@@ -2,7 +2,7 @@
 
 **Feature Branch**: `003-design-system`
 **Created**: 2026-10-02
-**Status**: Draft
+**Status**: Approved (Gate 1, 2026-10-02)
 **Iniciativa**: 0 · Plataforma
 **Onda**: 1
 **Agente**: Claude (revisor: Gemini)
@@ -278,8 +278,9 @@ componente tem regras de uso documentadas.
 - **FR-001**: O sistema MUST definir um conjunto único de fundamentos visuais nomeados (cores
   semânticas, tipografia, espaçamentos, raios, sombras, ícones e movimento), nos temas claro e
   escuro, que são a única fonte de valores visuais das telas.
-- **FR-002**: A paleta MUST seguir a direção visual da marca Prumo:
-  [NEEDS CLARIFICATION: qual direção visual/paleta da marca? (ver Question 1)].
+- **FR-002**: A paleta MUST seguir a direção visual "sóbria e calma" da marca Prumo:
+  verde-petróleo/azul profundo como cor da marca, neutros quentes, verde suave para entrada e
+  terracota suave para saída (nunca vermelho alarmante), nos temas claro e escuro.
 - **FR-003**: Os fundamentos MUST incluir cores semânticas de finanças — entrada, saída,
   neutro, alerta, sucesso, erro, informação e destaque de IA — com contraste AA nos dois temas.
 - **FR-004**: Telas de features MUST NOT usar cores, tamanhos de fonte ou espaçamentos fora dos
@@ -290,8 +291,9 @@ componente tem regras de uso documentadas.
   de instalação e na tela de abertura, coerente com a paleta escolhida.
 
 **Shell e navegação**
-- **FR-007**: O shell MUST oferecer navegação principal com os destinos:
-  [NEEDS CLARIFICATION: quais seções compõem a navegação principal? (ver Question 2)].
+- **FR-007**: O shell MUST oferecer navegação principal com os destinos, nesta ordem:
+  **Início** · **Extrato** · **Planejamento** (cartões, orçamento, metas, projeção) ·
+  **Investimentos** · **Mais** (contas e conexões, importações, alertas, ajustes, exportação).
   Em telas estreitas ela é uma barra inferior fixa (máx. 5 destinos, ícone + rótulo); em telas
   largas, um menu lateral com os mesmos destinos e ordem.
 - **FR-008**: O shell MUST definir um mapa de onde cada uma das 32 features do roadmap se
@@ -352,8 +354,9 @@ componente tem regras de uso documentadas.
 **Modo privacidade**
 - **FR-031**: O usuário MUST poder ativar/desativar o modo privacidade pelo cabeçalho e pelos
   Ajustes; a escolha MUST persistir no aparelho e valer para todo valor monetário exibido no
-  app, inclusive em gráficos e cards de resumo futuros.
-  [NEEDS CLARIFICATION: o modo privacidade entra já nesta feature? (ver Question 3)]
+  app, inclusive em gráficos e cards de resumo futuros. O modo privacidade entra completo
+  nesta feature (botão no cabeçalho, opção em Ajustes, persistência e respeito por todo
+  componente de valor).
 
 **Componentes de finanças**
 - **FR-032**: O item de transação MUST exibir ícone/cor da categoria, descrição, categoria,
@@ -456,6 +459,20 @@ componente tem regras de uso documentadas.
 - **SC-009**: Na revisão da pré-visualização, o Doug aprova a identidade visual e os padrões de
   valor/data sem pedir mudanças estruturais (no máximo ajustes finos).
 
+## Clarifications
+
+### Session 2026-10-02
+
+- Q: Qual direção visual/paleta da marca Prumo? → A: Sóbria e calma — verde-petróleo/azul
+  profundo como cor da marca, neutros quentes, verde suave para entrada e terracota suave para
+  saída (FR-002).
+- Q: Quais destinos compõem a navegação principal? → A: Início · Extrato · Planejamento
+  (cartões, orçamento, metas, projeção) · Investimentos · Mais (contas e conexões, importações,
+  alertas, ajustes, exportação) (FR-007).
+- Q: O modo privacidade (ocultar valores) entra já nesta feature? → A: Sim, completo: botão no
+  cabeçalho e em Ajustes, persistido no aparelho e respeitado por todo componente de valor
+  (FR-031).
+
 ## Assumptions
 
 - A biblioteca de interface definida na constitution será a base dos componentes; detalhes
@@ -468,7 +485,7 @@ componente tem regras de uso documentadas.
   saída), conforme Constitution III e o modelo da feature 004; a decisão de "entrada" ou
   "saída" vem do sinal.
 - Saídas usam cor semântica de "saída" (tom avermelhado/terroso suave, não alarmante) e
-  entradas a cor de "entrada" (tom verde); o tom exato depende da paleta (Question 1).
+  entradas a cor de "entrada" (tom verde suave), conforme FR-002.
 - Gráficos (barras, linhas, pizza) ficam fora desta feature; a feature 017 (dashboard) os
   define usando os fundamentos daqui.
 - Tela de login é da feature 006; esta feature apenas garante que o shell não exige login para
