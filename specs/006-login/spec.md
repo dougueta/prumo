@@ -2,7 +2,7 @@
 
 **Feature Branch**: `006-login`
 **Created**: 2026-10-02
-**Status**: Draft
+**Status**: Approved (Gate 1, 2026-10-02)
 **Iniciativa**: 1 · Autenticação
 **Onda**: 1
 **Agente**: Claude (revisor: Gemini)
@@ -57,11 +57,11 @@ neutra que um e-mail autorizado veria antes de concluir, e nunca obter sessão).
    para um e-mail autorizado (ex.: "Se este e-mail tiver acesso, você receberá as instruções"),
    nenhuma mensagem é enviada a esse e-mail, nenhuma sessão é criada e o evento "tentativa
    recusada" é registrado.
-4. **Given** um usuário que tente se identificar por um provedor externo (se adotado) com uma
+4. **Given** um usuário que tente se identificar pelo Google com uma
    conta cujo e-mail não está na lista, **When** o provedor devolve a identidade, **Then** o
    acesso é recusado com a mesma mensagem neutra, nenhuma sessão é criada e o evento é
    registrado.
-5. **Given** a verificação de entrada (código ou link) já usada ou expirada, **When** alguém
+5. **Given** a verificação de entrada (código por e-mail) já usada ou expirada, **When** alguém
    tenta usá-la, **Then** o acesso é recusado com a mensagem "Este acesso expirou ou já foi
    usado — peça um novo" e o evento é registrado.
 6. **Given** a tela de entrada, **When** o mesmo e-mail ou a mesma origem acumula 5 tentativas
@@ -89,7 +89,7 @@ em FR-010 a FR-013.
 1. **Given** uma sessão válida no dispositivo, **When** o Doug reabre o app dentro do período
    de inatividade permitido, **Then** ele vai direto para o app, sem nova verificação.
 2. **Given** uma sessão válida e o app sem uso além do período de inatividade, **When** o Doug
-   reabre o app, **Then** ele vê a tela de desbloqueio definida em FR-012 antes de qualquer
+   reabre o app, **Then** ele vê a tela de desbloqueio por biometria/PIN do celular (FR-012) antes de qualquer
    dado ser exibido.
 3. **Given** uma sessão em uso, **When** o Doug continua usando o app regularmente, **Then** a
    sessão é renovada automaticamente sem interrupção, respeitando o limite máximo absoluto
@@ -182,11 +182,12 @@ mecanismo é impossível de ativar em produção.
   autorizado; nenhuma mensagem enviada; evento registrado com e-mail mascarado.
 - **Diferença de maiúsculas/espaços no e-mail** → comparação ignora maiúsculas e espaços nas
   pontas (`Doug@Gmail.com ` = `doug@gmail.com`).
-- **Código/link expirado** (mais de 10 minutos) → recusado; Doug pede um novo.
-- **Código/link reutilizado** → recusado; pedir um novo invalida todos os anteriores.
-- **Link aberto em outro navegador/dispositivo** (ex.: e-mail aberto no computador, pedido
-  feito no celular) → a entrada vale no dispositivo onde o link/código foi usado; o pedido
-  original continua sem sessão. Ver FR-003 sobre o uso do app instalado no celular.
+- **Código expirado** (mais de 10 minutos) → recusado; Doug pede um novo.
+- **Código reutilizado** → recusado; pedir um novo invalida todos os anteriores.
+- **E-mail com o código aberto em outro dispositivo** (ex.: e-mail lido no computador, pedido
+  feito no celular) → o Doug digita o código no dispositivo onde pediu; a entrada vale só ali.
+- **Biometria/PIN do celular falha ou indisponível no desbloqueio** → após 5 falhas seguidas, ou
+  se o dispositivo não oferecer biometria/PIN, o app exige entrada completa (Google ou código).
 - **Pedidos repetidos de código** → no máximo 1 a cada 60 segundos e 5 por hora por e-mail;
   além disso, a mesma mensagem neutra de "muitas tentativas".
 - **Sessão expira no meio de uma ação** (ex.: salvando um lançamento) → a ação NÃO é executada
@@ -220,12 +221,11 @@ mecanismo é impossível de ativar em produção.
 - **FR-002**: Para qualquer e-mail fora da lista, o sistema MUST responder com a mesma mensagem
   e tempo de resposta equivalente aos de um e-mail autorizado, MUST NOT enviar nenhuma
   mensagem a esse e-mail e MUST NOT criar sessão.
-- **FR-003**: O sistema MUST oferecer os seguintes métodos de entrada:
-  [NEEDS CLARIFICATION: quais métodos de entrada? Ver Question 1 — Google, código por e-mail,
-  link por e-mail, passkey/biometria ou combinação]. Qualquer método MUST funcionar dentro do
-  app instalado no celular (Android e iOS) sem obrigar o Doug a concluir a entrada em outro
-  aplicativo ou navegador.
-- **FR-004**: Códigos/links de entrada por e-mail (se adotados) MUST valer por no máximo
+- **FR-003**: O sistema MUST oferecer como método principal o **login com Google** e, como
+  reserva, um **código de 6 dígitos enviado por e-mail** (sem link mágico). Ambos MUST
+  funcionar dentro do app instalado no celular (Android e iOS) sem obrigar o Doug a concluir a
+  entrada em outro aplicativo ou navegador; o código é digitado no próprio app.
+- **FR-004**: Códigos de entrada por e-mail MUST valer por no máximo
   10 minutos, ser de uso único, e todo novo pedido MUST invalidar os anteriores.
 - **FR-005**: O sistema MUST limitar tentativas: no máximo 5 falhas em 15 minutos por e-mail e
   por origem (bloqueio de 15 minutos), e no máximo 1 pedido de código a cada 60 segundos e
@@ -245,12 +245,14 @@ mecanismo é impossível de ativar em produção.
   logout ou sessão vencida.
 
 **Sessão**
-- **FR-010**: A sessão MUST ter renovação automática com uso e limites de duração definidos:
-  [NEEDS CLARIFICATION: duração da sessão e bloqueio por inatividade — ver Question 2].
+- **FR-010**: A sessão MUST durar 30 dias, renovada automaticamente a cada uso, com limite
+  máximo absoluto de 90 dias desde a entrada; após isso, entrada completa obrigatória.
 - **FR-011**: Validade de sessão, códigos e bloqueios MUST ser decidida pelo servidor (não pelo
   relógio do dispositivo).
-- **FR-012**: Ao reabrir o app após o período de inatividade definido em FR-010, o sistema MUST
-  exigir desbloqueio antes de exibir qualquer dado, conforme a resposta da Question 2.
+- **FR-012**: Ao reabrir (ou voltar para) o app após 15 minutos sem uso, o sistema MUST exigir
+  desbloqueio com a biometria ou o PIN do próprio celular antes de exibir qualquer dado. Após
+  5 falhas seguidas, ou se o dispositivo não oferecer esse recurso, MUST exigir entrada
+  completa (FR-003). O desbloqueio não renova o limite máximo de 90 dias.
 - **FR-013**: Se a sessão vencer ou for encerrada durante uma ação, o sistema MUST NOT executar
   a ação parcialmente, MUST avisar que ela não foi salva e, após nova entrada, MUST retornar à
   mesma tela.
@@ -263,7 +265,7 @@ mecanismo é impossível de ativar em produção.
 
 **Registro de eventos de acesso**
 - **FR-017**: O sistema MUST registrar os eventos: login com sucesso, falha de verificação,
-  e-mail recusado, código/link expirado ou reutilizado, bloqueio por tentativas, desbloqueio
+  e-mail recusado, código expirado ou reutilizado, bloqueio por tentativas, desbloqueio
   por inatividade, logout, sair de todos os dispositivos e sessão expirada.
 - **FR-018**: Cada evento MUST conter tipo, data/hora (UTC armazenado; exibido em
   `America/Sao_Paulo`), método de entrada, descrição do dispositivo/navegador e origem
@@ -311,7 +313,7 @@ mecanismo é impossível de ativar em produção.
   todos os dados financeiros das outras features.
 - **Sessão**: vínculo entre o usuário e um dispositivo — dispositivo/navegador, início, último
   uso, vencimento, estado (ativa, encerrada, vencida).
-- **Pedido de entrada** (se houver código/link por e-mail): e-mail, criado em, expira em,
+- **Pedido de código por e-mail**: e-mail, criado em, expira em,
   usado em/invalidado.
 - **Evento de acesso**: tipo, data/hora, método, dispositivo/navegador, origem aproximada,
   e-mail mascarado (quando não autorizado); somente-leitura.
@@ -338,6 +340,18 @@ mecanismo é impossível de ativar em produção.
   bloqueadas.
 - **SC-008**: Em 100% das pré-visualizações o Doug entra sem digitar nada e vê o selo de
   demonstração; em produção, 0 formas de ativar entrada automática (verificado por testes).
+- **SC-009**: Ao reabrir o app após 15 minutos sem uso, 100% das vezes nenhum dado é exibido
+  antes do desbloqueio por biometria/PIN ou nova entrada.
+
+## Clarifications
+
+### Session 2026-10-02
+
+- Q: Método de entrada? → A: Login com Google como principal + código de 6 dígitos por e-mail
+  como reserva (sem link mágico, que no iOS abre fora do app instalado).
+- Q: Duração da sessão e bloqueio por inatividade? → A: Sessão de 30 dias renovada com o uso,
+  máximo absoluto de 90 dias; ao reabrir após 15 minutos parado, desbloqueio com biometria/PIN
+  do celular.
 
 ## Assumptions
 
@@ -346,9 +360,9 @@ mecanismo é impossível de ativar em produção.
   na configuração do servidor, sem tela no app — evita um caminho de escalada de acesso.
 - Não existe cadastro, convite, recuperação de senha nem múltiplos usuários; não há senha
   tradicional (métodos sem senha reduzem risco de vazamento e de força bruta).
-- Envio de e-mail (se adotado) usa o serviço gratuito do provedor de autenticação, cujo limite
+- Envio do código por e-mail usa o serviço gratuito do provedor de autenticação, cujo limite
   baixo de envios por hora é suficiente para 1 usuário (teto de custo R$ 0, ADR 0006).
-- Provedores externos de identidade (se adotados) têm uso gratuito para este volume.
+- O login com Google tem uso gratuito para este volume.
 - Alerta por e-mail/push de "novo dispositivo" fica fora de escopo; o histórico de acessos
   cobre a visibilidade. Pode entrar via 024 (central de notificações).
 - Os testes ponta a ponta de login com banco rodam no CI contra o ambiente efêmero (ADR 0006);
