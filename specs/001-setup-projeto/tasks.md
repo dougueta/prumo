@@ -11,20 +11,20 @@
 
 ## Phase 1: Setup (infraestrutura compartilhada)
 
-- [ ] T001 Inicializar app Next.js 16 + TS 5.9 strict + Tailwind 4 (sem exemplos) na raiz; `package.json` com `engines.node >=24`, `.nvmrc` = 24 — `package.json`, `tsconfig.json`, `next.config.ts`
-- [ ] T002 [P] Configurar ESLint 10 flat (`eslint-config-next`, `typescript-eslint` type-checked, regra proibindo `process.env` fora de `src/lib/env.ts`) e Prettier 3.9 — `eslint.config.mjs`, `prettier.config.mjs`
-- [ ] T003 [P] Configurar Vitest 5 (+ Testing Library, `TZ=America/Sao_Paulo`, projetos `unit` e `integration`) — `vitest.config.ts`, `tests/setup.ts`
-- [ ] T004 [P] Configurar Playwright 1.63 (projetos `chromium`, `mobile-chrome`, `demo` com `APP_ENV=preview`; webServer `next start`) — `playwright.config.ts`
-- [ ] T005 [P] Inicializar Supabase CLI (`supabase init`, projeto `prumo`, porta padrão) — `supabase/config.toml`
-- [ ] T006 Scripts npm: `dev`, `dev:setup`, `dev:demo`, `build`, `start`, `lint`, `format`, `typecheck`, `check`, `test:unit`, `test:integration`, `test:e2e`, `synthetic`; `dev:setup` em Node (multiplataforma) roda `supabase start`, aplica migrações e escreve `.env.local` — `package.json`, `scripts/dev-setup.mjs` (FR-001, FR-005)
+- [x] T001 Inicializar app Next.js 16 + TS 5.9 strict + Tailwind 4 (sem exemplos) na raiz; `package.json` com `engines.node >=24`, `.nvmrc` = 24 — `package.json`, `tsconfig.json`, `next.config.ts`
+- [x] T002 [P] Configurar ESLint 10 flat (`eslint-config-next`, `typescript-eslint` type-checked, regra proibindo `process.env` fora de `src/lib/env.ts`) e Prettier 3.9 — `eslint.config.mjs`, `prettier.config.mjs`
+- [x] T003 [P] Configurar Vitest 5 (+ Testing Library, `TZ=America/Sao_Paulo`, projetos `unit` e `integration`) — `vitest.config.ts`, `tests/setup.ts`
+- [x] T004 [P] Configurar Playwright 1.63 (projetos `chromium`, `mobile-chrome`, `demo` com `APP_ENV=preview`; webServer `next start`) — `playwright.config.ts`
+- [x] T005 [P] Inicializar Supabase CLI (`supabase init`, projeto `prumo`, porta padrão) — `supabase/config.toml`
+- [x] T006 Scripts npm: `dev`, `dev:setup`, `dev:demo`, `build`, `start`, `lint`, `format`, `typecheck`, `check`, `test:unit`, `test:integration`, `test:e2e`, `synthetic`; `dev:setup` em Node (multiplataforma) roda `supabase start`, aplica migrações e escreve `.env.local` — `package.json`, `scripts/dev-setup.mjs` (FR-001, FR-005)
 
 ## Phase 2: Foundational (bloqueia todas as histórias)
 
-- [ ] T007 [P] Teste unit de `loadEnv()`: schemas local/preview/production, proteção cruzada `VERCEL_ENV`, mensagem lista só nomes e nunca valores — `tests/unit/env.test.ts` (FR-003)
-- [ ] T008 Implementar `src/lib/env.ts` (zod 4) e `src/lib/app-env.ts` (`getAppEnv`, `isDemo`) até T007 passar (FR-003)
-- [ ] T009 [P] Criar `.env.example` com o catálogo do data-model §3 (descrições, sem valores reais) e teste que garante que todo campo do schema está no exemplo — `.env.example`, `tests/unit/env-example.test.ts` (FR-004)
-- [ ] T010 Validar env no boot via `src/instrumentation.ts` (falha imediata) (FR-003)
-- [ ] T011 [P] `src/lib/format.ts` (moeda/data `pt-BR`, `America/Sao_Paulo`) com testes — `tests/unit/format.test.ts` (FR-021)
+- [x] T007 [P] Teste unit de `loadEnv()`: schemas local/preview/production, proteção cruzada `VERCEL_ENV`, mensagem lista só nomes e nunca valores — `tests/unit/env.test.ts` (FR-003)
+- [x] T008 Implementar `src/lib/env.ts` (zod 4) e `src/lib/app-env.ts` (`getAppEnv`, `isDemo`) até T007 passar (FR-003)
+- [x] T009 [P] Criar `.env.example` com o catálogo do data-model §3 (descrições, sem valores reais) e teste que garante que todo campo do schema está no exemplo — `.env.example`, `tests/unit/env-example.test.ts` (FR-004)
+- [x] T010 Validar env no boot via `src/instrumentation.ts` (falha imediata) (FR-003)
+- [x] T011 [P] `src/lib/format.ts` (moeda/data `pt-BR`, `America/Sao_Paulo`) com testes — `tests/unit/format.test.ts` (FR-021)
 
 **Checkpoint**: configuração validada; histórias podem começar.
 
@@ -35,17 +35,17 @@
 **Independent Test**: máquina limpa → `quickstart.md` → tela "Prumo" + `/api/health` ok.
 
 ### Testes (escrever primeiro)
-- [ ] T012 [P] [US1] Teste unit de `checkHealth()`: ok, degraded (erro/timeout 3 s), demo, sem vazamento de mensagem de erro — `tests/unit/health.test.ts` (FR-002)
-- [ ] T013 [P] [US1] Teste de integração: `health_ping()` no Supabase local e `GET /api/health` real valida contra `contracts/health.openapi.yaml` — `tests/integration/health.int.test.ts` (FR-002)
-- [ ] T014 [P] [US1] E2E: home exibe "Prumo" em `lang=pt-BR`; health 200 — `tests/e2e/home.spec.ts` (FR-001, FR-021)
+- [x] T012 [P] [US1] Teste unit de `checkHealth()`: ok, degraded (erro/timeout 3 s), demo, sem vazamento de mensagem de erro — `tests/unit/health.test.ts` (FR-002)
+- [x] T013 [P] [US1] Teste de integração: `health_ping()` no Supabase local e `GET /api/health` real valida contra `contracts/health.openapi.yaml` — `tests/integration/health.int.test.ts` (FR-002)
+- [x] T014 [P] [US1] E2E: home exibe "Prumo" em `lang=pt-BR`; health 200 — `tests/e2e/home.spec.ts` (FR-001, FR-021)
 
 ### Implementação
-- [ ] T015 [US1] Migração `supabase/migrations/<ts>_health_ping.sql` conforme data-model §1
-- [ ] T016 [US1] `src/lib/supabase/server.ts` (`server-only`, chave secreta) 
-- [ ] T017 [US1] `src/lib/health.ts` (`checkHealth` puro, injetável) até T012 passar
-- [ ] T018 [US1] `src/app/api/health/route.ts` (`Cache-Control: no-store`, 503 em degraded) até T013 passar
-- [ ] T019 [US1] `src/app/layout.tsx` + `src/app/page.tsx` mínimos ("Prumo", tema por sistema) até T014 passar
-- [ ] T020 [US1] Seção "Início rápido" no `README.md` espelhando `quickstart.md` + validar em Windows Git Bash (FR-001, FR-005, SC-001)
+- [x] T015 [US1] Migração `supabase/migrations/<ts>_health_ping.sql` conforme data-model §1
+- [x] T016 [US1] `src/lib/supabase/server.ts` (`server-only`, chave secreta) 
+- [x] T017 [US1] `src/lib/health.ts` (`checkHealth` puro, injetável) até T012 passar
+- [x] T018 [US1] `src/app/api/health/route.ts` (`Cache-Control: no-store`, 503 em degraded) até T013 passar
+- [x] T019 [US1] `src/app/layout.tsx` + `src/app/page.tsx` mínimos ("Prumo", tema por sistema) até T014 passar
+- [x] T020 [US1] Seção "Início rápido" no `README.md` espelhando `quickstart.md` + validar em Windows Git Bash (FR-001, FR-005, SC-001)
 
 **Checkpoint**: US1 funcional e testada.
 

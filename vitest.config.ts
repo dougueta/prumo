@@ -6,7 +6,13 @@ process.env.TZ = "America/Sao_Paulo";
 
 export default defineConfig({
   plugins: [react()],
-  resolve: { alias: { "@": path.resolve(__dirname, "src") } },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      // server-only lança erro fora do bundler do Next; nos testes (Node) é inofensivo.
+      "server-only": path.resolve(__dirname, "tests/server-only-stub.ts"),
+    },
+  },
   test: {
     projects: [
       {

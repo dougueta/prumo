@@ -6,7 +6,7 @@ const GATE_PASSWORD = "uma-senha-bem-longa-com-20+";
 
 const local = {
   APP_ENV: "local",
-  SUPABASE_URL: "http://127.0.0.1:55321",
+  SUPABASE_URL: "http://127.0.0.1:57321",
   SUPABASE_SECRET_KEY: SECRET,
 };
 
@@ -42,9 +42,7 @@ describe("parseEnv", () => {
   });
 
   it("falha em local sem Supabase, listando os nomes faltantes", () => {
-    expect(() => parseEnv({ APP_ENV: "local" })).toThrow(
-      /SUPABASE_URL.*SUPABASE_SECRET_KEY|SUPABASE_SECRET_KEY.*SUPABASE_URL/s,
-    );
+    expect(() => parseEnv({ APP_ENV: "local" })).toThrow(/SUPABASE_SECRET_KEY, SUPABASE_URL/);
   });
 
   it("falha em preview se houver qualquer SUPABASE_*", () => {

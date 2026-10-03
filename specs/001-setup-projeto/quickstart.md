@@ -1,13 +1,13 @@
 # Quickstart — Prumo (após a implementação da 001)
 
-Pré-requisitos: Git, Node 24 LTS, Docker Desktop **aberto**, Supabase CLI ≥ 2.119.
+Pré-requisitos: Git, Node 24 LTS, Docker Desktop **aberto**, Supabase CLI ≥ 2.109.
 Windows: use Git Bash.
 
 ```bash
 git clone https://github.com/dougueta/prumo.git && cd prumo
 npm ci
 cp .env.example .env.local          # valores locais já vêm preenchidos pelo passo abaixo
-npm run dev:setup                   # supabase start + aplica migrações + escreve .env.local
+npm run dev:setup                   # supabase start (portas 573xx) + migrações + .env.local
 npm run dev                         # http://localhost:3000
 ```
 
