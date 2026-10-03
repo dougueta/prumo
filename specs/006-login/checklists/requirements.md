@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain
+- [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic (no implementation details)
@@ -40,4 +40,6 @@
 - Padrões assumidos sem pergunta (documentados em Assumptions/FRs): validade de 10 min e uso
   único dos códigos, 5 falhas/15 min, retenção de 90 dias dos eventos, entrada automática em
   `preview` atrás da proteção da plataforma, alerta de novo dispositivo fora de escopo.
+- Iteração 2 (2026-10-02): clarificações aplicadas (Q1 = B, Q2 = B); todos os itens passam.
+  Spec aprovada no Gate 1.
 - Items marked incomplete require spec updates before `/speckit-clarify` or `/speckit-plan`
