@@ -74,7 +74,7 @@
 ### Implementação
 - [x] T026 [US3] `src/components/demo-badge.tsx` no layout quando `isDemo()` até T025 passar (FR-011)
 - [x] T027 [US3] `src/proxy.ts` (trava Basic Auth só em `production`) até T024 passar (FR-013)
-- [ ] T028 [US3] ⚠️ Ação externa (confirmar com Doug): criar projeto Supabase gratuito `prumo` (sa-east-1, org `doug_lab`); aplicar migrações (FR-012)
+- [x] T028 [US3] ⚠️ Ação externa (confirmar com Doug): criar projeto Supabase gratuito `prumo` (sa-east-1, org `doug_lab`) — feito 2026-10-03, ref `pblwfscuxwsymxfzvgem`; migrações aplicadas pelo job `deploy-db` no merge (FR-012)
 - [ ] T029 [US3] ⚠️ Ação externa (confirmar com Doug): criar projeto Vercel `prumo` (time `doug-lab`) ligado ao repo; envs: Preview = `APP_ENV=preview` sem `SUPABASE_*`; Production = Supabase + `PRODUCTION_GATE_*`; habilitar Vercel Authentication para previews (FR-010, FR-011, FR-012, FR-013)
 - [x] T030 [US3] Job `deploy-db` no `ci.yml` (só `main`): `supabase db push` com segredos do GitHub; documentar segredos necessários no README (FR-012)
 - [ ] T031 [US3] Verificação ponta a ponta: PR de teste mostra link de preview em ≤ 5 min; dois previews independentes; merge atualiza produção; produção pede credenciais (SC-004)
