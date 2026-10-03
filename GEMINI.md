@@ -63,6 +63,6 @@ Ao rodar o script de criação de feature, **sempre** passe `--number NNN --shor
   pesquisa; nada é copiado sem spec/plan.
 
 <!-- SPECKIT START -->
-For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+Plano atual: `specs/001-setup-projeto/plan.md` (stack, estrutura de pastas, comandos).
+Ao trabalhar em outra feature, leia o `plan.md` da pasta `specs/NNN-slug/` correspondente.
 <!-- SPECKIT END -->
