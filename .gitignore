@@ -1,0 +1,27 @@
+# deps / build
+node_modules/
+.next/
+out/
+dist/
+coverage/
+playwright-report/
+test-results/
+# env & secrets — NUNCA versionar
+.env
+.env.*
+!.env.example
+*.pem
+service-account*.json
+# supabase local
+supabase/.temp/
+supabase/.branches/
+# dados reais — NUNCA versionar (Constitution II)
+data/real/
+*.ofx
+!tests/fixtures/**/*.ofx
+extratos/
+faturas/
+# misc
+.DS_Store
+.vercel
+*.log
