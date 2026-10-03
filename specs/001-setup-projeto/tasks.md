@@ -120,7 +120,7 @@
 - [x] T045 [P] Workflow `keepalive.yml` (cron diário 12:00 UTC → `GET $PRODUCTION_URL/api/health`, falha se ≠ 200 `ok`) (FR-023)
 - [x] T046 [P] Teste do keepalive com `act`/dry-run documentado ou script `scripts/keepalive-check.mjs` testado em unit — `tests/unit/keepalive.test.ts` (FR-023)
 - [x] T047 Registrar custo R$ 0 no README (planos usados e limites: Vercel Hobby, Supabase Free, Actions 2.000 min) (FR-022)
-- [ ] T048 Rodar `quickstart.md` do zero num clone limpo e corrigir divergências (SC-001)
+- [x] T048 Rodar `quickstart.md` do zero num clone limpo e corrigir divergências (SC-001)
 - [ ] T049 Atualizar `docs/roadmap.md` (001 → `review`) e abrir PR `001 · Setup do projeto` com rótulos `autor:claude`, milestone `0 · Plataforma`
 
 ---
