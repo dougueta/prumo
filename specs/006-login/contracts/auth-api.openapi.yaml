@@ -1,0 +1,101 @@
+openapi: 3.1.0
+info:
+  title: Prumo — Auth (feature 006)
+  version: 1.0.0
+  description: >
+    Route Handlers de autenticação. Todas as respostas têm `Cache-Control: no-store`.
+    Nenhuma resposta contém tokens, códigos, e-mails de terceiros ou mensagens do provedor.
+servers:
+  - url: /
+paths:
+  /auth/callback:
+    get:
+      summary: Retorno do Google OAuth (PKCE)
+      parameters:
+        - { name: code, in: query, required: false, schema: { type: string, maxLength: 512 } }
+        - { name: error, in: query, required: false, schema: { type: string, maxLength: 200 } }
+      responses:
+        "302":
+          description: >
+            Sucesso e e-mail ∈ allowlist ⇒ `Location: <cookie prumo_next | />` e sessão criada
+            (evento `login_succeeded`, method `google`).
+            E-mail ∉ allowlist ou cadastro recusado pelo Supabase ⇒ sessão revogada,
+            `Location: /entrar?erro=recusado` (evento `email_refused`, e-mail mascarado).
+            `code` ausente/inválido ou provedor indisponível ⇒ `Location: /entrar?erro=indisponivel`
+            (evento `provider_error`).
+          headers:
+            Location: { schema: { type: string } }
+  /api/auth/status:
+    get:
+      summary: Estado da sessão para o SessionGuard (não renova `last_active_at`)
+      responses:
+        "200":
+          description: Sessão existente
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [state]
+                properties:
+                  state: { type: string, enum: [active, locked] }
+                  canUnlock: { type: boolean, description: "dispositivo/usuário tem credencial WebAuthn" }
+        "401":
+          description: Sem sessão, expirada ou encerrada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /api/auth/webauthn/register/options:
+    post:
+      summary: Opções de cadastro da biometria/PIN (só até 10 min após entrada completa)
+      responses:
+        "200":
+          description: PublicKeyCredentialCreationOptionsJSON (rp.id = host de APP_ORIGIN, userVerification required, authenticatorAttachment platform)
+          content: { application/json: { schema: { type: object } } }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "403":
+          description: Janela de cadastro encerrada
+          content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+  /api/auth/webauthn/register/verify:
+    post:
+      summary: Verifica e grava a credencial (evento unlock_enrolled)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, description: RegistrationResponseJSON } } }
+      responses:
+        "201": { description: Cadastrada, content: { application/json: { schema: { type: object, properties: { ok: { const: true } } } } } }
+        "400": { description: Asserção inválida ou desafio expirado, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+  /api/auth/webauthn/unlock/options:
+    post:
+      summary: Opções de autenticação para desbloquear sessão LOCKED
+      responses:
+        "200": { description: PublicKeyCredentialRequestOptionsJSON (allowCredentials do dono, userVerification required), content: { application/json: { schema: { type: object } } } }
+        "401": { $ref: "#/components/responses/Unauthenticated" }
+        "409":
+          description: Sem credencial cadastrada (exige entrada completa)
+          content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+  /api/auth/webauthn/unlock/verify:
+    post:
+      summary: Verifica a asserção e desbloqueia
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, description: AuthenticationResponseJSON } } }
+      responses:
+        "200": { description: Desbloqueada (evento session_unlocked), content: { application/json: { schema: { type: object, properties: { ok: { const: true } } } } } }
+        "400":
+          description: Falhou (unlock_failures+1, evento unlock_failed); `remaining` tentativas
+          content: { application/json: { schema: { type: object, properties: { error: { const: UNLOCK_FAILED }, remaining: { type: integer, minimum: 0, maximum: 4 } } } } }
+        "401":
+          description: Sessão encerrada (5ª falha ⇒ end_reason unlock_failures) ou inexistente
+          content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+components:
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string, enum: [UNAUTHENTICATED, LOCKED, SESSION_EXPIRED, ENROLL_WINDOW_CLOSED, NO_CREDENTIAL, CHALLENGE_EXPIRED, INVALID] }
+  responses:
+    Unauthenticated:
+      description: Sem sessão válida
+      content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
