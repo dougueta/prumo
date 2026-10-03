@@ -39,12 +39,12 @@ Este documento é operacional. As regras vêm da constitution
 Cada feature em implementação vive em seu próprio worktree, irmão do repositório principal:
 
 ```bash
-# a partir de financas/ (main atualizada)
-git worktree add ../financas-wt/NNN-slug -b NNN-slug
-cd ../financas-wt/NNN-slug
+# a partir de prumo/ (main atualizada)
+git worktree add ../prumo-wt/NNN-slug -b NNN-slug
+cd ../prumo-wt/NNN-slug
 # ... /speckit-implement ...
 # ao terminar (após merge):
-git worktree remove ../financas-wt/NNN-slug
+git worktree remove ../prumo-wt/NNN-slug
 ```
 
 Regras:

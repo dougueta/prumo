@@ -1,6 +1,6 @@
-# Finanças
+# Prumo
 
-App pessoal de finanças (PWA) no espírito do GuiaBolso: Open Finance + importação manual,
+Mantenha suas finanças no prumo. App pessoal de finanças (PWA) no espírito do GuiaBolso: Open Finance + importação manual,
 categorização com IA, dashboard, orçamento, análise de comportamento, alertas inteligentes,
 investimentos e planejamento.
 

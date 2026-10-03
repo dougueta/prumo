@@ -2,7 +2,7 @@
 
 ## O projeto em 30 segundos
 
-**Finanças** é um app web pessoal (PWA) de finanças do Doug, no espírito do GuiaBolso:
+**Prumo** é um app web pessoal (PWA) de finanças do Doug, no espírito do GuiaBolso:
 consolida contas e cartões via Open Finance (Pluggy) e importação manual (CSV/OFX/PDF),
 categoriza com IA, mostra dashboard, orçamento, análise de comportamento, alertas
 inteligentes, investimentos (manual + Google Sheets) e planejamento.

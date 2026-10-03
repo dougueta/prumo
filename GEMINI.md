@@ -1,4 +1,4 @@
-# GEMINI.md — Onboarding do Gemini no projeto Finanças
+# GEMINI.md — Onboarding do Gemini no projeto Prumo
 
 Olá, Gemini. Você é um dos dois agentes que constroem este projeto, junto com o Claude,
 sob aprovação do Doug (product owner). Este arquivo diz **quem você é aqui, o que já foi
@@ -30,8 +30,8 @@ decidido, o que você deve fazer agora e o que você nunca deve fazer**.
 # 1. a partir do repo principal, com main atualizada
 git fetch && git checkout main && git pull
 # 2. worktree próprio
-git worktree add ../financas-wt/NNN-slug -b NNN-slug
-cd ../financas-wt/NNN-slug
+git worktree add ../prumo-wt/NNN-slug -b NNN-slug
+cd ../prumo-wt/NNN-slug
 # 3. ciclo Spec Kit no Gemini CLI
 /speckit.specify   # informe: número NNN e slug do roadmap; cabeçalho com Iniciativa/Onda/Agente/Dependências
 /speckit.clarify   # perguntas ao Doug → PARE e espere o Gate 1

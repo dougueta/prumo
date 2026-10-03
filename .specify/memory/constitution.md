@@ -1,6 +1,6 @@
 <!--
 Sync Impact Report
-- Version change: (template) → 1.0.0
+- Version change: (template) → 1.0.0 (nome do projeto: Prumo)
 - Principles: todos definidos pela primeira vez (I–X)
 - Added sections: Restrições Técnicas e Stack; Fluxo de Desenvolvimento, Paralelismo e Revisão; Governança
 - Removed sections: nenhuma
@@ -12,9 +12,9 @@ Sync Impact Report
 - Deferred TODOs: nenhum
 -->
 
-# Finanças Constitution
+# Prumo Constitution
 
-App pessoal de finanças (inspirado no GuiaBolso) construído exclusivamente por Spec-Driven
+**Prumo** — app pessoal de finanças (inspirado no GuiaBolso) construído exclusivamente por Spec-Driven
 Development com GitHub Spec Kit, por dois agentes de IA (Claude e Gemini) sob aprovação do
 product owner (Doug).
 
