@@ -35,14 +35,17 @@ inicialização. `VERCEL_ENV=preview` com `APP_ENV≠preview` → falha.
 |---|---|---|---|
 | `APP_ENV` | todos | não | `local` \| `preview` \| `production` |
 | `NEXT_PUBLIC_APP_VERSION` | todos | não | versão (preenchida no build a partir do commit) |
-| `NEXT_PUBLIC_SUPABASE_URL` | local, production | não | URL do projeto Supabase |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | local, production | não | chave publicável |
+| `SUPABASE_URL` | local, production | não | URL do projeto Supabase (lida só no servidor, em runtime) |
 | `SUPABASE_SECRET_KEY` | local, production | **sim** | chave secreta (só servidor) |
 | `PRODUCTION_GATE_USER` | production | **sim** | usuário da trava provisória |
 | `PRODUCTION_GATE_PASSWORD` | production | **sim** | senha da trava provisória (≥ 20 caracteres) |
 
 Regras de validação (zod): URLs válidas; chaves não vazias; `PRODUCTION_GATE_PASSWORD.length
 >= 20`; em `preview`, `SUPABASE_*` MUST estar ausentes.
+
+> Desvio registrado na implementação (2026-10-02): nada de `NEXT_PUBLIC_SUPABASE_*` na 001 —
+> variáveis `NEXT_PUBLIC_*` são embutidas no build, o que impediria o mesmo build de rodar como
+> `local` e `preview`. O cliente Supabase de navegador (se necessário) é decisão da feature 006.
 
 ## 4. Status de saúde (`HealthStatus`)
 

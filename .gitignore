@@ -28,3 +28,8 @@ faturas/
 
 # estado local do Spec Kit (muda por worktree/branch)
 .specify/feature.json
+# next / typescript
+*.tsbuildinfo
+next-env.d.ts
+/build
+npm-debug.log*

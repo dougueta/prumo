@@ -16,7 +16,7 @@ dados sintéticos determinístico (JSON/CSV/OFX). Detalhes e escolhas em [resear
 
 **Language/Version**: TypeScript 5.9.3 (strict) · Node 24 LTS
 **Primary Dependencies**: Next.js 16.3, React 19.3, Tailwind 4.3, @supabase/supabase-js 2.117,
-@supabase/ssr 0.12, zod 4.6, Serwist 9.5 (@serwist/turbopack), @faker-js/faker 10.6 (dev)
+zod 4.6, @faker-js/faker 10.6 (dev); service worker próprio (sem Serwist — ver research R-08)
 **Storage**: Supabase Postgres — apenas a função `health_ping()` nesta feature
 **Testing**: Vitest 5 + Testing Library 16 (unit/integração), Playwright 1.63 (E2E)
 **Target Platform**: Web/PWA — Chrome Android, Safari iOS, desktop; deploy Vercel (Hobby)
@@ -65,7 +65,6 @@ src/
 │   ├── layout.tsx              # html lang=pt-BR, tema por sistema, DemoBadge
 │   ├── page.tsx                # tela inicial "Prumo" (mínima; shell real = feature 003)
 │   ├── manifest.ts             # PWA manifest
-│   ├── sw.ts                   # Serwist: precache + fallback /~offline
 │   ├── ~offline/page.tsx       # "Você está sem conexão"
 │   └── api/health/route.ts     # contrato health.openapi.yaml
 ├── proxy.ts                    # trava provisória de produção (contrato production-gate)
@@ -83,6 +82,7 @@ src/
     ├── export-csv.ts · export-ofx.ts
     └── cli.ts                  # contrato synthetic-cli
 public/icons/                   # ícones PWA (192, 512, maskable, apple-touch)
+public/sw.js                    # service worker: precache /~offline + fallback de navegação
 supabase/
 ├── config.toml
 └── migrations/<ts>_health_ping.sql

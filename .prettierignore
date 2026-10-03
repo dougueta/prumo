@@ -1,0 +1,14 @@
+.next
+node_modules
+coverage
+playwright-report
+test-results
+package-lock.json
+supabase/.temp
+.specify
+.claude
+.gemini/commands
+specs
+docs
+*.md
+tests/fixtures

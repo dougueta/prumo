@@ -110,7 +110,7 @@
 
 - [ ] T041 [P] [US5] E2E: `/manifest.webmanifest` válido (nome "Prumo", `display: standalone`, ícones 192/512/maskable), service worker registrado, navegação offline cai em `/~offline` — `tests/e2e/pwa.spec.ts` (FR-019, FR-020)
 - [ ] T042 [US5] Ícones em `public/icons/` (192, 512, maskable, apple-touch) e `src/app/manifest.ts`
-- [ ] T043 [US5] Serwist (`@serwist/turbopack`): `src/app/sw.ts` com precache do shell e fallback `src/app/~offline/page.tsx` ("Você está sem conexão") até T041 passar
+- [ ] T043 [US5] Service worker `public/sw.js` (precache `/~offline`, navegação network-first com fallback) + registro em `src/components/sw-register.tsx` + `src/app/~offline/page.tsx` ("Você está sem conexão") até T041 passar
 - [ ] T044 [US5] Verificação manual em Android (Chrome) e iOS (Safari) — evidência (prints sem dados) no PR (SC-007)
 
 ---

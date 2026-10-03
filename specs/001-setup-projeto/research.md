@@ -36,8 +36,9 @@ Versões verificadas em 2026-10-02 via `npm view`.
 - **Alternatives**: `@t3-oss/env-nextjs` (açúcar sobre zod; dependência extra desnecessária).
 
 ## R-06 · Cliente Supabase
-- **Decision**: `@supabase/supabase-js` 2.117 + `@supabase/ssr` 0.12; chave publicável no
-  client, chave secreta somente em código de servidor (`server-only`).
+- **Decision**: `@supabase/supabase-js` 2.117; na 001
+  só há cliente de servidor (`server-only`) com `SUPABASE_URL` + `SUPABASE_SECRET_KEY` lidos em
+  runtime. *Desvio*: sem `NEXT_PUBLIC_SUPABASE_*` (embutidas no build; ver data-model §3).
 - **Health**: função SQL `public.health_ping()` (migração desta feature) chamada via RPC.
 
 ## R-07 · Proteção de acesso provisória (FR-013)
@@ -50,14 +51,18 @@ Versões verificadas em 2026-10-02 via `npm view`.
   não necessariamente o domínio de produção; a trava no app funciona em qualquer plano.
 
 ## R-08 · PWA (FR-019/FR-020)
-- **Decision**: manifesto nativo do Next (`app/manifest.ts`) + **Serwist 9.5**
-  (`@serwist/turbopack`, compatível com o Turbopack padrão do Next 16) com precache do shell e
-  rota `/~offline` como fallback de navegação. Sem cache de dados financeiros (fora de escopo).
+- **Decision (revisada na implementação)**: manifesto nativo do Next (`app/manifest.ts`) +
+  **service worker próprio** `public/sw.js` (~30 linhas): precache de `/~offline` e ícones;
+  navegação network-first com fallback para `/~offline`. Sem cache de dados financeiros.
+- **Rationale da revisão**: a spec exige só a página offline; a doc do Next 16 cita Serwist como
+  *opção* para cache offline completo — dependência desnecessária hoje (Constitution X).
+  Serwist volta à mesa se uma feature futura pedir cache offline de dados.
 - **Alternatives**: `next-pwa` (abandonado); service worker manual (mais código para manter).
 
 ## R-09 · Qualidade e testes
-- **Decision**: ESLint 10 (flat config + `eslint-config-next` 16 + `typescript-eslint`),
-  Prettier 3.9, `tsc --noEmit`, Vitest 5 (unit + integração), Testing Library 16,
+- **Decision**: ESLint 9 (versão do scaffold `create-next-app` 16.3.8; plugins do Next ainda não
+  validados com 10) (flat config + `eslint-config-next` 16 + `typescript-eslint`),
+  Prettier 3.9, `tsc --noEmit`, Vitest 5 (unit + integração), Testing Library 16, jsdom 29 (o 30 exige Node ≥ 24.15),
   Playwright 1.63 (E2E, Chromium no CI + emulação mobile).
 - **Integração**: roda contra o Supabase do CI. **E2E**: `next build && next start` contra o
   Supabase do CI, mais um projeto E2E com `APP_ENV=preview` para validar o modo demonstração.
