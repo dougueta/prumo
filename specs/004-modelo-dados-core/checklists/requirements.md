@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain — 3 marcadores pendentes (FR-010 saldo, FR-029 taxonomia de categorias, US7 cenário 2 pendente que muda de valor), a resolver no `/speckit-clarify`
+- [x] No [NEEDS CLARIFICATION] markers remain — 3 clarificações resolvidas pelo Doug em 2026-10-02 (FR-010, FR-029, US7 cenário 2)
 - [x] Requirements are testable and unambiguous
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic (no implementation details)
@@ -31,6 +31,7 @@
 
 ## Notes
 
+- Iteração 2 de validação: clarificações aplicadas; checklist completo (Gate 1 aprovado em 2026-10-02).
 - Iteração 1 de validação. Termos como "UTC", "ISO 4217" e "centavos inteiros" são
   restrições de domínio exigidas pela Constitution III, não detalhes de implementação.
 - Nenhuma tecnologia (banco, framework, provedor) é citada; schema tipado, índices e regras de

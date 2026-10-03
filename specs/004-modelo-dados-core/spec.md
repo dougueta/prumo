@@ -2,7 +2,7 @@
 
 **Feature Branch**: `004-modelo-dados-core`
 **Created**: 2026-10-02
-**Status**: Draft
+**Status**: Approved (Gate 1, 2026-10-02)
 **Iniciativa**: 0 · Plataforma
 **Onda**: 1
 **Agente**: Claude (revisor: Gemini)
@@ -250,8 +250,8 @@ transação, efetivada, com o novo valor e auditoria da mudança.
 1. **Given** uma transação pendente da fonte, **When** a fonte a confirma com o mesmo id
    externo, **Then** o status passa a efetivada na mesma transação.
 2. **Given** uma transação pendente cujo valor muda na confirmação, **When** a fonte envia o
-   novo valor, **Then** o valor é tratado conforme
-   [NEEDS CLARIFICATION: transação pendente que muda de valor — atualizar no lugar, criar nova e excluir a antiga, ou não gravar pendentes?].
+   novo valor, **Then** a mesma transação é atualizada com o novo valor, o valor anterior fica registrado na
+   auditoria e campos protegidos por edição manual permanecem intocados.
 3. **Given** uma transação pendente que a fonte deixa de informar (compra cancelada),
    **When** a sincronização percebe a ausência, **Then** a transação é excluída logicamente com
    motivo "cancelada na fonte" e auditada — nunca apagada.
@@ -319,8 +319,10 @@ transação, efetivada, com o novo valor e auditoria da mudança.
   dígitos e identificador externo.
 - **FR-009**: Contas de cartão de crédito MUST aceitar limite (em centavos), dia de fechamento
   e dia de vencimento (1–31), todos opcionais.
-- **FR-010**: A conta MUST registrar o saldo conforme
-  [NEEDS CLARIFICATION: saldo armazenado (vindo da fonte), sempre calculado a partir das transações, ou ambos com indicação de divergência?].
+- **FR-010**: A conta MUST guardar o saldo informado pela fonte (em centavos, com data de
+  referência), quando houver, e o contrato MUST oferecer também o saldo calculado a partir
+  das transações (mais saldo inicial, para contas manuais); quando ambos existirem e forem
+  diferentes, a divergência MUST ser exposta para exibição.
 - **FR-011**: O dono MUST poder criar, editar, arquivar e desarquivar contas; contas MUST NOT
   ser excluídas fisicamente; arquivar preserva todo o histórico.
 - **FR-012**: Origem + identificador externo de conta MUST ser único por dono.
@@ -347,7 +349,9 @@ transação, efetivada, com o novo valor e auditoria da mudança.
   manuais em todos os campos editáveis.
 - **FR-020**: Em transações importadas, o dono MUST poder editar descrição editável,
   estabelecimento, categoria, natureza, transação relacionada e notas; valor, data, conta,
-  origem, identificador externo e descrição original MUST permanecer como vieram da fonte.
+  origem, identificador externo e descrição original MUST permanecer como vieram da fonte —
+  exceto quando a própria fonte atualiza uma transação pendente (US7), caso em que valor e
+  descrição de origem são atualizados na mesma transação, com auditoria.
 
 **Idempotência e unicidade**
 - **FR-021**: Origem + identificador externo MUST ser único por conta; regravação da mesma
@@ -373,9 +377,8 @@ transação, efetivada, com o novo valor e auditoria da mudança.
 - **FR-028**: Cada categoria MUST ter tipo `despesa`, `receita` ou `neutra` (não conta como
   entrada nem saída, ex.: transferências), herdado pelas subcategorias.
 - **FR-029**: Todo dono MUST receber, no primeiro acesso, o conjunto padrão de categorias
-  brasileiro conforme
-  [NEEDS CLARIFICATION: qual taxonomia padrão de categorias — estilo GuiaBolso (~15 categorias + subcategorias), enxuta sem subcategorias, ou importada do app legado controle-financeiro?],
-  incluindo sempre as categorias de sistema "Sem categoria", "Transferência entre contas",
+  brasileiro no estilo GuiaBolso (cerca de 15 categorias com subcategorias; lista exata
+  definida no plano), incluindo sempre as categorias de sistema "Sem categoria", "Transferência entre contas",
   "Pagamento de fatura", além de categorias para salário e tarifas bancárias.
 - **FR-030**: O dono MUST poder criar, renomear, ocultar, mover (trocar de pai), excluir
   logicamente e restaurar categorias; categorias de sistema podem ser renomeadas, mas não
@@ -438,7 +441,7 @@ transação, efetivada, com o novo valor e auditoria da mudança.
   externo opcional; catálogo de referência + personalizadas do dono.
 - **Conta**: pertence a uma instituição. Nome, apelido, tipo (corrente, carteira digital,
   cartão de crédito, poupança, investimento), moeda, origem, identificador externo, 4 últimos
-  dígitos, situação, saldo (ver FR-010); para cartão: limite, dia de fechamento e vencimento.
+  dígitos, situação, saldo informado pela fonte + data de referência (ver FR-010); para cartão: limite, dia de fechamento e vencimento.
 - **Transação**: movimento numa conta. Valor em centavos com sinal, data (São Paulo), horário
   opcional, descrição original e editável, estabelecimento, status, origem, identificador
   externo, lote, categoria + origem/confiança da atribuição, natureza, transação relacionada,
@@ -470,6 +473,18 @@ transação, efetivada, com o novo valor e auditoria da mudança.
   mês de extrato de todas as contas é percebida como instantânea (≤ 1 segundo).
 - **SC-008**: O Doug consegue cadastrar uma conta manual e lançar uma transação manual em
   menos de 1 minuto cada (medido quando a tela da feature 012 existir).
+
+## Clarifications
+
+### Session 2026-10-02
+
+- Q: Qual taxonomia padrão de categorias? → A: Estilo GuiaBolso, cerca de 15 categorias com
+  subcategorias; a lista exata fica no plano.
+- Q: Como tratar transação pendente que muda de valor na confirmação? → A: Atualiza a mesma
+  transação; o valor anterior fica na auditoria; campos protegidos por edição manual ficam
+  intocados.
+- Q: Saldo armazenado ou calculado? → A: Ambos — guarda o saldo da fonte com data de
+  referência e oferece o saldo calculado a partir das transações; exibe a divergência.
 
 ## Assumptions
 
