@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain
+- [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic (no implementation details)
@@ -34,7 +34,6 @@
 - Iteração 1: removida menção à biblioteca de UI específica em Assumptions (vazamento de
   implementação). Referências a WCAG 2.1 AA, fuso `America/Sao_Paulo` e centavos inteiros são
   padrões/regras da constitution, não detalhes de implementação.
-- 3 marcadores [NEEDS CLARIFICATION] pendentes (dentro do limite): FR-002 (direção
-  visual/paleta), FR-007 (destinos da navegação principal), FR-031 (modo privacidade já nesta
-  feature). Resolver em `/speckit-clarify` antes do `/speckit-plan`.
+- Clarificações resolvidas pelo Doug em 2026-10-02 (Q1=A, Q2=A, Q3=A) e gravadas na seção
+  Clarifications da spec (FR-002, FR-007, FR-031). Spec aprovada no Gate 1. Checklist completo.
 - Items marked incomplete require spec updates before `/speckit-clarify` or `/speckit-plan`
