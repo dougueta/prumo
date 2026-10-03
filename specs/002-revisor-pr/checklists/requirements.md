@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain
+- [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic (no implementation details)
@@ -36,9 +36,8 @@
   e a ferramenta Gemini Code Assist aparecem por serem requisitos de produto definidos pela
   constitution/roadmap, não escolhas de implementação. O mecanismo concreto da verificação de
   revisão (como é calculada) fica para o plano.
-- Pendentes: 3 marcadores [NEEDS CLARIFICATION] cobrindo 2 perguntas — Q1 (identidade dos agentes
-  no GitHub, FR-009) e Q2 (saída de emergência com revisor indisponível, Edge Cases + FR-024).
-  Resolver no `/speckit-clarify` antes do Gate 1.
+- Q1 e Q2 respondidas pelo Doug em 2026-10-02 (ver seção Clarifications da spec); spec aprovada
+  no Gate 1. Checklist completo.
 - Dependência externa não bloqueante: pesquisa R5 do Gemini (capacidades do Gemini Code Assist),
   registrada em Assumptions e FR-016.
 - Iteração 1 de validação: todos os demais itens passam.

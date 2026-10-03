@@ -2,7 +2,7 @@
 
 **Feature Branch**: `002-revisor-pr`
 **Created**: 2026-10-02
-**Status**: Draft
+**Status**: Approved (Gate 1, 2026-10-02)
 **Iniciativa**: 0 · Plataforma
 **Onda**: 1
 **Agente**: Claude (revisor: Gemini)
@@ -193,9 +193,8 @@ terceiro e verificar que o fluxo segue.
 
 - **Revisor indisponível** (o Gemini não responde, cota esgotada, serviço fora; ou o Claude não
   pode ser executado): a verificação de revisão permanece pendente com "aguardando veredito de
-  <revisor>" e o PR fica bloqueado; é possível re-solicitar a revisão.
-  Tratamento além disso: [NEEDS CLARIFICATION: existe saída de emergência quando o revisor
-  designado fica indisponível por muito tempo? — ver Q2].
+  <revisor>" e o PR fica bloqueado; é possível re-solicitar a revisão. Não há bypass: a única
+  exceção é a correção urgente de produção com rótulo `emergencia` (FR-024).
 - **PR sem spec**: PR que altera arquivos fora das áreas de processo (`docs/`, arquivos de
   agentes, `.specify/`, `.gemini/`, `.github/` de processo) e cuja branch não corresponde a uma
   pasta `specs/NNN-slug/` com `spec.md` → verificação falha com "PR sem spec (Constitution I)".
@@ -254,8 +253,10 @@ terceiro e verificar que o fluxo segue.
   (ex.: "aguardando veredito de Gemini", "veredito desatualizado", "rótulo de autor ausente ou
   ambíguo", "PR sem spec", "achados sem resposta: #2, #5").
 - **FR-009**: A verificação MUST identificar a autoria de um veredito de forma que um agente
-  autor não consiga se passar pelo revisor designado.
-  [NEEDS CLARIFICATION: sob qual identidade cada agente publica no GitHub? — ver Q1]
+  autor não consiga se passar pelo revisor designado: só valem vereditos publicados pelo bot do
+  Gemini (PRs `autor:claude`/`autor:doug`) ou pelo app gratuito "prumo-revisor" do Doug (PRs
+  `autor:gemini`). Comentários da conta do Doug — usada pelos agentes autores — nunca contam como
+  veredito.
 - **FR-010**: A verificação MUST desconsiderar vereditos do agente autor, de agentes que não são
   o revisor designado e fora do formato obrigatório, registrando aviso no PR.
 - **FR-011**: A verificação MUST falhar quando a marcação de coautoria dos commits contradisser o
@@ -296,16 +297,19 @@ terceiro e verificar que o fluxo segue.
   processo · emenda), Rótulos, Checklist do autor (testes antes da implementação, verificações
   verdes, sem segredo/dado real, rebase na versão principal, todos os FRs cobertos) e Respostas
   aos achados.
-- **FR-022**: O repositório MUST ter os rótulos `autor:claude`, `autor:gemini`, `autor:doug`, um
+- **FR-022**: O repositório MUST ter os rótulos `autor:claude`, `autor:gemini`, `autor:doug`,
+  `emergencia`, um
   rótulo por iniciativa do roadmap (0 a 10) e um marco (milestone) por iniciativa.
 
 **Processo e transição**
 - **FR-023**: Ao integrar esta feature, a exceção de bootstrap MUST ser encerrada e registrada
   na documentação de processo (`docs/workflow.md`, `AGENTS.md`, `GEMINI.md`), com a data de fim,
   e `docs/gemini-handoff.md` MUST passar a listar os PRs aguardando revisão do Gemini.
-- **FR-024**: Indisponibilidade prolongada do revisor designado MUST ser tratada conforme
-  [NEEDS CLARIFICATION: saída de emergência — ver Q2]; qualquer exceção usada MUST ficar
-  registrada no PR com motivo.
+- **FR-024**: Indisponibilidade do revisor designado MUST NOT ter bypass: o PR aguarda, com
+  revisão re-solicitável. Única exceção: correção urgente de produção com rótulo `emergencia`,
+  que o Doug pode integrar sem veredito desde que o PR registre o motivo; a revisão independente
+  MUST ser feita após o merge em até 7 dias, e a verificação/documentação MUST sinalizar
+  emergências com revisão pós-merge pendente ou vencida.
 - **FR-025**: Esta feature MUST custar R$ 0/mês: nenhuma assinatura, API paga ou serviço novo com
   cobrança recorrente.
 
@@ -343,6 +347,17 @@ terceiro e verificar que o fluxo segue.
   veredito seguinte.
 - **SC-008**: Custo recorrente adicional = R$ 0/mês.
 
+## Clarifications
+
+### Session 2026-10-02
+
+- Q: Sob qual identidade cada agente publica no GitHub? → A: Agentes autores usam a conta do
+  Doug; o revisor Claude publica o veredito via GitHub App gratuito "prumo-revisor"; o Gemini via
+  o bot dele. A verificação só aceita vereditos desses dois bots (FR-009).
+- Q: Existe saída de emergência quando o revisor designado fica indisponível? → A: Sem bypass; o
+  PR aguarda. Exceção apenas para correção urgente de produção com rótulo `emergencia`, motivo
+  registrado no PR e revisão independente pós-merge em até 7 dias (FR-024).
+
 ## Assumptions
 
 - O Gemini Code Assist (app do GitHub, gratuito para pessoas físicas) é o revisor dos PRs do
@@ -356,8 +371,9 @@ terceiro e verificar que o fluxo segue.
   nenhuma chamada de API paga é feita em CI.
 - As verificações automáticas usam a cota gratuita da plataforma de CI do repositório (mesma da
   feature 001).
-- Os agentes abrem PRs e fazem push usando credenciais do Doug ou credenciais próprias conforme
-  Q1; em ambos os casos só o Doug tem permissão de merge.
+- Os agentes autores abrem PRs e fazem push com a conta do Doug; o revisor Claude publica pelo
+  app gratuito "prumo-revisor" (instalado só neste repositório, chave guardada localmente, fora do
+  repo); o Gemini publica pelo bot dele. Só o Doug integra (merge).
 - Como o GitHub não permite aprovar o próprio PR, a aprovação do Doug é o ato de merge (FR-004).
 - A marcação de coautoria nos commits (`Co-Authored-By`) já é prática dos agentes e é
   estendida a todos os commits.
