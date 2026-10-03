@@ -89,7 +89,10 @@ pré-visualização e ver o texto novo; após o merge, ver o texto em produção
 1. **Given** um PR aberto, **When** o processo de publicação conclui, **Then** um link de
    pré-visualização aparece no PR.
 2. **Given** um link de pré-visualização, **When** acessado, **Then** a versão exibe o ambiente
-   `preview` e **nunca** está conectada aos dados de produção.
+   `preview`, o selo "Demonstração — dados fictícios", e **não** está conectada a nenhum
+   ambiente de dados persistente (nem produção, nem outro).
+5. **Given** dois PRs abertos em paralelo, **When** o Doug usa as duas pré-visualizações,
+   **Then** as ações em uma não afetam a outra.
 3. **Given** um merge na versão principal, **When** a publicação conclui, **Then** a produção
    exibe a nova versão e o ambiente `production`.
 4. **Given** a versão de pré-visualização ou de produção, **When** acessada por qualquer pessoa
@@ -186,10 +189,10 @@ pelo ícone e ativar modo avião.
 **Publicação**
 - **FR-010**: Cada proposta de mudança MUST gerar uma pré-visualização acessível por link
   publicado na própria proposta.
-- **FR-011**: Pré-visualizações MUST usar um ambiente de dados separado da produção.
-  Ambiente de preview: [NEEDS CLARIFICATION: as pré-visualizações compartilham um único
-  ambiente de dados de homologação, ou cada PR recebe um ambiente de dados próprio e
-  descartável?]
+- **FR-011**: Pré-visualizações MUST rodar em **modo demonstração**: sem conexão com nenhum
+  ambiente de dados persistente, servindo exclusivamente dados sintéticos (gerados pela
+  User Story 4) e sinalizando visivelmente "Demonstração — dados fictícios" em todas as telas.
+  Ações que gravariam dados funcionam apenas em memória durante a sessão.
 - **FR-012**: Merge na versão principal MUST atualizar a produção automaticamente.
 - **FR-013**: Pré-visualização e produção MUST ficar inacessíveis a qualquer pessoa além do Doug
   até que a feature 006 (Login) assuma essa proteção.
@@ -210,13 +213,16 @@ pelo ícone e ativar modo avião.
 - **FR-021**: A interface MUST usar idioma `pt-BR` e fuso `America/Sao_Paulo` como padrão.
 
 **Custos**
-- **FR-022**: A infraestrutura desta feature MUST caber no limite de custo mensal definido:
-  [NEEDS CLARIFICATION: qual o teto de custo mensal de infraestrutura aceitável para o Prumo?]
+- **FR-022**: A infraestrutura desta feature MUST custar **R$ 0/mês** (somente planos
+  gratuitos). Qualquer feature futura que exija custo recorrente MUST declarar o custo na sua
+  spec e obter aprovação explícita do Doug.
+- **FR-023**: O sistema MUST evitar que a produção fique indisponível por inatividade (pausa do
+  plano gratuito) ou, se ocorrer, detectar e avisar o Doug em até 24 horas.
 
 ### Key Entities
 
-- **Ambiente**: `local`, `preview` ou `production`; cada um com sua configuração e seu
-  ambiente de dados isolado.
+- **Ambiente**: `local` (ambiente de dados local e isolado), `preview` (modo demonstração,
+  sem dados persistentes) ou `production` (único ambiente de dados hospedado).
 - **Configuração**: conjunto nomeado de variáveis obrigatórias/opcionais, com descrição e
   indicação de segredo.
 - **Conjunto de dados sintéticos**: identificado por semente; contém instituições, contas,
@@ -239,9 +245,22 @@ pelo ícone e ativar modo avião.
   semente.
 - **SC-007**: O app é instalável e abre em tela cheia em Android e iOS.
 
+## Clarifications
+
+### Session 2026-10-02
+
+- Q: Ambiente de dados das pré-visualizações? → A: Modo demonstração com dados sintéticos em
+  memória, sem banco. Motivo: a conta do Doug no plano gratuito do provedor de dados tem só
+  1 vaga livre (outra está em uso pelo projeto Helux); ela vai para a produção.
+- Q: Teto de custo mensal? → A: R$ 0 (somente planos gratuitos). Custos futuros (Open
+  Finance, IA) serão decididos feature a feature com aprovação do Doug (ver pesquisas R1/R3).
+
 ## Assumptions
 
-- O Doug desenvolve no Windows com Git Bash; o CI roda em Linux.
+- O Doug desenvolve no Windows com Git Bash e Docker Desktop (já instalado); o CI roda em Linux.
+- O ambiente de dados local roda em contêiner na máquina do desenvolvedor.
+- Como pré-visualizações não têm banco, os testes ponta a ponta de fluxos com dados rodam no
+  CI contra um ambiente de dados efêmero criado no próprio CI, não contra a pré-visualização.
 - A stack definida na constitution (Next.js, Supabase, Vercel) será usada; detalhes ficam no plano.
 - Domínio de produção: o subdomínio padrão gratuito da plataforma de hospedagem; domínio
   próprio fica fora de escopo.

@@ -13,7 +13,7 @@
 
 ## Requirement Completeness
 
-- [ ] No [NEEDS CLARIFICATION] markers remain — 2 pendentes (FR-011, FR-022)
+- [x] No [NEEDS CLARIFICATION] markers remain
 - [x] Requirements are testable and unambiguous
 - [x] Success criteria are measurable
 - [x] Success criteria are technology-agnostic (no implementation details)
@@ -34,4 +34,4 @@
 - Por ser uma feature de plataforma, os "usuários" são o Doug e os agentes; formatos de
   arquivo (CSV/OFX) e o sistema operacional são citados por serem requisitos de produto, não
   escolhas de implementação. A stack aparece só em Assumptions, referenciando a constitution.
-- Aguardando respostas de Q1 (FR-011) e Q2 (FR-022).
+- Q1 e Q2 respondidas em 2026-10-02 (ver seção Clarifications da spec). Checklist completo.
