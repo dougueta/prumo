@@ -1,14 +1,11 @@
 <!--
 Sync Impact Report
-- Version change: (template) → 1.0.0 (nome do projeto: Prumo)
-- Principles: todos definidos pela primeira vez (I–X)
-- Added sections: Restrições Técnicas e Stack; Fluxo de Desenvolvimento, Paralelismo e Revisão; Governança
-- Removed sections: nenhuma
-- Templates:
-  ✅ .specify/templates/plan-template.md — Constitution Check genérico lê este arquivo; checklist explícito em docs/workflow.md
-  ✅ .specify/templates/spec-template.md — sem mudança estrutural; cabeçalho de iniciativa exigido via docs/workflow.md
-  ✅ .specify/templates/tasks-template.md — test-first já previsto
-  ✅ AGENTS.md, CLAUDE.md, GEMINI.md, .gemini/styleguide.md — alinhados
+- Version change: 1.0.0 → 1.1.0 (MINOR: regras novas em seções existentes)
+- Modified principles: VII. Contratos Compartilhados e Donos de Dados (+ modo demonstração)
+- Modified sections: Restrições Técnicas e Stack (+ ambientes e custo)
+- Added/Removed sections: nenhuma
+- Origem: spec 001 clarify + ADR 0006, aprovado pelo Doug em 2026-10-02
+- Templates: ✅ plan/spec/tasks templates (sem mudança estrutural) · ✅ docs/review-checklist.md atualizado
 - Deferred TODOs: nenhum
 -->
 
@@ -107,6 +104,9 @@ objetiva.
   features MUST NOT alterar o schema de uma tabela que não possuem; a mudança é proposta
   na spec da dona.
 - Migrações usam timestamp (Supabase CLI) e são sempre aditivas/reversíveis quando possível.
+- Todo acesso a dados passa por repositórios com duas implementações: Supabase e memória.
+  Toda feature com dados MUST funcionar no **modo demonstração** (pré-visualizações sem
+  banco, dados sintéticos, selo "Demonstração — dados fictícios") — ver ADR 0006.
 
 **Rationale**: é o que torna seguro o desenvolvimento paralelo por agentes diferentes.
 
@@ -162,6 +162,10 @@ Cada feature MUST entregar, distribuído nos artefatos do Spec Kit:
 - **Testes**: Vitest (unit/integração), Playwright (E2E), mocks de contrato para externos.
 - **Qualidade**: ESLint + Prettier + `tsc --noEmit` no CI; Conventional Commits.
 - Dependência nova MUST ser listada e justificada no `plan.md` da feature que a introduz.
+- **Ambientes** (ADR 0006): `local` (Supabase via Docker), `CI` (Supabase efêmero no job),
+  `preview` (modo demonstração, sem banco), `production` (único projeto Supabase hospedado).
+- **Custo**: teto padrão R$ 0/mês. Qualquer custo recorrente (serviço, API, plano) MUST ser
+  declarado na spec da feature que o introduz, com valor estimado, e aprovado pelo Doug.
 
 ## Fluxo de Desenvolvimento, Paralelismo e Revisão
 
@@ -190,4 +194,4 @@ Cada feature MUST entregar, distribuído nos artefatos do Spec Kit:
 - Todo revisor de PR verifica conformidade com esta constitution.
 - Orientação operacional para agentes: `AGENTS.md` (comum), `CLAUDE.md`, `GEMINI.md`.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-02 | **Last Amended**: 2026-10-02
+**Version**: 1.1.0 | **Ratified**: 2026-10-02 | **Last Amended**: 2026-10-02

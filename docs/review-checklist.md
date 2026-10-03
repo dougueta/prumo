@@ -48,6 +48,8 @@ como se fosse defeito. Se não há problemas, diga APROVADO sem enrolação.
 - [ ] Nenhuma alteração de schema em tabela de outra feature.
 - [ ] Migração com timestamp, aditiva/reversível.
 - [ ] Contratos em `contracts/` batem com a implementação (rotas, payloads, erros).
+- [ ] A feature funciona no modo demonstração (repositório em memória) — ADR 0006.
+- [ ] Nenhum custo recorrente novo sem estar declarado e aprovado na spec.
 
 ## 8. Qualidade geral (X)
 - [ ] Sem abstrações não exigidas pela spec; dependências novas justificadas no plan.
