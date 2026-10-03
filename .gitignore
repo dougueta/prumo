@@ -25,3 +25,6 @@ faturas/
 .DS_Store
 .vercel
 *.log
+
+# estado local do Spec Kit (muda por worktree/branch)
+.specify/feature.json
