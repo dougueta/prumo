@@ -9,6 +9,19 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Fixa a raiz do projeto (há um package-lock.json solto no diretório do usuário).
   turbopack: { root: path.resolve(".") },
+  // Guia PWA do Next 16: o service worker nunca deve ficar em cache.
+  async headers() {
+    return [
+      {
+        source: "/sw.js",
+        headers: [
+          { key: "Content-Type", value: "application/javascript; charset=utf-8" },
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+          { key: "Content-Security-Policy", value: "default-src 'self'; script-src 'self'" },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

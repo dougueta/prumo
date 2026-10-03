@@ -1,11 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { DemoBadge } from "@/components/demo-badge";
+import { ServiceWorkerRegister } from "@/components/sw-register";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Prumo",
   description: "Suas finanças no prumo.",
   applicationName: "Prumo",
+  appleWebApp: { capable: true, title: "Prumo", statusBarStyle: "default" },
+  icons: { apple: "/icons/apple-touch-icon.png" },
 };
 
 export const viewport: Viewport = {
@@ -22,6 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <DemoBadge />
         {children}
+        <ServiceWorkerRegister />
       </body>
     </html>
   );

@@ -57,7 +57,7 @@
 
 - [x] T021 [US2] Workflow `ci.yml`: gatilhos `pull_request` + `push main`; jobs paralelos `quality` (lint, format:check, typecheck), `unit`, `integration` (setup-cli + `supabase start` + migrações), `e2e` (build + Playwright + upload do relatório); caches de npm, Playwright e Docker — `.github/workflows/ci.yml` (FR-006, FR-007, FR-008)
 - [x] T022 [US2] Garantir que nenhum teste usa rede externa: `tests/setup.ts` bloqueia `fetch` para hosts não-locais — com teste que comprova o bloqueio — `tests/unit/no-external-network.test.ts` (FR-008)
-- [ ] T023 [US2] PR de verificação: branch temporária com erro de tipo → CI vermelho; registrar evidência no PR da 001 e apagar branch (FR-007, SC-002, SC-003)
+- [x] T023 [US2] PR de verificação: branch temporária com erro de tipo → CI vermelho; registrar evidência no PR da 001 e apagar branch (FR-007, SC-002, SC-003)
 
 **Checkpoint**: rede de segurança ativa.
 
@@ -108,9 +108,9 @@
 
 **Independent Test**: instalar em Android/iOS a partir da produção; modo avião → página offline.
 
-- [ ] T041 [P] [US5] E2E: `/manifest.webmanifest` válido (nome "Prumo", `display: standalone`, ícones 192/512/maskable), service worker registrado, navegação offline cai em `/~offline` — `tests/e2e/pwa.spec.ts` (FR-019, FR-020)
-- [ ] T042 [US5] Ícones em `public/icons/` (192, 512, maskable, apple-touch) e `src/app/manifest.ts`
-- [ ] T043 [US5] Service worker `public/sw.js` (precache `/~offline`, navegação network-first com fallback) + registro em `src/components/sw-register.tsx` + `src/app/~offline/page.tsx` ("Você está sem conexão") até T041 passar
+- [x] T041 [P] [US5] E2E: `/manifest.webmanifest` válido (nome "Prumo", `display: standalone`, ícones 192/512/maskable), service worker registrado, navegação offline cai em `/~offline` — `tests/e2e/pwa.spec.ts` (FR-019, FR-020)
+- [x] T042 [US5] Ícones em `public/icons/` (192, 512, maskable, apple-touch) e `src/app/manifest.ts`
+- [x] T043 [US5] Service worker `public/sw.js` (precache `/~offline`, navegação network-first com fallback) + registro em `src/components/sw-register.tsx` + `src/app/~offline/page.tsx` ("Você está sem conexão") até T041 passar
 - [ ] T044 [US5] Verificação manual em Android (Chrome) e iOS (Safari) — evidência (prints sem dados) no PR (SC-007)
 
 ---
