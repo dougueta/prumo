@@ -55,8 +55,8 @@
 
 **Independent Test**: PR com erro de tipo proposital falha; corrigido, passa em ≤ 10 min.
 
-- [ ] T021 [US2] Workflow `ci.yml`: gatilhos `pull_request` + `push main`; jobs paralelos `quality` (lint, format:check, typecheck), `unit`, `integration` (setup-cli + `supabase start` + migrações), `e2e` (build + Playwright + upload do relatório); caches de npm, Playwright e Docker — `.github/workflows/ci.yml` (FR-006, FR-007, FR-008)
-- [ ] T022 [US2] Garantir que nenhum teste usa rede externa: `tests/setup.ts` bloqueia `fetch` para hosts não-locais — com teste que comprova o bloqueio — `tests/unit/no-external-network.test.ts` (FR-008)
+- [x] T021 [US2] Workflow `ci.yml`: gatilhos `pull_request` + `push main`; jobs paralelos `quality` (lint, format:check, typecheck), `unit`, `integration` (setup-cli + `supabase start` + migrações), `e2e` (build + Playwright + upload do relatório); caches de npm, Playwright e Docker — `.github/workflows/ci.yml` (FR-006, FR-007, FR-008)
+- [x] T022 [US2] Garantir que nenhum teste usa rede externa: `tests/setup.ts` bloqueia `fetch` para hosts não-locais — com teste que comprova o bloqueio — `tests/unit/no-external-network.test.ts` (FR-008)
 - [ ] T023 [US2] PR de verificação: branch temporária com erro de tipo → CI vermelho; registrar evidência no PR da 001 e apagar branch (FR-007, SC-002, SC-003)
 
 **Checkpoint**: rede de segurança ativa.

@@ -56,8 +56,9 @@ describe("parseEnv", () => {
   });
 
   it("falha em produção sem a trava provisória", () => {
-    const { PRODUCTION_GATE_PASSWORD: _omit, ...rest } = production;
-    expect(() => parseEnv(rest)).toThrow(/PRODUCTION_GATE_PASSWORD/);
+    const withoutPassword: Record<string, string | undefined> = { ...production };
+    delete withoutPassword.PRODUCTION_GATE_PASSWORD;
+    expect(() => parseEnv(withoutPassword)).toThrow(/PRODUCTION_GATE_PASSWORD/);
   });
 
   it("falha em produção com senha da trava curta", () => {
