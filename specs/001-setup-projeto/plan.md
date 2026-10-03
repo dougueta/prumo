@@ -16,7 +16,7 @@ dados sintéticos determinístico (JSON/CSV/OFX). Detalhes e escolhas em [resear
 
 **Language/Version**: TypeScript 5.9.3 (strict) · Node 24 LTS
 **Primary Dependencies**: Next.js 16.3, React 19.3, Tailwind 4.3, @supabase/supabase-js 2.117,
-zod 4.6, @faker-js/faker 10.6 (dev); service worker próprio (sem Serwist — ver research R-08)
+zod 4.6; service worker próprio (sem Serwist — ver research R-08)
 **Storage**: Supabase Postgres — apenas a função `health_ping()` nesta feature
 **Testing**: Vitest 5 + Testing Library 16 (unit/integração), Playwright 1.63 (E2E)
 **Target Platform**: Web/PWA — Chrome Android, Safari iOS, desktop; deploy Vercel (Hobby)
@@ -80,7 +80,8 @@ src/
     ├── profile.ts              # perfil (instituições/contas fictícias)
     ├── generate.ts             # generateDataset() — puro
     ├── export-csv.ts · export-ofx.ts
-    └── cli.ts                  # contrato synthetic-cli
+    └── cli.ts                  # runCli() — contrato synthetic-cli
+scripts/synthetic.ts            # entrada do `npm run synthetic` (lê process.env fora de src/)
 public/icons/                   # ícones PWA (192, 512, maskable, apple-touch)
 public/sw.js                    # service worker: precache /~offline + fallback de navegação
 supabase/
@@ -123,7 +124,7 @@ playwright.config.ts · next.config.ts · tsconfig.json · README (seção "Iní
 preview; `ok` com `data.status = unreachable`.
 
 ### Algoritmo — `generateDataset({ seed, months, anchorDate })` (FR-014)
-1. `rng = mulberry32(seed)`; `faker.seed(seed)`; meses = janela que termina em `anchorDate`.
+1. `rng = mulberry32(seed)`; meses = janela que termina em `anchorDate`.
 2. Instituições/contas do `profile.ts` (fixas).
 3. Por mês: salário dividido nas 2 contas (dia 5 e 20); 5–7 assinaturas fixas (mesmo dia/valor,
    1 reajuste no período); 30–60 compras distribuídas (70% Cartão Órbita); transferências

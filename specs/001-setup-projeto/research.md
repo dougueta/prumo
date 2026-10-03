@@ -84,8 +84,9 @@ Versões verificadas em 2026-10-02 via `npm view`.
 - **Rationale**: R$ 0, sem serviço extra, aviso em ≤ 24 h.
 
 ## R-12 · Gerador de dados sintéticos (FR-014–FR-018)
-- **Decision**: módulo TypeScript `src/synthetic/` com PRNG próprio por semente
-  (mulberry32) + `@faker-js/faker` 10 (locale `pt_BR`, `faker.seed(semente)`); CLI
+- **Decision (revisada na implementação)**: módulo TypeScript `src/synthetic/` com PRNG próprio
+  por semente (mulberry32) e listas curadas de estabelecimentos **fictícios** — sem `faker`
+  (nomes gerados por faker podem coincidir com empresas/pessoas reais; FR-015). CLI
   `npm run synthetic -- --seed 42 --months 12 --out tests/fixtures/synthetic`.
   Saídas: `dataset.json` (formato próprio, ver data-model), `extrato-*.csv`, `extrato-*.ofx`
   (OFX 2.x XML). Instituições com **nomes fictícios** ("Banco Aurora (simulado)" etc.),

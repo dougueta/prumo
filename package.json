@@ -16,7 +16,7 @@
     "test:unit": "vitest run --project unit",
     "test:integration": "vitest run --project integration",
     "test:e2e": "next build && playwright test",
-    "synthetic": "tsx src/synthetic/cli.ts"
+    "synthetic": "tsx scripts/synthetic.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.2",
@@ -27,7 +27,6 @@
     "zod": "4.6.5"
   },
   "devDependencies": {
-    "@faker-js/faker": "10.6.0",
     "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/dom": "10.4.2",

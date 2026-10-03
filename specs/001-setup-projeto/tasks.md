@@ -88,17 +88,17 @@
 **Independent Test**: mesma semente ⇒ JSON idêntico; outra semente ⇒ diferente e válido.
 
 ### Testes
-- [ ] T032 [P] [US4] Teste unit do PRNG (`mulberry32` determinístico) — `tests/unit/synthetic/prng.test.ts`
-- [ ] T033 [P] [US4] Teste das invariantes do data-model §5 (inteiros, pares de transferência somam 0, parcelas consecutivas, contagens mínimas, `synthetic: true`, sem dados reais) + determinismo byte a byte + desempenho ≤ 30 s — `tests/unit/synthetic/generate.test.ts` (FR-014, FR-015, FR-018, SC-006)
-- [ ] T034 [P] [US4] Testes dos exportadores CSV (`;`, vírgula decimal, BOM) e OFX 2.x (XML válido, `FITID` estável) — `tests/unit/synthetic/exporters.test.ts` (FR-016)
-- [ ] T035 [P] [US4] Teste da CLI: recusa com exit 2 em `APP_ENV=production`; exit 1 com `--months 11` — `tests/unit/synthetic/cli.test.ts` (FR-017)
+- [x] T032 [P] [US4] Teste unit do PRNG (`mulberry32` determinístico) — `tests/unit/synthetic/prng.test.ts`
+- [x] T033 [P] [US4] Teste das invariantes do data-model §5 (inteiros, pares de transferência somam 0, parcelas consecutivas, contagens mínimas, `synthetic: true`, sem dados reais) + determinismo byte a byte + desempenho ≤ 30 s — `tests/unit/synthetic/generate.test.ts` (FR-014, FR-015, FR-018, SC-006)
+- [x] T034 [P] [US4] Testes dos exportadores CSV (`;`, vírgula decimal, BOM) e OFX 2.x (XML válido, `FITID` estável) — `tests/unit/synthetic/exporters.test.ts` (FR-016)
+- [x] T035 [P] [US4] Teste da CLI: recusa com exit 2 em `APP_ENV=production`; exit 1 com `--months 11` — `tests/unit/synthetic/cli.test.ts` (FR-017)
 
 ### Implementação
-- [ ] T036 [US4] `src/synthetic/prng.ts` até T032 passar
-- [ ] T037 [US4] `src/synthetic/profile.ts` + `src/synthetic/generate.ts` (algoritmo do plan) até T033 passar
-- [ ] T038 [P] [US4] `src/synthetic/export-csv.ts` e `src/synthetic/export-ofx.ts` até T034 passar
-- [ ] T039 [US4] `src/synthetic/cli.ts` + script `npm run synthetic` até T035 passar
-- [ ] T040 [US4] Gerar e versionar `tests/fixtures/synthetic/` (seed 42) + teste de CI que regenera e compara (fixture nunca fica desatualizada)
+- [x] T036 [US4] `src/synthetic/prng.ts` até T032 passar
+- [x] T037 [US4] `src/synthetic/profile.ts` + `src/synthetic/generate.ts` (algoritmo do plan) até T033 passar
+- [x] T038 [P] [US4] `src/synthetic/export-csv.ts` e `src/synthetic/export-ofx.ts` até T034 passar
+- [x] T039 [US4] `src/synthetic/cli.ts` + script `npm run synthetic` até T035 passar
+- [x] T040 [US4] Gerar e versionar `tests/fixtures/synthetic/` (seed 42) + teste de CI que regenera e compara (fixture nunca fica desatualizada)
 
 **Checkpoint**: dados sintéticos disponíveis para todas as features.
 

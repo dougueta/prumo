@@ -1,0 +1,6824 @@
+{
+  "schemaVersion": 1,
+  "synthetic": true,
+  "seed": 42,
+  "anchorDate": "2026-09-30",
+  "months": 12,
+  "institutions": [
+    {
+      "id": "inst-aurora",
+      "name": "Banco Aurora (simulado)",
+      "kind": "bank"
+    },
+    {
+      "id": "inst-horizonte",
+      "name": "Banco Horizonte (simulado)",
+      "kind": "bank"
+    },
+    {
+      "id": "inst-orbita",
+      "name": "Banco Órbita (simulado)",
+      "kind": "bank"
+    },
+    {
+      "id": "inst-pix",
+      "name": "Carteira Pix (simulada)",
+      "kind": "wallet"
+    }
+  ],
+  "accounts": [
+    {
+      "id": "acc-aurora",
+      "institutionId": "inst-aurora",
+      "name": "Conta Aurora (simulada)",
+      "type": "checking",
+      "receivesSalary": true
+    },
+    {
+      "id": "acc-horizonte",
+      "institutionId": "inst-horizonte",
+      "name": "Conta Horizonte (simulada)",
+      "type": "checking",
+      "receivesSalary": true
+    },
+    {
+      "id": "acc-pix",
+      "institutionId": "inst-pix",
+      "name": "Carteira Pix (simulada)",
+      "type": "wallet",
+      "receivesSalary": false
+    },
+    {
+      "id": "card-orbita",
+      "institutionId": "inst-orbita",
+      "name": "Cartão Órbita (simulado)",
+      "type": "credit_card",
+      "receivesSalary": false,
+      "creditLimitCents": 1500000,
+      "closingDay": 3,
+      "dueDay": 10
+    },
+    {
+      "id": "card-horizonte",
+      "institutionId": "inst-horizonte",
+      "name": "Cartão Horizonte (simulado)",
+      "type": "credit_card",
+      "receivesSalary": false,
+      "creditLimitCents": 800000,
+      "closingDay": 25,
+      "dueDay": 5
+    }
+  ],
+  "transactions": [
+    {
+      "id": "42-1",
+      "accountId": "card-orbita",
+      "date": "2025-10-01",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -16542,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-2",
+      "accountId": "card-orbita",
+      "date": "2025-10-01",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -14418,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-3",
+      "accountId": "card-horizonte",
+      "date": "2025-10-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-4",
+      "accountId": "card-orbita",
+      "date": "2025-10-02",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -6254,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-5",
+      "accountId": "card-orbita",
+      "date": "2025-10-03",
+      "description": "Café Grão Fictício",
+      "amountCents": -3343,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-6",
+      "accountId": "acc-aurora",
+      "date": "2025-10-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-7",
+      "accountId": "card-orbita",
+      "date": "2025-10-05",
+      "description": "Café Grão Fictício",
+      "amountCents": -1010,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-8",
+      "accountId": "acc-aurora",
+      "date": "2025-10-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-4",
+      "synthetic": true
+    },
+    {
+      "id": "42-9",
+      "accountId": "acc-pix",
+      "date": "2025-10-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-4",
+      "synthetic": true
+    },
+    {
+      "id": "42-10",
+      "accountId": "card-orbita",
+      "date": "2025-10-06",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -7683,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-11",
+      "accountId": "card-orbita",
+      "date": "2025-10-06",
+      "description": "Café Grão Fictício",
+      "amountCents": -2687,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-12",
+      "accountId": "card-horizonte",
+      "date": "2025-10-07",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -5337,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-13",
+      "accountId": "card-orbita",
+      "date": "2025-10-07",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -22578,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-14",
+      "accountId": "card-orbita",
+      "date": "2025-10-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -3990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-15",
+      "accountId": "acc-horizonte",
+      "date": "2025-10-10",
+      "description": "Tarifa Pacote de Serviços (simulada)",
+      "amountCents": -3500,
+      "kind": "fee",
+      "synthetic": true
+    },
+    {
+      "id": "42-16",
+      "accountId": "card-orbita",
+      "date": "2025-10-10",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -14210,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-17",
+      "accountId": "card-orbita",
+      "date": "2025-10-10",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -10074,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-18",
+      "accountId": "card-orbita",
+      "date": "2025-10-10",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -6828,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-19",
+      "accountId": "card-orbita",
+      "date": "2025-10-10",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -6851,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-20",
+      "accountId": "card-orbita",
+      "date": "2025-10-11",
+      "description": "Pet Shop Fictício",
+      "amountCents": -11419,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-21",
+      "accountId": "card-orbita",
+      "date": "2025-10-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-22",
+      "accountId": "card-orbita",
+      "date": "2025-10-12",
+      "description": "Pet Shop Fictício",
+      "amountCents": -3161,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-23",
+      "accountId": "card-orbita",
+      "date": "2025-10-12",
+      "description": "Transporte por App Fictício",
+      "amountCents": -4974,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-24",
+      "accountId": "card-orbita",
+      "date": "2025-10-13",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -5870,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-25",
+      "accountId": "acc-pix",
+      "date": "2025-10-14",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -3347,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-26",
+      "accountId": "card-horizonte",
+      "date": "2025-10-14",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -2743,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-27",
+      "accountId": "acc-pix",
+      "date": "2025-10-15",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3842,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-28",
+      "accountId": "card-orbita",
+      "date": "2025-10-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-29",
+      "accountId": "card-orbita",
+      "date": "2025-10-15",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -38331,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-30",
+      "accountId": "card-orbita",
+      "date": "2025-10-15",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -22239,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-31",
+      "accountId": "card-orbita",
+      "date": "2025-10-16",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -13456,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-32",
+      "accountId": "card-orbita",
+      "date": "2025-10-16",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -13888,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-33",
+      "accountId": "card-horizonte",
+      "date": "2025-10-17",
+      "description": "Transporte por App Fictício",
+      "amountCents": -2768,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-34",
+      "accountId": "card-orbita",
+      "date": "2025-10-17",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -29690,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-35",
+      "accountId": "acc-pix",
+      "date": "2025-10-18",
+      "description": "Transporte por App Fictício",
+      "amountCents": -2986,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-36",
+      "accountId": "card-orbita",
+      "date": "2025-10-19",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -4810,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-37",
+      "accountId": "card-orbita",
+      "date": "2025-10-19",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -4678,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-38",
+      "accountId": "acc-horizonte",
+      "date": "2025-10-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-39",
+      "accountId": "card-orbita",
+      "date": "2025-10-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-40",
+      "accountId": "card-orbita",
+      "date": "2025-10-20",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -8126,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-41",
+      "accountId": "card-orbita",
+      "date": "2025-10-20",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3788,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-42",
+      "accountId": "card-orbita",
+      "date": "2025-10-21",
+      "description": "Pet Shop Fictício",
+      "amountCents": -5972,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-43",
+      "accountId": "card-orbita",
+      "date": "2025-10-21",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -31912,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-44",
+      "accountId": "card-horizonte",
+      "date": "2025-10-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-45",
+      "accountId": "card-orbita",
+      "date": "2025-10-22",
+      "description": "Pet Shop Fictício",
+      "amountCents": -19899,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-46",
+      "accountId": "card-orbita",
+      "date": "2025-10-22",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -5623,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-47",
+      "accountId": "card-orbita",
+      "date": "2025-10-22",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3312,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-48",
+      "accountId": "card-orbita",
+      "date": "2025-10-22",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -8056,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-49",
+      "accountId": "card-horizonte",
+      "date": "2025-10-23",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -42330,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-50",
+      "accountId": "card-orbita",
+      "date": "2025-10-23",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -4419,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-51",
+      "accountId": "card-horizonte",
+      "date": "2025-10-25",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -5054,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-52",
+      "accountId": "card-orbita",
+      "date": "2025-10-25",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -11190,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-53",
+      "accountId": "card-horizonte",
+      "date": "2025-10-27",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -13576,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-54",
+      "accountId": "card-orbita",
+      "date": "2025-10-27",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -10572,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-55",
+      "accountId": "card-orbita",
+      "date": "2025-10-27",
+      "description": "Pet Shop Fictício",
+      "amountCents": -15642,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-56",
+      "accountId": "card-horizonte",
+      "date": "2025-10-28",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -37062,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-57",
+      "accountId": "card-orbita",
+      "date": "2025-10-28",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -14313,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-58",
+      "accountId": "acc-pix",
+      "date": "2025-10-31",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -3712,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-59",
+      "accountId": "card-horizonte",
+      "date": "2025-10-31",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -2882,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-60",
+      "accountId": "card-orbita",
+      "date": "2025-11-01",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -11710,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-61",
+      "accountId": "card-horizonte",
+      "date": "2025-11-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-62",
+      "accountId": "card-orbita",
+      "date": "2025-11-02",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -4538,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-63",
+      "accountId": "card-orbita",
+      "date": "2025-11-02",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1772,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-64",
+      "accountId": "acc-aurora",
+      "date": "2025-11-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-65",
+      "accountId": "acc-horizonte",
+      "date": "2025-11-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -128232,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-7",
+      "synthetic": true
+    },
+    {
+      "id": "42-66",
+      "accountId": "card-horizonte",
+      "date": "2025-11-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 128232,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-7",
+      "synthetic": true
+    },
+    {
+      "id": "42-67",
+      "accountId": "card-orbita",
+      "date": "2025-11-05",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -5458,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-68",
+      "accountId": "card-orbita",
+      "date": "2025-11-05",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -42673,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-69",
+      "accountId": "acc-aurora",
+      "date": "2025-11-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-5",
+      "synthetic": true
+    },
+    {
+      "id": "42-70",
+      "accountId": "acc-pix",
+      "date": "2025-11-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-5",
+      "synthetic": true
+    },
+    {
+      "id": "42-71",
+      "accountId": "card-horizonte",
+      "date": "2025-11-07",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -14248,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-72",
+      "accountId": "card-orbita",
+      "date": "2025-11-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -3990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-73",
+      "accountId": "card-orbita",
+      "date": "2025-11-09",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -22080,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-74",
+      "accountId": "acc-aurora",
+      "date": "2025-11-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -417978,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-6",
+      "synthetic": true
+    },
+    {
+      "id": "42-75",
+      "accountId": "acc-pix",
+      "date": "2025-11-10",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -35030,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-76",
+      "accountId": "acc-pix",
+      "date": "2025-11-10",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5974,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-77",
+      "accountId": "card-orbita",
+      "date": "2025-11-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 417978,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-6",
+      "synthetic": true
+    },
+    {
+      "id": "42-78",
+      "accountId": "card-orbita",
+      "date": "2025-11-11",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -15682,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-79",
+      "accountId": "card-orbita",
+      "date": "2025-11-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-80",
+      "accountId": "card-orbita",
+      "date": "2025-11-12",
+      "description": "Pet Shop Fictício",
+      "amountCents": -17925,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-81",
+      "accountId": "card-orbita",
+      "date": "2025-11-13",
+      "description": "Transporte por App Fictício",
+      "amountCents": -2959,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-82",
+      "accountId": "card-orbita",
+      "date": "2025-11-13",
+      "description": "Pet Shop Fictício",
+      "amountCents": -11542,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-83",
+      "accountId": "card-orbita",
+      "date": "2025-11-13",
+      "description": "Pet Shop Fictício",
+      "amountCents": -8774,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-84",
+      "accountId": "card-orbita",
+      "date": "2025-11-14",
+      "description": "Loja de Eletro Fictícia 1/6",
+      "amountCents": -25000,
+      "kind": "installment",
+      "installment": {
+        "number": 1,
+        "total": 6,
+        "groupId": "42-inst-1"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-85",
+      "accountId": "card-orbita",
+      "date": "2025-11-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-86",
+      "accountId": "acc-pix",
+      "date": "2025-11-16",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -8090,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-87",
+      "accountId": "acc-pix",
+      "date": "2025-11-16",
+      "description": "Pix recebido (simulado)",
+      "amountCents": 12878,
+      "kind": "income_other",
+      "synthetic": true
+    },
+    {
+      "id": "42-88",
+      "accountId": "card-orbita",
+      "date": "2025-11-16",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -13312,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-89",
+      "accountId": "card-orbita",
+      "date": "2025-11-16",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -22193,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-90",
+      "accountId": "card-orbita",
+      "date": "2025-11-16",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1789,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-91",
+      "accountId": "card-orbita",
+      "date": "2025-11-16",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -3472,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-92",
+      "accountId": "card-orbita",
+      "date": "2025-11-17",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -3851,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-93",
+      "accountId": "card-orbita",
+      "date": "2025-11-17",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -11790,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-94",
+      "accountId": "card-orbita",
+      "date": "2025-11-17",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -14555,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-95",
+      "accountId": "acc-pix",
+      "date": "2025-11-18",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -10290,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-96",
+      "accountId": "card-horizonte",
+      "date": "2025-11-18",
+      "description": "Pet Shop Fictício",
+      "amountCents": -8968,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-97",
+      "accountId": "acc-horizonte",
+      "date": "2025-11-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-98",
+      "accountId": "acc-pix",
+      "date": "2025-11-20",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -6880,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-99",
+      "accountId": "card-orbita",
+      "date": "2025-11-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-100",
+      "accountId": "card-orbita",
+      "date": "2025-11-20",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -7402,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-101",
+      "accountId": "card-orbita",
+      "date": "2025-11-21",
+      "description": "Pet Shop Fictício",
+      "amountCents": -8937,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-102",
+      "accountId": "card-horizonte",
+      "date": "2025-11-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-103",
+      "accountId": "card-orbita",
+      "date": "2025-11-23",
+      "description": "Transporte por App Fictício",
+      "amountCents": -4114,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-104",
+      "accountId": "card-orbita",
+      "date": "2025-11-24",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -10063,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-105",
+      "accountId": "card-horizonte",
+      "date": "2025-11-25",
+      "description": "Café Grão Fictício",
+      "amountCents": -2469,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-106",
+      "accountId": "card-orbita",
+      "date": "2025-11-29",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -10916,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-107",
+      "accountId": "acc-pix",
+      "date": "2025-12-02",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -922,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-108",
+      "accountId": "card-horizonte",
+      "date": "2025-12-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-109",
+      "accountId": "card-orbita",
+      "date": "2025-12-02",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1800,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-110",
+      "accountId": "card-orbita",
+      "date": "2025-12-02",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -11618,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-111",
+      "accountId": "card-orbita",
+      "date": "2025-12-02",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -4621,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-112",
+      "accountId": "card-orbita",
+      "date": "2025-12-02",
+      "description": "Transporte por App Fictício",
+      "amountCents": -5767,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-113",
+      "accountId": "card-orbita",
+      "date": "2025-12-03",
+      "description": "Pet Shop Fictício",
+      "amountCents": -5318,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-114",
+      "accountId": "card-orbita",
+      "date": "2025-12-03",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -36837,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-115",
+      "accountId": "acc-aurora",
+      "date": "2025-12-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-116",
+      "accountId": "acc-horizonte",
+      "date": "2025-12-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -42165,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-10",
+      "synthetic": true
+    },
+    {
+      "id": "42-117",
+      "accountId": "card-horizonte",
+      "date": "2025-12-05",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -5580,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-118",
+      "accountId": "card-horizonte",
+      "date": "2025-12-05",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -13069,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-119",
+      "accountId": "card-horizonte",
+      "date": "2025-12-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 42165,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-10",
+      "synthetic": true
+    },
+    {
+      "id": "42-120",
+      "accountId": "acc-aurora",
+      "date": "2025-12-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-8",
+      "synthetic": true
+    },
+    {
+      "id": "42-121",
+      "accountId": "acc-pix",
+      "date": "2025-12-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-8",
+      "synthetic": true
+    },
+    {
+      "id": "42-122",
+      "accountId": "card-orbita",
+      "date": "2025-12-06",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -8000,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-123",
+      "accountId": "card-orbita",
+      "date": "2025-12-07",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -13948,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-124",
+      "accountId": "card-horizonte",
+      "date": "2025-12-08",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -7246,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-125",
+      "accountId": "card-orbita",
+      "date": "2025-12-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -3990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-126",
+      "accountId": "card-orbita",
+      "date": "2025-12-08",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -17861,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-127",
+      "accountId": "card-orbita",
+      "date": "2025-12-08",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3871,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-128",
+      "accountId": "acc-pix",
+      "date": "2025-12-09",
+      "description": "Transporte por App Fictício",
+      "amountCents": -4543,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-129",
+      "accountId": "acc-aurora",
+      "date": "2025-12-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -292667,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-9",
+      "synthetic": true
+    },
+    {
+      "id": "42-130",
+      "accountId": "card-orbita",
+      "date": "2025-12-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 292667,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-9",
+      "synthetic": true
+    },
+    {
+      "id": "42-131",
+      "accountId": "acc-pix",
+      "date": "2025-12-11",
+      "description": "Pet Shop Fictício",
+      "amountCents": -4696,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-132",
+      "accountId": "acc-pix",
+      "date": "2025-12-11",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -3627,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-133",
+      "accountId": "card-orbita",
+      "date": "2025-12-11",
+      "description": "Pet Shop Fictício",
+      "amountCents": -14036,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-134",
+      "accountId": "card-orbita",
+      "date": "2025-12-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-135",
+      "accountId": "card-orbita",
+      "date": "2025-12-14",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -7287,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-136",
+      "accountId": "card-orbita",
+      "date": "2025-12-14",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5168,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-137",
+      "accountId": "card-orbita",
+      "date": "2025-12-14",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3682,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-138",
+      "accountId": "card-orbita",
+      "date": "2025-12-14",
+      "description": "Loja de Eletro Fictícia 2/6",
+      "amountCents": -25000,
+      "kind": "installment",
+      "installment": {
+        "number": 2,
+        "total": 6,
+        "groupId": "42-inst-1"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-139",
+      "accountId": "acc-pix",
+      "date": "2025-12-15",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -10876,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-140",
+      "accountId": "acc-pix",
+      "date": "2025-12-15",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -2545,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-141",
+      "accountId": "card-orbita",
+      "date": "2025-12-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-142",
+      "accountId": "card-orbita",
+      "date": "2025-12-15",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -7541,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-143",
+      "accountId": "card-orbita",
+      "date": "2025-12-15",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -8418,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-144",
+      "accountId": "card-orbita",
+      "date": "2025-12-15",
+      "description": "Pet Shop Fictício",
+      "amountCents": -3775,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-145",
+      "accountId": "acc-pix",
+      "date": "2025-12-16",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -23959,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-146",
+      "accountId": "card-orbita",
+      "date": "2025-12-16",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -3259,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-147",
+      "accountId": "card-horizonte",
+      "date": "2025-12-17",
+      "description": "Pet Shop Fictício",
+      "amountCents": -11012,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-148",
+      "accountId": "card-orbita",
+      "date": "2025-12-17",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -7393,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-149",
+      "accountId": "card-orbita",
+      "date": "2025-12-18",
+      "description": "Transporte por App Fictício",
+      "amountCents": -1286,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-150",
+      "accountId": "card-orbita",
+      "date": "2025-12-19",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -13001,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-151",
+      "accountId": "acc-horizonte",
+      "date": "2025-12-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-152",
+      "accountId": "card-orbita",
+      "date": "2025-12-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-153",
+      "accountId": "card-orbita",
+      "date": "2025-12-20",
+      "description": "Transporte por App Fictício",
+      "amountCents": -5002,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-154",
+      "accountId": "card-orbita",
+      "date": "2025-12-20",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -10859,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-155",
+      "accountId": "card-orbita",
+      "date": "2025-12-21",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -4288,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-156",
+      "accountId": "card-orbita",
+      "date": "2025-12-21",
+      "description": "Transporte por App Fictício",
+      "amountCents": -2039,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-157",
+      "accountId": "card-horizonte",
+      "date": "2025-12-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-158",
+      "accountId": "card-horizonte",
+      "date": "2025-12-22",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -11512,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-159",
+      "accountId": "card-horizonte",
+      "date": "2025-12-23",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -4673,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-160",
+      "accountId": "card-horizonte",
+      "date": "2025-12-23",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3002,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-161",
+      "accountId": "card-orbita",
+      "date": "2025-12-25",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3350,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-162",
+      "accountId": "card-orbita",
+      "date": "2025-12-25",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -6383,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-163",
+      "accountId": "card-horizonte",
+      "date": "2025-12-26",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -9720,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-164",
+      "accountId": "card-horizonte",
+      "date": "2025-12-26",
+      "description": "Café Grão Fictício",
+      "amountCents": -1146,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-165",
+      "accountId": "card-orbita",
+      "date": "2025-12-26",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -26757,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-166",
+      "accountId": "card-horizonte",
+      "date": "2025-12-27",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -6570,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-167",
+      "accountId": "card-orbita",
+      "date": "2025-12-28",
+      "description": "Transporte por App Fictício",
+      "amountCents": -4779,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-168",
+      "accountId": "card-orbita",
+      "date": "2025-12-29",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -5511,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-169",
+      "accountId": "card-horizonte",
+      "date": "2025-12-30",
+      "description": "Transporte por App Fictício",
+      "amountCents": -2129,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-170",
+      "accountId": "card-orbita",
+      "date": "2025-12-31",
+      "description": "Café Grão Fictício",
+      "amountCents": -3408,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-171",
+      "accountId": "card-horizonte",
+      "date": "2026-01-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-172",
+      "accountId": "card-orbita",
+      "date": "2026-01-02",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -11559,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-173",
+      "accountId": "acc-aurora",
+      "date": "2026-01-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-174",
+      "accountId": "acc-horizonte",
+      "date": "2026-01-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -92139,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-13",
+      "synthetic": true
+    },
+    {
+      "id": "42-175",
+      "accountId": "card-horizonte",
+      "date": "2026-01-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 92139,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-13",
+      "synthetic": true
+    },
+    {
+      "id": "42-176",
+      "accountId": "card-orbita",
+      "date": "2026-01-05",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -13756,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-177",
+      "accountId": "acc-aurora",
+      "date": "2026-01-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-11",
+      "synthetic": true
+    },
+    {
+      "id": "42-178",
+      "accountId": "acc-pix",
+      "date": "2026-01-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-11",
+      "synthetic": true
+    },
+    {
+      "id": "42-179",
+      "accountId": "card-orbita",
+      "date": "2026-01-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -3990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-180",
+      "accountId": "card-horizonte",
+      "date": "2026-01-09",
+      "description": "Móveis Fictícios 1/10",
+      "amountCents": -18990,
+      "kind": "installment",
+      "installment": {
+        "number": 1,
+        "total": 10,
+        "groupId": "42-inst-2"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-181",
+      "accountId": "acc-aurora",
+      "date": "2026-01-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -292023,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-12",
+      "synthetic": true
+    },
+    {
+      "id": "42-182",
+      "accountId": "card-orbita",
+      "date": "2026-01-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 292023,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-12",
+      "synthetic": true
+    },
+    {
+      "id": "42-183",
+      "accountId": "card-orbita",
+      "date": "2026-01-11",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -7124,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-184",
+      "accountId": "card-orbita",
+      "date": "2026-01-11",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -29318,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-185",
+      "accountId": "card-orbita",
+      "date": "2026-01-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-186",
+      "accountId": "card-orbita",
+      "date": "2026-01-12",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -7520,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-187",
+      "accountId": "card-orbita",
+      "date": "2026-01-13",
+      "description": "Café Grão Fictício",
+      "amountCents": -2919,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-188",
+      "accountId": "card-orbita",
+      "date": "2026-01-13",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -37866,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-189",
+      "accountId": "card-orbita",
+      "date": "2026-01-14",
+      "description": "Loja de Eletro Fictícia 3/6",
+      "amountCents": -25000,
+      "kind": "installment",
+      "installment": {
+        "number": 3,
+        "total": 6,
+        "groupId": "42-inst-1"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-190",
+      "accountId": "card-orbita",
+      "date": "2026-01-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-191",
+      "accountId": "acc-pix",
+      "date": "2026-01-16",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -39846,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-192",
+      "accountId": "acc-pix",
+      "date": "2026-01-16",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -5034,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-193",
+      "accountId": "card-orbita",
+      "date": "2026-01-18",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -7919,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-194",
+      "accountId": "card-orbita",
+      "date": "2026-01-19",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -35233,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-195",
+      "accountId": "card-orbita",
+      "date": "2026-01-19",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -18224,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-196",
+      "accountId": "acc-horizonte",
+      "date": "2026-01-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-197",
+      "accountId": "card-orbita",
+      "date": "2026-01-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-198",
+      "accountId": "card-orbita",
+      "date": "2026-01-20",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -8927,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-199",
+      "accountId": "card-orbita",
+      "date": "2026-01-20",
+      "description": "Pet Shop Fictício",
+      "amountCents": -8357,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-200",
+      "accountId": "card-orbita",
+      "date": "2026-01-20",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -36614,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-201",
+      "accountId": "acc-pix",
+      "date": "2026-01-21",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -28743,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-202",
+      "accountId": "card-orbita",
+      "date": "2026-01-21",
+      "description": "Café Grão Fictício",
+      "amountCents": -1401,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-203",
+      "accountId": "acc-pix",
+      "date": "2026-01-22",
+      "description": "Pet Shop Fictício",
+      "amountCents": -8837,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-204",
+      "accountId": "card-horizonte",
+      "date": "2026-01-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-205",
+      "accountId": "card-horizonte",
+      "date": "2026-01-22",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -39887,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-206",
+      "accountId": "card-orbita",
+      "date": "2026-01-23",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -11007,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-207",
+      "accountId": "card-orbita",
+      "date": "2026-01-24",
+      "description": "Pet Shop Fictício",
+      "amountCents": -3002,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-208",
+      "accountId": "card-orbita",
+      "date": "2026-01-24",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -12964,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-209",
+      "accountId": "card-orbita",
+      "date": "2026-01-26",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -20541,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-210",
+      "accountId": "card-orbita",
+      "date": "2026-01-28",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -22941,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-211",
+      "accountId": "acc-pix",
+      "date": "2026-01-29",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -4649,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-212",
+      "accountId": "card-horizonte",
+      "date": "2026-01-29",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -8632,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-213",
+      "accountId": "card-orbita",
+      "date": "2026-01-29",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -800,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-214",
+      "accountId": "acc-pix",
+      "date": "2026-01-30",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -3955,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-215",
+      "accountId": "card-orbita",
+      "date": "2026-01-30",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -6576,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-216",
+      "accountId": "card-orbita",
+      "date": "2026-01-31",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -3831,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-217",
+      "accountId": "card-orbita",
+      "date": "2026-01-31",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -6128,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-218",
+      "accountId": "card-orbita",
+      "date": "2026-01-31",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -5787,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-219",
+      "accountId": "card-orbita",
+      "date": "2026-02-01",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -15933,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-220",
+      "accountId": "card-horizonte",
+      "date": "2026-02-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-221",
+      "accountId": "card-horizonte",
+      "date": "2026-02-02",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -9865,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-222",
+      "accountId": "acc-pix",
+      "date": "2026-02-03",
+      "description": "Pet Shop Fictício",
+      "amountCents": -6828,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-223",
+      "accountId": "card-orbita",
+      "date": "2026-02-04",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -9376,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-224",
+      "accountId": "card-orbita",
+      "date": "2026-02-04",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -7989,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-225",
+      "accountId": "acc-aurora",
+      "date": "2026-02-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-226",
+      "accountId": "acc-horizonte",
+      "date": "2026-02-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -83989,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-16",
+      "synthetic": true
+    },
+    {
+      "id": "42-227",
+      "accountId": "card-horizonte",
+      "date": "2026-02-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 83989,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-16",
+      "synthetic": true
+    },
+    {
+      "id": "42-228",
+      "accountId": "card-orbita",
+      "date": "2026-02-05",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -10108,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-229",
+      "accountId": "card-orbita",
+      "date": "2026-02-05",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -28036,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-230",
+      "accountId": "card-orbita",
+      "date": "2026-02-05",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -5983,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-231",
+      "accountId": "acc-aurora",
+      "date": "2026-02-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-14",
+      "synthetic": true
+    },
+    {
+      "id": "42-232",
+      "accountId": "acc-pix",
+      "date": "2026-02-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-14",
+      "synthetic": true
+    },
+    {
+      "id": "42-233",
+      "accountId": "card-orbita",
+      "date": "2026-02-06",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3350,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-234",
+      "accountId": "acc-pix",
+      "date": "2026-02-07",
+      "description": "Pix recebido (simulado)",
+      "amountCents": 11184,
+      "kind": "income_other",
+      "synthetic": true
+    },
+    {
+      "id": "42-235",
+      "accountId": "card-orbita",
+      "date": "2026-02-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -3990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-236",
+      "accountId": "card-orbita",
+      "date": "2026-02-08",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -9376,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-237",
+      "accountId": "card-horizonte",
+      "date": "2026-02-09",
+      "description": "Móveis Fictícios 2/10",
+      "amountCents": -18990,
+      "kind": "installment",
+      "installment": {
+        "number": 2,
+        "total": 10,
+        "groupId": "42-inst-2"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-238",
+      "accountId": "acc-aurora",
+      "date": "2026-02-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -355474,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-15",
+      "synthetic": true
+    },
+    {
+      "id": "42-239",
+      "accountId": "acc-horizonte",
+      "date": "2026-02-10",
+      "description": "Tarifa Pacote de Serviços (simulada)",
+      "amountCents": -3500,
+      "kind": "fee",
+      "synthetic": true
+    },
+    {
+      "id": "42-240",
+      "accountId": "card-horizonte",
+      "date": "2026-02-10",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -10379,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-241",
+      "accountId": "card-orbita",
+      "date": "2026-02-10",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -16328,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-242",
+      "accountId": "card-orbita",
+      "date": "2026-02-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 355474,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-15",
+      "synthetic": true
+    },
+    {
+      "id": "42-243",
+      "accountId": "card-orbita",
+      "date": "2026-02-11",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -4684,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-244",
+      "accountId": "card-orbita",
+      "date": "2026-02-11",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -23759,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-245",
+      "accountId": "acc-pix",
+      "date": "2026-02-12",
+      "description": "Transporte por App Fictício",
+      "amountCents": -1311,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-246",
+      "accountId": "card-orbita",
+      "date": "2026-02-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-247",
+      "accountId": "card-horizonte",
+      "date": "2026-02-14",
+      "description": "Café Grão Fictício",
+      "amountCents": -1188,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-248",
+      "accountId": "card-orbita",
+      "date": "2026-02-14",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -34110,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-249",
+      "accountId": "card-orbita",
+      "date": "2026-02-14",
+      "description": "Loja de Eletro Fictícia 4/6",
+      "amountCents": -25000,
+      "kind": "installment",
+      "installment": {
+        "number": 4,
+        "total": 6,
+        "groupId": "42-inst-1"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-250",
+      "accountId": "card-orbita",
+      "date": "2026-02-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-251",
+      "accountId": "card-orbita",
+      "date": "2026-02-15",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -9574,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-252",
+      "accountId": "card-orbita",
+      "date": "2026-02-15",
+      "description": "Transporte por App Fictício",
+      "amountCents": -5063,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-253",
+      "accountId": "card-orbita",
+      "date": "2026-02-16",
+      "description": "Estorno Loja de Roupas Fictícia",
+      "amountCents": 8990,
+      "kind": "refund",
+      "synthetic": true
+    },
+    {
+      "id": "42-254",
+      "accountId": "card-orbita",
+      "date": "2026-02-17",
+      "description": "Transporte por App Fictício",
+      "amountCents": -4700,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-255",
+      "accountId": "card-orbita",
+      "date": "2026-02-18",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -4711,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-256",
+      "accountId": "acc-pix",
+      "date": "2026-02-19",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -8579,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-257",
+      "accountId": "card-orbita",
+      "date": "2026-02-19",
+      "description": "Pet Shop Fictício",
+      "amountCents": -12189,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-258",
+      "accountId": "acc-horizonte",
+      "date": "2026-02-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-259",
+      "accountId": "acc-pix",
+      "date": "2026-02-20",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -20724,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-260",
+      "accountId": "card-orbita",
+      "date": "2026-02-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-261",
+      "accountId": "card-orbita",
+      "date": "2026-02-21",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -15830,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-262",
+      "accountId": "card-horizonte",
+      "date": "2026-02-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-263",
+      "accountId": "card-orbita",
+      "date": "2026-02-22",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -38091,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-264",
+      "accountId": "card-orbita",
+      "date": "2026-02-22",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -20540,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-265",
+      "accountId": "card-horizonte",
+      "date": "2026-02-24",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -22200,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-266",
+      "accountId": "card-horizonte",
+      "date": "2026-02-24",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -6683,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-267",
+      "accountId": "card-horizonte",
+      "date": "2026-02-24",
+      "description": "Café Grão Fictício",
+      "amountCents": -3185,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-268",
+      "accountId": "card-orbita",
+      "date": "2026-02-25",
+      "description": "Pet Shop Fictício",
+      "amountCents": -7051,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-269",
+      "accountId": "card-orbita",
+      "date": "2026-02-27",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -961,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-270",
+      "accountId": "card-orbita",
+      "date": "2026-02-27",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -35391,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-271",
+      "accountId": "card-orbita",
+      "date": "2026-02-28",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -14434,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-272",
+      "accountId": "card-orbita",
+      "date": "2026-02-28",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -24519,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-273",
+      "accountId": "card-horizonte",
+      "date": "2026-03-01",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -15702,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-274",
+      "accountId": "card-horizonte",
+      "date": "2026-03-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-275",
+      "accountId": "card-orbita",
+      "date": "2026-03-03",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -6647,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-276",
+      "accountId": "acc-pix",
+      "date": "2026-03-04",
+      "description": "Pet Shop Fictício",
+      "amountCents": -11442,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-277",
+      "accountId": "acc-aurora",
+      "date": "2026-03-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-278",
+      "accountId": "acc-horizonte",
+      "date": "2026-03-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -88970,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-19",
+      "synthetic": true
+    },
+    {
+      "id": "42-279",
+      "accountId": "card-horizonte",
+      "date": "2026-03-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 88970,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-19",
+      "synthetic": true
+    },
+    {
+      "id": "42-280",
+      "accountId": "acc-aurora",
+      "date": "2026-03-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-17",
+      "synthetic": true
+    },
+    {
+      "id": "42-281",
+      "accountId": "acc-pix",
+      "date": "2026-03-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-17",
+      "synthetic": true
+    },
+    {
+      "id": "42-282",
+      "accountId": "card-orbita",
+      "date": "2026-03-06",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -5143,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-283",
+      "accountId": "acc-pix",
+      "date": "2026-03-07",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -1954,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-284",
+      "accountId": "card-orbita",
+      "date": "2026-03-07",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -4839,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-285",
+      "accountId": "card-orbita",
+      "date": "2026-03-07",
+      "description": "Café Grão Fictício",
+      "amountCents": -1346,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-286",
+      "accountId": "acc-pix",
+      "date": "2026-03-08",
+      "description": "Café Grão Fictício",
+      "amountCents": -1079,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-287",
+      "accountId": "card-horizonte",
+      "date": "2026-03-08",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -11172,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-288",
+      "accountId": "card-orbita",
+      "date": "2026-03-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -3990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-289",
+      "accountId": "card-orbita",
+      "date": "2026-03-08",
+      "description": "Pet Shop Fictício",
+      "amountCents": -11934,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-290",
+      "accountId": "card-horizonte",
+      "date": "2026-03-09",
+      "description": "Móveis Fictícios 3/10",
+      "amountCents": -18990,
+      "kind": "installment",
+      "installment": {
+        "number": 3,
+        "total": 10,
+        "groupId": "42-inst-2"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-291",
+      "accountId": "card-orbita",
+      "date": "2026-03-09",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -40907,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-292",
+      "accountId": "acc-aurora",
+      "date": "2026-03-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -388256,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-18",
+      "synthetic": true
+    },
+    {
+      "id": "42-293",
+      "accountId": "card-orbita",
+      "date": "2026-03-10",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -33019,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-294",
+      "accountId": "card-orbita",
+      "date": "2026-03-10",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -23591,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-295",
+      "accountId": "card-orbita",
+      "date": "2026-03-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 388256,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-18",
+      "synthetic": true
+    },
+    {
+      "id": "42-296",
+      "accountId": "card-orbita",
+      "date": "2026-03-11",
+      "description": "Software Fictício Inc. (USD)",
+      "amountCents": -11180,
+      "kind": "international",
+      "originalCurrency": {
+        "code": "USD",
+        "amountMinor": 2000
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-297",
+      "accountId": "card-orbita",
+      "date": "2026-03-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-298",
+      "accountId": "card-orbita",
+      "date": "2026-03-12",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -11616,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-299",
+      "accountId": "card-orbita",
+      "date": "2026-03-12",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -4253,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-300",
+      "accountId": "card-orbita",
+      "date": "2026-03-13",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -13044,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-301",
+      "accountId": "card-orbita",
+      "date": "2026-03-13",
+      "description": "Pet Shop Fictício",
+      "amountCents": -19290,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-302",
+      "accountId": "card-orbita",
+      "date": "2026-03-14",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -24487,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-303",
+      "accountId": "card-orbita",
+      "date": "2026-03-14",
+      "description": "Loja de Eletro Fictícia 5/6",
+      "amountCents": -25000,
+      "kind": "installment",
+      "installment": {
+        "number": 5,
+        "total": 6,
+        "groupId": "42-inst-1"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-304",
+      "accountId": "card-horizonte",
+      "date": "2026-03-15",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -6027,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-305",
+      "accountId": "card-orbita",
+      "date": "2026-03-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-306",
+      "accountId": "card-horizonte",
+      "date": "2026-03-16",
+      "description": "Pet Shop Fictício",
+      "amountCents": -16229,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-307",
+      "accountId": "card-horizonte",
+      "date": "2026-03-16",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -7690,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-308",
+      "accountId": "card-orbita",
+      "date": "2026-03-18",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -21651,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-309",
+      "accountId": "card-orbita",
+      "date": "2026-03-19",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -4770,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-310",
+      "accountId": "acc-horizonte",
+      "date": "2026-03-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-311",
+      "accountId": "card-horizonte",
+      "date": "2026-03-20",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5944,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-312",
+      "accountId": "card-orbita",
+      "date": "2026-03-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-313",
+      "accountId": "card-orbita",
+      "date": "2026-03-20",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -14966,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-314",
+      "accountId": "card-orbita",
+      "date": "2026-03-20",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -16798,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-315",
+      "accountId": "card-horizonte",
+      "date": "2026-03-21",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -7333,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-316",
+      "accountId": "card-orbita",
+      "date": "2026-03-21",
+      "description": "Café Grão Fictício",
+      "amountCents": -2472,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-317",
+      "accountId": "card-orbita",
+      "date": "2026-03-21",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -26900,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-318",
+      "accountId": "card-orbita",
+      "date": "2026-03-21",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -28752,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-319",
+      "accountId": "card-orbita",
+      "date": "2026-03-21",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3322,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-320",
+      "accountId": "card-horizonte",
+      "date": "2026-03-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-321",
+      "accountId": "card-orbita",
+      "date": "2026-03-22",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -33397,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-322",
+      "accountId": "card-orbita",
+      "date": "2026-03-22",
+      "description": "Pet Shop Fictício",
+      "amountCents": -13607,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-323",
+      "accountId": "card-orbita",
+      "date": "2026-03-22",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -10372,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-324",
+      "accountId": "card-orbita",
+      "date": "2026-03-23",
+      "description": "Café Grão Fictício",
+      "amountCents": -1988,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-325",
+      "accountId": "acc-pix",
+      "date": "2026-03-24",
+      "description": "Café Grão Fictício",
+      "amountCents": -1112,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-326",
+      "accountId": "card-orbita",
+      "date": "2026-03-25",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -7670,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-327",
+      "accountId": "card-horizonte",
+      "date": "2026-03-26",
+      "description": "Pet Shop Fictício",
+      "amountCents": -7521,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-328",
+      "accountId": "card-orbita",
+      "date": "2026-03-27",
+      "description": "Café Grão Fictício",
+      "amountCents": -3237,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-329",
+      "accountId": "card-horizonte",
+      "date": "2026-03-28",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5191,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-330",
+      "accountId": "card-horizonte",
+      "date": "2026-03-28",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3459,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-331",
+      "accountId": "card-horizonte",
+      "date": "2026-03-29",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -17821,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-332",
+      "accountId": "card-orbita",
+      "date": "2026-03-29",
+      "description": "Café Grão Fictício",
+      "amountCents": -1911,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-333",
+      "accountId": "card-orbita",
+      "date": "2026-03-31",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -17559,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-334",
+      "accountId": "card-orbita",
+      "date": "2026-03-31",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -19627,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-335",
+      "accountId": "card-horizonte",
+      "date": "2026-04-01",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1843,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-336",
+      "accountId": "acc-pix",
+      "date": "2026-04-02",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -13581,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-337",
+      "accountId": "card-horizonte",
+      "date": "2026-04-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-338",
+      "accountId": "card-horizonte",
+      "date": "2026-04-02",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -29262,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-339",
+      "accountId": "card-orbita",
+      "date": "2026-04-02",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -10844,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-340",
+      "accountId": "card-orbita",
+      "date": "2026-04-02",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -11957,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-341",
+      "accountId": "card-orbita",
+      "date": "2026-04-03",
+      "description": "Transporte por App Fictício",
+      "amountCents": -5398,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-342",
+      "accountId": "card-orbita",
+      "date": "2026-04-03",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3825,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-343",
+      "accountId": "card-orbita",
+      "date": "2026-04-04",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -12661,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-344",
+      "accountId": "acc-aurora",
+      "date": "2026-04-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-345",
+      "accountId": "acc-horizonte",
+      "date": "2026-04-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -139559,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-22",
+      "synthetic": true
+    },
+    {
+      "id": "42-346",
+      "accountId": "card-horizonte",
+      "date": "2026-04-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 139559,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-22",
+      "synthetic": true
+    },
+    {
+      "id": "42-347",
+      "accountId": "acc-aurora",
+      "date": "2026-04-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-20",
+      "synthetic": true
+    },
+    {
+      "id": "42-348",
+      "accountId": "acc-pix",
+      "date": "2026-04-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-20",
+      "synthetic": true
+    },
+    {
+      "id": "42-349",
+      "accountId": "card-orbita",
+      "date": "2026-04-06",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -8179,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-350",
+      "accountId": "card-orbita",
+      "date": "2026-04-06",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -4291,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-351",
+      "accountId": "card-orbita",
+      "date": "2026-04-07",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -29196,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-352",
+      "accountId": "acc-pix",
+      "date": "2026-04-08",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -17745,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-353",
+      "accountId": "card-horizonte",
+      "date": "2026-04-08",
+      "description": "Café Grão Fictício",
+      "amountCents": -2928,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-354",
+      "accountId": "card-orbita",
+      "date": "2026-04-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-355",
+      "accountId": "card-orbita",
+      "date": "2026-04-08",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -7743,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-356",
+      "accountId": "card-horizonte",
+      "date": "2026-04-09",
+      "description": "Móveis Fictícios 4/10",
+      "amountCents": -18990,
+      "kind": "installment",
+      "installment": {
+        "number": 4,
+        "total": 10,
+        "groupId": "42-inst-2"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-357",
+      "accountId": "card-orbita",
+      "date": "2026-04-09",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -43623,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-358",
+      "accountId": "card-orbita",
+      "date": "2026-04-09",
+      "description": "Pet Shop Fictício",
+      "amountCents": -7890,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-359",
+      "accountId": "card-orbita",
+      "date": "2026-04-09",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3106,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-360",
+      "accountId": "acc-aurora",
+      "date": "2026-04-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -475455,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-21",
+      "synthetic": true
+    },
+    {
+      "id": "42-361",
+      "accountId": "acc-pix",
+      "date": "2026-04-10",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -27964,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-362",
+      "accountId": "card-horizonte",
+      "date": "2026-04-10",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -5967,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-363",
+      "accountId": "card-orbita",
+      "date": "2026-04-10",
+      "description": "Café Grão Fictício",
+      "amountCents": -1352,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-364",
+      "accountId": "card-orbita",
+      "date": "2026-04-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 475455,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-21",
+      "synthetic": true
+    },
+    {
+      "id": "42-365",
+      "accountId": "card-orbita",
+      "date": "2026-04-11",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -29012,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-366",
+      "accountId": "card-orbita",
+      "date": "2026-04-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-367",
+      "accountId": "card-orbita",
+      "date": "2026-04-13",
+      "description": "Pet Shop Fictício",
+      "amountCents": -9236,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-368",
+      "accountId": "card-orbita",
+      "date": "2026-04-13",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3001,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-369",
+      "accountId": "card-orbita",
+      "date": "2026-04-14",
+      "description": "Loja de Eletro Fictícia 6/6",
+      "amountCents": -25000,
+      "kind": "installment",
+      "installment": {
+        "number": 6,
+        "total": 6,
+        "groupId": "42-inst-1"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-370",
+      "accountId": "card-orbita",
+      "date": "2026-04-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-371",
+      "accountId": "card-orbita",
+      "date": "2026-04-15",
+      "description": "Transporte por App Fictício",
+      "amountCents": -4698,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-372",
+      "accountId": "card-orbita",
+      "date": "2026-04-15",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -7327,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-373",
+      "accountId": "acc-pix",
+      "date": "2026-04-16",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -4151,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-374",
+      "accountId": "card-orbita",
+      "date": "2026-04-16",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -6627,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-375",
+      "accountId": "card-orbita",
+      "date": "2026-04-16",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -3987,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-376",
+      "accountId": "acc-pix",
+      "date": "2026-04-17",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -10836,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-377",
+      "accountId": "card-orbita",
+      "date": "2026-04-18",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3074,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-378",
+      "accountId": "card-orbita",
+      "date": "2026-04-19",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -11624,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-379",
+      "accountId": "card-orbita",
+      "date": "2026-04-19",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -4033,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-380",
+      "accountId": "acc-horizonte",
+      "date": "2026-04-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-381",
+      "accountId": "card-orbita",
+      "date": "2026-04-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-382",
+      "accountId": "card-orbita",
+      "date": "2026-04-20",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -14380,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-383",
+      "accountId": "acc-pix",
+      "date": "2026-04-21",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -15459,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-384",
+      "accountId": "acc-pix",
+      "date": "2026-04-22",
+      "description": "Café Grão Fictício",
+      "amountCents": -1215,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-385",
+      "accountId": "card-horizonte",
+      "date": "2026-04-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-386",
+      "accountId": "card-horizonte",
+      "date": "2026-04-22",
+      "description": "Pet Shop Fictício",
+      "amountCents": -17525,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-387",
+      "accountId": "card-horizonte",
+      "date": "2026-04-22",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -5206,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-388",
+      "accountId": "card-orbita",
+      "date": "2026-04-22",
+      "description": "Pet Shop Fictício",
+      "amountCents": -16638,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-389",
+      "accountId": "acc-pix",
+      "date": "2026-04-23",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -6966,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-390",
+      "accountId": "card-orbita",
+      "date": "2026-04-23",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -13503,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-391",
+      "accountId": "card-orbita",
+      "date": "2026-04-23",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -5259,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-392",
+      "accountId": "card-orbita",
+      "date": "2026-04-23",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -6543,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-393",
+      "accountId": "card-orbita",
+      "date": "2026-04-24",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5379,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-394",
+      "accountId": "card-orbita",
+      "date": "2026-04-24",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -7814,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-395",
+      "accountId": "card-orbita",
+      "date": "2026-04-25",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -8563,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-396",
+      "accountId": "card-orbita",
+      "date": "2026-04-25",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -6050,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-397",
+      "accountId": "acc-pix",
+      "date": "2026-04-26",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5805,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-398",
+      "accountId": "card-orbita",
+      "date": "2026-04-26",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -2251,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-399",
+      "accountId": "card-orbita",
+      "date": "2026-04-27",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -17830,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-400",
+      "accountId": "card-orbita",
+      "date": "2026-04-27",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -6903,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-401",
+      "accountId": "card-orbita",
+      "date": "2026-04-27",
+      "description": "Café Grão Fictício",
+      "amountCents": -1810,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-402",
+      "accountId": "card-orbita",
+      "date": "2026-04-28",
+      "description": "Transporte por App Fictício",
+      "amountCents": -5853,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-403",
+      "accountId": "card-horizonte",
+      "date": "2026-04-29",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -7443,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-404",
+      "accountId": "card-orbita",
+      "date": "2026-04-30",
+      "description": "Pet Shop Fictício",
+      "amountCents": -5901,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-405",
+      "accountId": "card-orbita",
+      "date": "2026-04-30",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -8797,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-406",
+      "accountId": "card-horizonte",
+      "date": "2026-05-01",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -7746,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-407",
+      "accountId": "card-horizonte",
+      "date": "2026-05-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-408",
+      "accountId": "card-orbita",
+      "date": "2026-05-02",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -2743,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-409",
+      "accountId": "card-orbita",
+      "date": "2026-05-03",
+      "description": "Transporte por App Fictício",
+      "amountCents": -4183,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-410",
+      "accountId": "card-orbita",
+      "date": "2026-05-03",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -29779,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-411",
+      "accountId": "acc-pix",
+      "date": "2026-05-04",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -4287,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-412",
+      "accountId": "card-horizonte",
+      "date": "2026-05-04",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -3629,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-413",
+      "accountId": "card-orbita",
+      "date": "2026-05-04",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -43646,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-414",
+      "accountId": "acc-aurora",
+      "date": "2026-05-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-415",
+      "accountId": "acc-horizonte",
+      "date": "2026-05-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -105644,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-25",
+      "synthetic": true
+    },
+    {
+      "id": "42-416",
+      "accountId": "card-horizonte",
+      "date": "2026-05-05",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -2851,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-417",
+      "accountId": "card-horizonte",
+      "date": "2026-05-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 105644,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-25",
+      "synthetic": true
+    },
+    {
+      "id": "42-418",
+      "accountId": "card-orbita",
+      "date": "2026-05-05",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1094,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-419",
+      "accountId": "acc-aurora",
+      "date": "2026-05-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-23",
+      "synthetic": true
+    },
+    {
+      "id": "42-420",
+      "accountId": "acc-pix",
+      "date": "2026-05-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-23",
+      "synthetic": true
+    },
+    {
+      "id": "42-421",
+      "accountId": "card-orbita",
+      "date": "2026-05-07",
+      "description": "Transporte por App Fictício",
+      "amountCents": -5312,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-422",
+      "accountId": "card-orbita",
+      "date": "2026-05-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-423",
+      "accountId": "card-orbita",
+      "date": "2026-05-08",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3168,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-424",
+      "accountId": "card-horizonte",
+      "date": "2026-05-09",
+      "description": "Móveis Fictícios 5/10",
+      "amountCents": -18990,
+      "kind": "installment",
+      "installment": {
+        "number": 5,
+        "total": 10,
+        "groupId": "42-inst-2"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-425",
+      "accountId": "card-orbita",
+      "date": "2026-05-09",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -9671,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-426",
+      "accountId": "card-orbita",
+      "date": "2026-05-09",
+      "description": "Café Grão Fictício",
+      "amountCents": -1187,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-427",
+      "accountId": "acc-aurora",
+      "date": "2026-05-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -401818,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-24",
+      "synthetic": true
+    },
+    {
+      "id": "42-428",
+      "accountId": "card-horizonte",
+      "date": "2026-05-10",
+      "description": "Pet Shop Fictício",
+      "amountCents": -6066,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-429",
+      "accountId": "card-orbita",
+      "date": "2026-05-10",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -14857,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-430",
+      "accountId": "card-orbita",
+      "date": "2026-05-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 401818,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-24",
+      "synthetic": true
+    },
+    {
+      "id": "42-431",
+      "accountId": "card-orbita",
+      "date": "2026-05-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-432",
+      "accountId": "card-orbita",
+      "date": "2026-05-12",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -20207,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-433",
+      "accountId": "card-horizonte",
+      "date": "2026-05-13",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -8966,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-434",
+      "accountId": "card-orbita",
+      "date": "2026-05-13",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -14443,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-435",
+      "accountId": "card-horizonte",
+      "date": "2026-05-14",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -37790,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-436",
+      "accountId": "card-orbita",
+      "date": "2026-05-14",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -4300,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-437",
+      "accountId": "card-orbita",
+      "date": "2026-05-14",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5315,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-438",
+      "accountId": "acc-pix",
+      "date": "2026-05-15",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -2740,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-439",
+      "accountId": "card-orbita",
+      "date": "2026-05-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-440",
+      "accountId": "card-orbita",
+      "date": "2026-05-15",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -7670,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-441",
+      "accountId": "card-orbita",
+      "date": "2026-05-15",
+      "description": "Café Grão Fictício",
+      "amountCents": -1878,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-442",
+      "accountId": "card-orbita",
+      "date": "2026-05-16",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -2048,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-443",
+      "accountId": "card-orbita",
+      "date": "2026-05-16",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -5433,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-444",
+      "accountId": "acc-pix",
+      "date": "2026-05-17",
+      "description": "Pix recebido (simulado)",
+      "amountCents": 3899,
+      "kind": "income_other",
+      "synthetic": true
+    },
+    {
+      "id": "42-445",
+      "accountId": "acc-pix",
+      "date": "2026-05-18",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -3543,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-446",
+      "accountId": "card-orbita",
+      "date": "2026-05-18",
+      "description": "Agência de Viagem Fictícia 1/3",
+      "amountCents": -45000,
+      "kind": "installment",
+      "installment": {
+        "number": 1,
+        "total": 3,
+        "groupId": "42-inst-3"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-447",
+      "accountId": "acc-horizonte",
+      "date": "2026-05-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-448",
+      "accountId": "card-horizonte",
+      "date": "2026-05-20",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -3529,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-449",
+      "accountId": "card-orbita",
+      "date": "2026-05-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-450",
+      "accountId": "card-orbita",
+      "date": "2026-05-20",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -4640,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-451",
+      "accountId": "card-horizonte",
+      "date": "2026-05-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-452",
+      "accountId": "card-orbita",
+      "date": "2026-05-22",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -3883,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-453",
+      "accountId": "card-orbita",
+      "date": "2026-05-23",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -13892,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-454",
+      "accountId": "card-orbita",
+      "date": "2026-05-23",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -36194,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-455",
+      "accountId": "card-orbita",
+      "date": "2026-05-24",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -21434,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-456",
+      "accountId": "card-orbita",
+      "date": "2026-05-24",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -6565,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-457",
+      "accountId": "card-orbita",
+      "date": "2026-05-25",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3279,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-458",
+      "accountId": "card-orbita",
+      "date": "2026-05-25",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -2701,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-459",
+      "accountId": "card-orbita",
+      "date": "2026-05-26",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -6739,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-460",
+      "accountId": "card-orbita",
+      "date": "2026-05-26",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -8066,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-461",
+      "accountId": "card-orbita",
+      "date": "2026-05-28",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -4339,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-462",
+      "accountId": "acc-pix",
+      "date": "2026-05-29",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -8737,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-463",
+      "accountId": "card-orbita",
+      "date": "2026-05-29",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -11405,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-464",
+      "accountId": "card-orbita",
+      "date": "2026-05-29",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3443,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-465",
+      "accountId": "card-orbita",
+      "date": "2026-05-29",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -17813,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-466",
+      "accountId": "card-orbita",
+      "date": "2026-05-29",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -28274,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-467",
+      "accountId": "card-orbita",
+      "date": "2026-05-29",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -20160,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-468",
+      "accountId": "card-orbita",
+      "date": "2026-05-30",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -7317,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-469",
+      "accountId": "card-orbita",
+      "date": "2026-05-30",
+      "description": "Pet Shop Fictício",
+      "amountCents": -13330,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-470",
+      "accountId": "card-horizonte",
+      "date": "2026-06-01",
+      "description": "Café Grão Fictício",
+      "amountCents": -2758,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-471",
+      "accountId": "card-horizonte",
+      "date": "2026-06-01",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -4118,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-472",
+      "accountId": "card-orbita",
+      "date": "2026-06-01",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -15256,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-473",
+      "accountId": "card-horizonte",
+      "date": "2026-06-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-474",
+      "accountId": "card-orbita",
+      "date": "2026-06-02",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -6414,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-475",
+      "accountId": "card-orbita",
+      "date": "2026-06-03",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -4479,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-476",
+      "accountId": "card-orbita",
+      "date": "2026-06-03",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -16897,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-477",
+      "accountId": "card-orbita",
+      "date": "2026-06-04",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -13751,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-478",
+      "accountId": "card-orbita",
+      "date": "2026-06-04",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -11024,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-479",
+      "accountId": "card-orbita",
+      "date": "2026-06-04",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -6012,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-480",
+      "accountId": "card-orbita",
+      "date": "2026-06-04",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1503,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-481",
+      "accountId": "acc-aurora",
+      "date": "2026-06-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-482",
+      "accountId": "acc-horizonte",
+      "date": "2026-06-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -106047,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-28",
+      "synthetic": true
+    },
+    {
+      "id": "42-483",
+      "accountId": "acc-pix",
+      "date": "2026-06-05",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -23296,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-484",
+      "accountId": "card-horizonte",
+      "date": "2026-06-05",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -36583,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-485",
+      "accountId": "card-horizonte",
+      "date": "2026-06-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 106047,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-28",
+      "synthetic": true
+    },
+    {
+      "id": "42-486",
+      "accountId": "card-orbita",
+      "date": "2026-06-05",
+      "description": "Café Grão Fictício",
+      "amountCents": -2018,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-487",
+      "accountId": "acc-aurora",
+      "date": "2026-06-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-26",
+      "synthetic": true
+    },
+    {
+      "id": "42-488",
+      "accountId": "acc-pix",
+      "date": "2026-06-06",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -4171,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-489",
+      "accountId": "acc-pix",
+      "date": "2026-06-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-26",
+      "synthetic": true
+    },
+    {
+      "id": "42-490",
+      "accountId": "card-horizonte",
+      "date": "2026-06-06",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3566,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-491",
+      "accountId": "card-orbita",
+      "date": "2026-06-06",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -11490,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-492",
+      "accountId": "card-orbita",
+      "date": "2026-06-06",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -28357,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-493",
+      "accountId": "card-horizonte",
+      "date": "2026-06-07",
+      "description": "Pet Shop Fictício",
+      "amountCents": -4257,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-494",
+      "accountId": "card-orbita",
+      "date": "2026-06-07",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -11034,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-495",
+      "accountId": "card-horizonte",
+      "date": "2026-06-08",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -5626,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-496",
+      "accountId": "card-horizonte",
+      "date": "2026-06-08",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -7181,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-497",
+      "accountId": "card-orbita",
+      "date": "2026-06-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-498",
+      "accountId": "card-orbita",
+      "date": "2026-06-08",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -6239,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-499",
+      "accountId": "card-horizonte",
+      "date": "2026-06-09",
+      "description": "Móveis Fictícios 6/10",
+      "amountCents": -18990,
+      "kind": "installment",
+      "installment": {
+        "number": 6,
+        "total": 10,
+        "groupId": "42-inst-2"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-500",
+      "accountId": "card-orbita",
+      "date": "2026-06-09",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -4420,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-501",
+      "accountId": "card-orbita",
+      "date": "2026-06-09",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -17911,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-502",
+      "accountId": "card-orbita",
+      "date": "2026-06-09",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -2787,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-503",
+      "accountId": "card-orbita",
+      "date": "2026-06-09",
+      "description": "Pet Shop Fictício",
+      "amountCents": -12470,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-504",
+      "accountId": "acc-aurora",
+      "date": "2026-06-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -446068,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-27",
+      "synthetic": true
+    },
+    {
+      "id": "42-505",
+      "accountId": "acc-horizonte",
+      "date": "2026-06-10",
+      "description": "Tarifa Pacote de Serviços (simulada)",
+      "amountCents": -3500,
+      "kind": "fee",
+      "synthetic": true
+    },
+    {
+      "id": "42-506",
+      "accountId": "acc-pix",
+      "date": "2026-06-10",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -7788,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-507",
+      "accountId": "card-horizonte",
+      "date": "2026-06-10",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -23616,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-508",
+      "accountId": "card-orbita",
+      "date": "2026-06-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 446068,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-27",
+      "synthetic": true
+    },
+    {
+      "id": "42-509",
+      "accountId": "acc-pix",
+      "date": "2026-06-11",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -39865,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-510",
+      "accountId": "card-orbita",
+      "date": "2026-06-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-511",
+      "accountId": "card-horizonte",
+      "date": "2026-06-13",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -8842,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-512",
+      "accountId": "card-horizonte",
+      "date": "2026-06-14",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -2166,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-513",
+      "accountId": "card-orbita",
+      "date": "2026-06-14",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -6119,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-514",
+      "accountId": "card-orbita",
+      "date": "2026-06-14",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1329,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-515",
+      "accountId": "card-orbita",
+      "date": "2026-06-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-516",
+      "accountId": "acc-pix",
+      "date": "2026-06-16",
+      "description": "Pet Shop Fictício",
+      "amountCents": -3052,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-517",
+      "accountId": "card-horizonte",
+      "date": "2026-06-17",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -38192,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-518",
+      "accountId": "card-orbita",
+      "date": "2026-06-18",
+      "description": "Agência de Viagem Fictícia 2/3",
+      "amountCents": -45000,
+      "kind": "installment",
+      "installment": {
+        "number": 2,
+        "total": 3,
+        "groupId": "42-inst-3"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-519",
+      "accountId": "card-orbita",
+      "date": "2026-06-19",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -30757,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-520",
+      "accountId": "card-orbita",
+      "date": "2026-06-19",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -19382,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-521",
+      "accountId": "acc-horizonte",
+      "date": "2026-06-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-522",
+      "accountId": "card-orbita",
+      "date": "2026-06-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-523",
+      "accountId": "card-orbita",
+      "date": "2026-06-20",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -13395,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-524",
+      "accountId": "card-orbita",
+      "date": "2026-06-21",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -3382,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-525",
+      "accountId": "card-orbita",
+      "date": "2026-06-21",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -8070,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-526",
+      "accountId": "card-horizonte",
+      "date": "2026-06-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-527",
+      "accountId": "card-orbita",
+      "date": "2026-06-22",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -8634,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-528",
+      "accountId": "card-orbita",
+      "date": "2026-06-23",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -13392,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-529",
+      "accountId": "card-orbita",
+      "date": "2026-06-23",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -3839,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-530",
+      "accountId": "card-orbita",
+      "date": "2026-06-24",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3217,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-531",
+      "accountId": "card-horizonte",
+      "date": "2026-06-25",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -16407,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-532",
+      "accountId": "card-horizonte",
+      "date": "2026-06-25",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -21863,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-533",
+      "accountId": "card-orbita",
+      "date": "2026-06-25",
+      "description": "Café Grão Fictício",
+      "amountCents": -1351,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-534",
+      "accountId": "acc-pix",
+      "date": "2026-06-26",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -17669,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-535",
+      "accountId": "card-orbita",
+      "date": "2026-06-26",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1990,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-536",
+      "accountId": "card-horizonte",
+      "date": "2026-06-27",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -18337,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-537",
+      "accountId": "card-orbita",
+      "date": "2026-06-27",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3036,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-538",
+      "accountId": "card-orbita",
+      "date": "2026-06-28",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -9712,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-539",
+      "accountId": "card-orbita",
+      "date": "2026-06-28",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3682,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-540",
+      "accountId": "card-orbita",
+      "date": "2026-06-28",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -962,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-541",
+      "accountId": "card-orbita",
+      "date": "2026-06-29",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -20988,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-542",
+      "accountId": "card-orbita",
+      "date": "2026-06-29",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5259,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-543",
+      "accountId": "card-orbita",
+      "date": "2026-06-29",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -13506,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-544",
+      "accountId": "card-orbita",
+      "date": "2026-06-30",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -7260,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-545",
+      "accountId": "card-orbita",
+      "date": "2026-06-30",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -10550,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-546",
+      "accountId": "card-orbita",
+      "date": "2026-06-30",
+      "description": "Café Grão Fictício",
+      "amountCents": -2610,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-547",
+      "accountId": "card-orbita",
+      "date": "2026-07-01",
+      "description": "Pet Shop Fictício",
+      "amountCents": -13964,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-548",
+      "accountId": "card-horizonte",
+      "date": "2026-07-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-549",
+      "accountId": "card-horizonte",
+      "date": "2026-07-02",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -6227,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-550",
+      "accountId": "card-horizonte",
+      "date": "2026-07-02",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -2605,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-551",
+      "accountId": "card-orbita",
+      "date": "2026-07-02",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -4800,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-552",
+      "accountId": "card-orbita",
+      "date": "2026-07-03",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5555,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-553",
+      "accountId": "card-orbita",
+      "date": "2026-07-03",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -4296,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-554",
+      "accountId": "card-orbita",
+      "date": "2026-07-04",
+      "description": "Pet Shop Fictício",
+      "amountCents": -9665,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-555",
+      "accountId": "card-orbita",
+      "date": "2026-07-04",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3312,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-556",
+      "accountId": "card-orbita",
+      "date": "2026-07-04",
+      "description": "Transporte por App Fictício",
+      "amountCents": -6363,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-557",
+      "accountId": "card-orbita",
+      "date": "2026-07-04",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1880,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-558",
+      "accountId": "acc-aurora",
+      "date": "2026-07-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-559",
+      "accountId": "acc-horizonte",
+      "date": "2026-07-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -228982,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-31",
+      "synthetic": true
+    },
+    {
+      "id": "42-560",
+      "accountId": "acc-pix",
+      "date": "2026-07-05",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -36229,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-561",
+      "accountId": "card-horizonte",
+      "date": "2026-07-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 228982,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-31",
+      "synthetic": true
+    },
+    {
+      "id": "42-562",
+      "accountId": "card-orbita",
+      "date": "2026-07-05",
+      "description": "Transporte por App Fictício",
+      "amountCents": -1506,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-563",
+      "accountId": "card-orbita",
+      "date": "2026-07-05",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1736,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-564",
+      "accountId": "card-orbita",
+      "date": "2026-07-05",
+      "description": "Transporte por App Fictício",
+      "amountCents": -5560,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-565",
+      "accountId": "acc-aurora",
+      "date": "2026-07-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-29",
+      "synthetic": true
+    },
+    {
+      "id": "42-566",
+      "accountId": "acc-pix",
+      "date": "2026-07-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-29",
+      "synthetic": true
+    },
+    {
+      "id": "42-567",
+      "accountId": "card-orbita",
+      "date": "2026-07-06",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -4023,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-568",
+      "accountId": "card-orbita",
+      "date": "2026-07-06",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -6459,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-569",
+      "accountId": "acc-pix",
+      "date": "2026-07-07",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -17307,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-570",
+      "accountId": "card-orbita",
+      "date": "2026-07-07",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -17509,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-571",
+      "accountId": "card-orbita",
+      "date": "2026-07-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-572",
+      "accountId": "card-horizonte",
+      "date": "2026-07-09",
+      "description": "Móveis Fictícios 7/10",
+      "amountCents": -18990,
+      "kind": "installment",
+      "installment": {
+        "number": 7,
+        "total": 10,
+        "groupId": "42-inst-2"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-573",
+      "accountId": "card-orbita",
+      "date": "2026-07-09",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -10522,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-574",
+      "accountId": "card-orbita",
+      "date": "2026-07-09",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -28209,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-575",
+      "accountId": "acc-aurora",
+      "date": "2026-07-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -420144,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-30",
+      "synthetic": true
+    },
+    {
+      "id": "42-576",
+      "accountId": "card-orbita",
+      "date": "2026-07-10",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -10082,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-577",
+      "accountId": "card-orbita",
+      "date": "2026-07-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 420144,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-30",
+      "synthetic": true
+    },
+    {
+      "id": "42-578",
+      "accountId": "card-orbita",
+      "date": "2026-07-11",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3805,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-579",
+      "accountId": "card-orbita",
+      "date": "2026-07-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-580",
+      "accountId": "acc-pix",
+      "date": "2026-07-13",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -42767,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-581",
+      "accountId": "card-orbita",
+      "date": "2026-07-13",
+      "description": "Pet Shop Fictício",
+      "amountCents": -14316,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-582",
+      "accountId": "card-orbita",
+      "date": "2026-07-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-583",
+      "accountId": "card-orbita",
+      "date": "2026-07-15",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -5225,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-584",
+      "accountId": "card-orbita",
+      "date": "2026-07-15",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -6496,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-585",
+      "accountId": "card-orbita",
+      "date": "2026-07-17",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -3532,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-586",
+      "accountId": "card-orbita",
+      "date": "2026-07-17",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -4205,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-587",
+      "accountId": "card-orbita",
+      "date": "2026-07-17",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -8628,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-588",
+      "accountId": "card-orbita",
+      "date": "2026-07-18",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -4219,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-589",
+      "accountId": "card-orbita",
+      "date": "2026-07-18",
+      "description": "Agência de Viagem Fictícia 3/3",
+      "amountCents": -45000,
+      "kind": "installment",
+      "installment": {
+        "number": 3,
+        "total": 3,
+        "groupId": "42-inst-3"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-590",
+      "accountId": "acc-horizonte",
+      "date": "2026-07-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-591",
+      "accountId": "card-horizonte",
+      "date": "2026-07-20",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3788,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-592",
+      "accountId": "card-orbita",
+      "date": "2026-07-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-593",
+      "accountId": "acc-pix",
+      "date": "2026-07-21",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -12580,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-594",
+      "accountId": "card-horizonte",
+      "date": "2026-07-21",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -6515,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-595",
+      "accountId": "card-horizonte",
+      "date": "2026-07-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-596",
+      "accountId": "card-orbita",
+      "date": "2026-07-22",
+      "description": "Pet Shop Fictício",
+      "amountCents": -13745,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-597",
+      "accountId": "card-orbita",
+      "date": "2026-07-23",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -19452,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-598",
+      "accountId": "card-orbita",
+      "date": "2026-07-23",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -15441,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-599",
+      "accountId": "card-orbita",
+      "date": "2026-07-23",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -4522,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-600",
+      "accountId": "card-horizonte",
+      "date": "2026-07-24",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -31471,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-601",
+      "accountId": "acc-pix",
+      "date": "2026-07-25",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -25319,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-602",
+      "accountId": "card-orbita",
+      "date": "2026-07-25",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -7426,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-603",
+      "accountId": "card-orbita",
+      "date": "2026-07-27",
+      "description": "Transporte por App Fictício",
+      "amountCents": -5817,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-604",
+      "accountId": "acc-pix",
+      "date": "2026-07-28",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -11480,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-605",
+      "accountId": "card-horizonte",
+      "date": "2026-07-28",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -33771,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-606",
+      "accountId": "card-orbita",
+      "date": "2026-07-28",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -15508,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-607",
+      "accountId": "card-orbita",
+      "date": "2026-07-30",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -11252,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-608",
+      "accountId": "card-orbita",
+      "date": "2026-07-30",
+      "description": "Pet Shop Fictício",
+      "amountCents": -14404,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-609",
+      "accountId": "card-orbita",
+      "date": "2026-07-30",
+      "description": "Café Grão Fictício",
+      "amountCents": -3070,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-610",
+      "accountId": "card-horizonte",
+      "date": "2026-07-31",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -19399,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-611",
+      "accountId": "card-horizonte",
+      "date": "2026-07-31",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -3662,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-612",
+      "accountId": "card-orbita",
+      "date": "2026-07-31",
+      "description": "Café Grão Fictício",
+      "amountCents": -1434,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-613",
+      "accountId": "card-horizonte",
+      "date": "2026-08-01",
+      "description": "Transporte por App Fictício",
+      "amountCents": -4545,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-614",
+      "accountId": "card-orbita",
+      "date": "2026-08-01",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -10719,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-615",
+      "accountId": "card-horizonte",
+      "date": "2026-08-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-616",
+      "accountId": "card-horizonte",
+      "date": "2026-08-02",
+      "description": "Café Grão Fictício",
+      "amountCents": -2456,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-617",
+      "accountId": "card-orbita",
+      "date": "2026-08-02",
+      "description": "Café Grão Fictício",
+      "amountCents": -1629,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-618",
+      "accountId": "card-orbita",
+      "date": "2026-08-02",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -36292,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-619",
+      "accountId": "card-orbita",
+      "date": "2026-08-03",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -19681,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-620",
+      "accountId": "acc-aurora",
+      "date": "2026-08-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-621",
+      "accountId": "acc-horizonte",
+      "date": "2026-08-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -142908,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-34",
+      "synthetic": true
+    },
+    {
+      "id": "42-622",
+      "accountId": "acc-pix",
+      "date": "2026-08-05",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -7460,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-623",
+      "accountId": "card-horizonte",
+      "date": "2026-08-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 142908,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-34",
+      "synthetic": true
+    },
+    {
+      "id": "42-624",
+      "accountId": "card-orbita",
+      "date": "2026-08-05",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -39918,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-625",
+      "accountId": "card-orbita",
+      "date": "2026-08-05",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -7783,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-626",
+      "accountId": "card-orbita",
+      "date": "2026-08-05",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -7617,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-627",
+      "accountId": "acc-aurora",
+      "date": "2026-08-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-32",
+      "synthetic": true
+    },
+    {
+      "id": "42-628",
+      "accountId": "acc-pix",
+      "date": "2026-08-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-32",
+      "synthetic": true
+    },
+    {
+      "id": "42-629",
+      "accountId": "card-horizonte",
+      "date": "2026-08-06",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -34364,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-630",
+      "accountId": "card-orbita",
+      "date": "2026-08-06",
+      "description": "Transporte por App Fictício",
+      "amountCents": -6390,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-631",
+      "accountId": "card-horizonte",
+      "date": "2026-08-08",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -29620,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-632",
+      "accountId": "card-orbita",
+      "date": "2026-08-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-633",
+      "accountId": "card-orbita",
+      "date": "2026-08-08",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -20499,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-634",
+      "accountId": "card-orbita",
+      "date": "2026-08-08",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -2042,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-635",
+      "accountId": "acc-pix",
+      "date": "2026-08-09",
+      "description": "Transporte por App Fictício",
+      "amountCents": -2304,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-636",
+      "accountId": "card-horizonte",
+      "date": "2026-08-09",
+      "description": "Móveis Fictícios 8/10",
+      "amountCents": -18990,
+      "kind": "installment",
+      "installment": {
+        "number": 8,
+        "total": 10,
+        "groupId": "42-inst-2"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-637",
+      "accountId": "card-orbita",
+      "date": "2026-08-09",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3664,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-638",
+      "accountId": "acc-aurora",
+      "date": "2026-08-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -353598,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-33",
+      "synthetic": true
+    },
+    {
+      "id": "42-639",
+      "accountId": "card-orbita",
+      "date": "2026-08-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 353598,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-33",
+      "synthetic": true
+    },
+    {
+      "id": "42-640",
+      "accountId": "card-orbita",
+      "date": "2026-08-11",
+      "description": "Café Grão Fictício",
+      "amountCents": -1481,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-641",
+      "accountId": "card-orbita",
+      "date": "2026-08-11",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -10219,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-642",
+      "accountId": "card-orbita",
+      "date": "2026-08-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-643",
+      "accountId": "card-orbita",
+      "date": "2026-08-12",
+      "description": "Pet Shop Fictício",
+      "amountCents": -6877,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-644",
+      "accountId": "card-horizonte",
+      "date": "2026-08-14",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -15931,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-645",
+      "accountId": "card-orbita",
+      "date": "2026-08-14",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -4829,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-646",
+      "accountId": "card-orbita",
+      "date": "2026-08-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-647",
+      "accountId": "card-orbita",
+      "date": "2026-08-15",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1115,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-648",
+      "accountId": "card-orbita",
+      "date": "2026-08-15",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -8066,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-649",
+      "accountId": "card-orbita",
+      "date": "2026-08-17",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5978,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-650",
+      "accountId": "card-horizonte",
+      "date": "2026-08-18",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3495,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-651",
+      "accountId": "card-orbita",
+      "date": "2026-08-18",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -5862,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-652",
+      "accountId": "acc-horizonte",
+      "date": "2026-08-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-653",
+      "accountId": "card-orbita",
+      "date": "2026-08-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-654",
+      "accountId": "card-orbita",
+      "date": "2026-08-20",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -6934,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-655",
+      "accountId": "card-orbita",
+      "date": "2026-08-21",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1179,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-656",
+      "accountId": "card-orbita",
+      "date": "2026-08-21",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -5987,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-657",
+      "accountId": "card-horizonte",
+      "date": "2026-08-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-658",
+      "accountId": "card-orbita",
+      "date": "2026-08-22",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -22918,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-659",
+      "accountId": "card-orbita",
+      "date": "2026-08-22",
+      "description": "Pet Shop Fictício",
+      "amountCents": -13782,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-660",
+      "accountId": "card-orbita",
+      "date": "2026-08-22",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -29956,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-661",
+      "accountId": "card-orbita",
+      "date": "2026-08-23",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -1572,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-662",
+      "accountId": "card-orbita",
+      "date": "2026-08-23",
+      "description": "Pet Shop Fictício",
+      "amountCents": -17373,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-663",
+      "accountId": "card-horizonte",
+      "date": "2026-08-24",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -6692,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-664",
+      "accountId": "acc-pix",
+      "date": "2026-08-27",
+      "description": "Pix recebido (simulado)",
+      "amountCents": 9937,
+      "kind": "income_other",
+      "synthetic": true
+    },
+    {
+      "id": "42-665",
+      "accountId": "card-orbita",
+      "date": "2026-08-27",
+      "description": "Transporte por App Fictício",
+      "amountCents": -3597,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-666",
+      "accountId": "card-orbita",
+      "date": "2026-08-28",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -15123,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-667",
+      "accountId": "card-orbita",
+      "date": "2026-08-28",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -8548,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-668",
+      "accountId": "card-orbita",
+      "date": "2026-08-29",
+      "description": "Café Grão Fictício",
+      "amountCents": -3232,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-669",
+      "accountId": "card-orbita",
+      "date": "2026-08-29",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1306,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-670",
+      "accountId": "card-orbita",
+      "date": "2026-08-29",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -38494,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-671",
+      "accountId": "card-orbita",
+      "date": "2026-08-30",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -3019,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-672",
+      "accountId": "card-horizonte",
+      "date": "2026-08-31",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -12865,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-673",
+      "accountId": "card-orbita",
+      "date": "2026-08-31",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -23562,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-674",
+      "accountId": "card-orbita",
+      "date": "2026-08-31",
+      "description": "Café Grão Fictício",
+      "amountCents": -2821,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-675",
+      "accountId": "card-orbita",
+      "date": "2026-08-31",
+      "description": "Transporte por App Fictício",
+      "amountCents": -6405,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-676",
+      "accountId": "card-orbita",
+      "date": "2026-08-31",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -6173,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-677",
+      "accountId": "card-orbita",
+      "date": "2026-09-01",
+      "description": "Café Grão Fictício",
+      "amountCents": -2637,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-678",
+      "accountId": "card-orbita",
+      "date": "2026-09-01",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -26045,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-679",
+      "accountId": "card-horizonte",
+      "date": "2026-09-02",
+      "description": "Academia Fictícia",
+      "amountCents": -11990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-680",
+      "accountId": "card-orbita",
+      "date": "2026-09-02",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -1203,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-681",
+      "accountId": "card-horizonte",
+      "date": "2026-09-03",
+      "description": "Café Grão Fictício",
+      "amountCents": -2076,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-682",
+      "accountId": "card-horizonte",
+      "date": "2026-09-03",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3354,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-683",
+      "accountId": "card-orbita",
+      "date": "2026-09-03",
+      "description": "Pet Shop Fictício",
+      "amountCents": -8164,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-684",
+      "accountId": "card-orbita",
+      "date": "2026-09-04",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3138,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-685",
+      "accountId": "card-orbita",
+      "date": "2026-09-04",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -3380,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-686",
+      "accountId": "acc-aurora",
+      "date": "2026-09-05",
+      "description": "Salário Empresa Fictícia",
+      "amountCents": 520000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-687",
+      "accountId": "acc-horizonte",
+      "date": "2026-09-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": -145438,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-37",
+      "synthetic": true
+    },
+    {
+      "id": "42-688",
+      "accountId": "card-horizonte",
+      "date": "2026-09-05",
+      "description": "Pagamento de fatura Cartão Horizonte (simulado)",
+      "amountCents": 145438,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-37",
+      "synthetic": true
+    },
+    {
+      "id": "42-689",
+      "accountId": "card-orbita",
+      "date": "2026-09-05",
+      "description": "Transporte por App Fictício",
+      "amountCents": -6409,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-690",
+      "accountId": "acc-aurora",
+      "date": "2026-09-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": -30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-35",
+      "synthetic": true
+    },
+    {
+      "id": "42-691",
+      "accountId": "acc-pix",
+      "date": "2026-09-06",
+      "description": "Transferência entre contas próprias",
+      "amountCents": 30000,
+      "kind": "transfer_internal",
+      "transferGroupId": "42-tg-35",
+      "synthetic": true
+    },
+    {
+      "id": "42-692",
+      "accountId": "card-orbita",
+      "date": "2026-09-06",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -17643,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-693",
+      "accountId": "card-orbita",
+      "date": "2026-09-06",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -7933,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-694",
+      "accountId": "card-orbita",
+      "date": "2026-09-07",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -17884,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-695",
+      "accountId": "card-orbita",
+      "date": "2026-09-07",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -28758,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-696",
+      "accountId": "card-orbita",
+      "date": "2026-09-08",
+      "description": "Streaming Filmes Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-697",
+      "accountId": "card-horizonte",
+      "date": "2026-09-09",
+      "description": "Móveis Fictícios 9/10",
+      "amountCents": -18990,
+      "kind": "installment",
+      "installment": {
+        "number": 9,
+        "total": 10,
+        "groupId": "42-inst-2"
+      },
+      "synthetic": true
+    },
+    {
+      "id": "42-698",
+      "accountId": "acc-aurora",
+      "date": "2026-09-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": -423302,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-36",
+      "synthetic": true
+    },
+    {
+      "id": "42-699",
+      "accountId": "card-horizonte",
+      "date": "2026-09-10",
+      "description": "Café Grão Fictício",
+      "amountCents": -2205,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-700",
+      "accountId": "card-orbita",
+      "date": "2026-09-10",
+      "description": "Pagamento de fatura Cartão Órbita (simulado)",
+      "amountCents": 423302,
+      "kind": "card_bill_payment",
+      "transferGroupId": "42-tg-36",
+      "synthetic": true
+    },
+    {
+      "id": "42-701",
+      "accountId": "acc-pix",
+      "date": "2026-09-11",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -9276,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-702",
+      "accountId": "card-horizonte",
+      "date": "2026-09-11",
+      "description": "Mercado Vila Fictícia",
+      "amountCents": -44564,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-703",
+      "accountId": "card-orbita",
+      "date": "2026-09-11",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5862,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-704",
+      "accountId": "card-orbita",
+      "date": "2026-09-12",
+      "description": "Música Fictícia Premium",
+      "amountCents": -2190,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-705",
+      "accountId": "card-orbita",
+      "date": "2026-09-12",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -30326,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-706",
+      "accountId": "card-orbita",
+      "date": "2026-09-13",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -13964,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-707",
+      "accountId": "card-orbita",
+      "date": "2026-09-13",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -3091,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-708",
+      "accountId": "card-horizonte",
+      "date": "2026-09-15",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -15170,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-709",
+      "accountId": "card-orbita",
+      "date": "2026-09-15",
+      "description": "Nuvem Fictícia 100 GB",
+      "amountCents": -990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-710",
+      "accountId": "card-orbita",
+      "date": "2026-09-17",
+      "description": "Farmácia Saúde Fictícia",
+      "amountCents": -4197,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-711",
+      "accountId": "acc-pix",
+      "date": "2026-09-18",
+      "description": "Pet Shop Fictício",
+      "amountCents": -16909,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-712",
+      "accountId": "card-orbita",
+      "date": "2026-09-18",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -5984,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-713",
+      "accountId": "card-orbita",
+      "date": "2026-09-18",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -2821,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-714",
+      "accountId": "card-orbita",
+      "date": "2026-09-18",
+      "description": "Restaurante Sabor Fictício",
+      "amountCents": -6662,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-715",
+      "accountId": "card-horizonte",
+      "date": "2026-09-19",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -4869,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-716",
+      "accountId": "acc-horizonte",
+      "date": "2026-09-20",
+      "description": "Salário Empresa Fictícia (2ª parte)",
+      "amountCents": 380000,
+      "kind": "salary",
+      "synthetic": true
+    },
+    {
+      "id": "42-717",
+      "accountId": "card-orbita",
+      "date": "2026-09-20",
+      "description": "Jornal Fictício Digital",
+      "amountCents": -2990,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-718",
+      "accountId": "acc-pix",
+      "date": "2026-09-21",
+      "description": "Pet Shop Fictício",
+      "amountCents": -5167,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-719",
+      "accountId": "card-horizonte",
+      "date": "2026-09-21",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -18257,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-720",
+      "accountId": "card-orbita",
+      "date": "2026-09-21",
+      "description": "Café Grão Fictício",
+      "amountCents": -719,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-721",
+      "accountId": "card-orbita",
+      "date": "2026-09-21",
+      "description": "Livraria Página Fictícia",
+      "amountCents": -10775,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-722",
+      "accountId": "card-horizonte",
+      "date": "2026-09-22",
+      "description": "App de Idiomas Fictício",
+      "amountCents": -4490,
+      "kind": "subscription",
+      "synthetic": true
+    },
+    {
+      "id": "42-723",
+      "accountId": "card-orbita",
+      "date": "2026-09-22",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -929,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-724",
+      "accountId": "card-orbita",
+      "date": "2026-09-24",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -4093,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-725",
+      "accountId": "card-horizonte",
+      "date": "2026-09-26",
+      "description": "Café Grão Fictício",
+      "amountCents": -2491,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-726",
+      "accountId": "card-orbita",
+      "date": "2026-09-26",
+      "description": "Delivery Comida Fictícia",
+      "amountCents": -5449,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-727",
+      "accountId": "card-horizonte",
+      "date": "2026-09-27",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -11806,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-728",
+      "accountId": "card-horizonte",
+      "date": "2026-09-27",
+      "description": "Cinema Tela Fictícia",
+      "amountCents": -5072,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-729",
+      "accountId": "card-orbita",
+      "date": "2026-09-27",
+      "description": "Pet Shop Fictício",
+      "amountCents": -6903,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-730",
+      "accountId": "acc-pix",
+      "date": "2026-09-29",
+      "description": "Posto Combustível Fictício",
+      "amountCents": -27809,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-731",
+      "accountId": "card-horizonte",
+      "date": "2026-09-29",
+      "description": "Loja de Roupas Fictícia",
+      "amountCents": -25953,
+      "kind": "purchase",
+      "synthetic": true
+    },
+    {
+      "id": "42-732",
+      "accountId": "card-orbita",
+      "date": "2026-09-30",
+      "description": "Padaria Pão Imaginário",
+      "amountCents": -2385,
+      "kind": "purchase",
+      "synthetic": true
+    }
+  ]
+}
