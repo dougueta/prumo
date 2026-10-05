@@ -13,15 +13,18 @@ npm run dev:demo       # modo demonstração (selo "Demonstração — dados fic
   alternar entre 360px (barra inferior) e 1280px (menu lateral).
 - Catálogo: `/catalogo` (não existe em produção).
 - Ajustes: `/mais/ajustes` → tema e "Ocultar valores".
+- Fora do shell: `/nao-existe` (404 em pt-BR) e `/~offline` — sem navegação, com tema e selo.
 
 ## Construir uma tela de feature com o design system (para Claude e Gemini)
 
 1. Consulte `/catalogo` e `specs/003-design-system/contracts/components.md`.
-2. Rota da feature no lugar previsto em `contracts/navigation.md` §2, dentro de `src/app/(app)/`.
+2. Rota da feature no lugar previsto em `contracts/navigation.md` §2, dentro de `src/app/(app)/`
+   (telas sem shell, como as de login da 006, seguem §2.1 e usam os mesmos componentes).
 3. Comece a página com `<PageHeader title="…" />`.
 4. Valores: **sempre** `<Money cents={…} />`; datas: `<RelativeDate date="YYYY-MM-DD" />`.
 5. Listas de transações: `<GroupedList>` + `<TransactionItem>`; estados: `EmptyState`,
-   `LoadingSkeleton`, `ErrorState` (nunca textos próprios — use os textos padrão).
+   `LoadingSkeleton`, `ErrorState` (nunca textos próprios — use os textos padrão). Ícone/cor de
+   categoria só por `categoryVisual()` (mapa fixo da 003).
 6. Cores/espaços só por classes de token (`bg-surface`, `text-foreground-muted`, `gap-4`).
    `npm run lint` acusa classe fora do tema, valor arbitrário (`w-[13px]`) e `dark:`.
 7. Nada de editar `src/components/ui/` — peça variante nova à 003.

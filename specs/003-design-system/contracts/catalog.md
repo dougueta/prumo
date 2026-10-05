@@ -51,4 +51,14 @@ Cabeçalho (nome, descrição, `importPath` copiável) → controles "Tema" e "O
 `generateDataset({ seed: 42, months: 12, anchorDate: "2026-09-30" })` (gerador da 001),
 memoizado no módulo. Proibido escrever valores/descrições de transação à mão no catálogo
 (exceção: casos-limite de formatação — `0`, `1`, `-1`, `null`, `100000000000` — que não são
-dados de pessoa).
+dados de pessoa). Categoria, status, natureza e categorização, que o gerador não tem, são
+**derivados** por regra determinística (data-model §7), nunca digitados.
+
+"Hoje" do catálogo é fixo em `2026-09-30` (data-model §8): datas relativas e screenshots não
+dependem do dia real.
+
+## 5. Tela de exemplo (SC-006)
+
+`/catalogo/exemplo-extrato` monta um extrato fictício só com componentes públicos (PageHeader,
+SummaryCard, GroupedList, TransactionItem, EmptyState, ErrorState em bloco). Ela serve de
+prova automática de que uma tela de feature fica dentro dos fundamentos (lint + E2E de cores).

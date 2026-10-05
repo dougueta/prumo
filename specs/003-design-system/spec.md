@@ -269,6 +269,11 @@ componente tem regras de uso documentadas.
   conteúdo tem largura máxima legível no desktop.
 - **Selo de demonstração e indicador de ambiente** não podem ser ocultados pelo usuário nem
   sobrepostos por diálogos de forma que pareça produção.
+- **Endereço inexistente**: uma URL que não corresponde a nenhuma tela mostra a página
+  "Página não encontrada" em português, com o visual do Prumo (tema e selo de demonstração) e a
+  ação "Voltar ao início" — nunca a página padrão em inglês da plataforma.
+- **Telas fora do shell** (entrada/login, desbloqueio, "sem conexão", "não encontrada"): não
+  exibem navegação principal, mas seguem os fundamentos visuais, o tema e o selo de demonstração.
 
 ## Requirements *(mandatory)*
 
@@ -298,7 +303,8 @@ componente tem regras de uso documentadas.
   largas, um menu lateral com os mesmos destinos e ordem.
 - **FR-008**: O shell MUST definir um mapa de onde cada uma das 32 features do roadmap se
   encaixa (destino principal, subseção ou "Mais"), documentado nas regras de uso, para que
-  nenhuma feature crie navegação própria.
+  nenhuma feature crie navegação própria; o mapa também lista as telas que ficam **fora do
+  shell** (entrada/login, desbloqueio, "sem conexão", "não encontrada") e a feature dona de cada uma.
 - **FR-009**: Destinos ainda sem feature implementada MUST exibir uma tela "em breve"
   padronizada; destinos de features futuras podem ficar ocultos até existirem, conforme o mapa.
 - **FR-010**: O shell MUST ter cabeçalho com título da tela, ação de voltar em telas internas,
@@ -306,8 +312,9 @@ componente tem regras de uso documentadas.
   em menu).
 - **FR-011**: Cada tela MUST ter endereço próprio, compatível com voltar/avançar do navegador
   e com o gesto de voltar do celular; a seção ativa MUST ficar destacada na navegação.
-- **FR-012**: Em modo demonstração, o shell MUST exibir o selo "Demonstração — dados fictícios"
-  em todas as telas, sempre visível e não removível pelo usuário (ADR 0006).
+- **FR-012**: Em modo demonstração, o app MUST exibir o selo "Demonstração — dados fictícios"
+  em todas as telas — dentro e fora do shell (inclusive entrada/login, "sem conexão" e "não
+  encontrada") —, sempre visível e não removível pelo usuário (ADR 0006).
 - **FR-013**: O shell MUST exibir indicador discreto do ambiente em `local`; em `production`
   não exibe indicador nem selo.
 - **FR-014**: O shell MUST exibir aviso de "offline" quando o aparelho perde conexão e
@@ -361,8 +368,9 @@ componente tem regras de uso documentadas.
 **Componentes de finanças**
 - **FR-032**: O item de transação MUST exibir ícone/cor da categoria, descrição, categoria,
   conta/origem, data, valor e indicadores opcionais de pendente, parcela ("3/10"),
-  transferência entre contas próprias e origem/confiança da categorização; MUST ser acionável
-  (abre detalhe) e ter versões compacta e normal.
+  natureza (transferência entre contas próprias, pagamento de fatura, estorno — Constitution IV),
+  valor na moeda original (compra internacional) e origem/confiança da categorização; MUST ser
+  acionável (abre detalhe) e ter versões compacta e normal.
 - **FR-033**: O card de resumo MUST exibir título, valor principal, variação opcional em
   relação a um período de referência (com seta e sinal, não só cor) e estados
   carregando/erro/vazio próprios.
@@ -472,6 +480,24 @@ componente tem regras de uso documentadas.
 - Q: O modo privacidade (ocultar valores) entra já nesta feature? → A: Sim, completo: botão no
   cabeçalho e em Ajustes, persistido no aparelho e respeitado por todo componente de valor
   (FR-031).
+
+### Remediação pós-analyze 2026-10-05
+
+Ajustes de requisito vindos do `/speckit-analyze` e das decisões transversais da onda 1
+(sem renumerar FRs; reaprovação no Gate 2 junto com plan + tasks):
+
+- FR-012: o selo de demonstração vale para **todas** as telas, inclusive fora do shell
+  (entrada/login da 006, "sem conexão", "não encontrada") — fica no layout raiz (ADR 0006).
+- FR-008: o mapa de navegação lista também as telas fora do shell e suas donas
+  (`/entrar`, `/entrar/codigo`, `/desbloquear` → 006; `/~offline` → 001; 404 raiz → 003). A tela
+  de segurança da conta fica em `/mais/seguranca` (decisão do Doug, D-B).
+- FR-032: o item de transação mostra a natureza (entre contas, pagamento de fatura, estorno) e
+  o valor na moeda original — alinhado ao modelo da 004 sem alterá-la.
+- Detalhamentos de contrato (texto dos FRs inalterado): o selo de origem (FR-035) também
+  representa a origem "fonte" do modelo da 004; ícone e cor de categoria (FR-036) vêm de um
+  mapa fixo da 003 por categoria de 1º nível; "seleção longa" (FR-044) = mais de 7 opções.
+  Ver contracts/components.md.
+- Edge cases novos: endereço inexistente (404 em português com o visual do app) e telas fora do shell.
 
 ## Assumptions
 
