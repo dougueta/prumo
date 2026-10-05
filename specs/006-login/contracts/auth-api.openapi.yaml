@@ -5,6 +5,8 @@ info:
   description: >
     Route Handlers de autenticação. Todas as respostas têm `Cache-Control: no-store`.
     Nenhuma resposta contém tokens, códigos, e-mails de terceiros ou mensagens do provedor.
+    Todo `Set-Cookie` emitido tem `HttpOnly; SameSite=Lax; Path=/` e `Secure` fora de `local`
+    (FR-023, data-model §10). Todo POST exige `Origin` = `APP_ORIGIN`, senão `403 ORIGIN_MISMATCH`.
 servers:
   - url: /
 paths:
@@ -25,6 +27,19 @@ paths:
             (evento `provider_error`).
           headers:
             Location: { schema: { type: string } }
+            Set-Cookie: { schema: { type: string }, description: "cookies sb-* e prumo_device (se ausente), todos HttpOnly" }
+  /auth/sair:
+    get:
+      summary: Limpa cookies de sessão já encerrada/expirada/inválida (auth-flows §2.1)
+      parameters:
+        - { name: next, in: query, required: false, schema: { type: string, maxLength: 512 } }
+      responses:
+        "302":
+          description: >
+            Sessão ACTIVE ou LOCKED ⇒ `Location: safeNext(next)` sem efeito (não desloga).
+            Caso contrário ⇒ cookies de auth apagados e `Location: /entrar?next=…&erro=expirada`.
+          headers:
+            Location: { schema: { type: string } }
   /api/auth/status:
     get:
       summary: Estado da sessão para o SessionGuard (não renova `last_active_at`)
@@ -38,9 +53,14 @@ paths:
                 required: [state]
                 properties:
                   state: { type: string, enum: [active, locked] }
-                  canUnlock: { type: boolean, description: "dispositivo/usuário tem credencial WebAuthn" }
+                  canUnlock: { type: boolean, description: "existe credencial WebAuthn cadastrada NESTE dispositivo (prumo_device)" }
         "401":
-          description: Sem sessão, expirada ou encerrada
+          description: Sem sessão (UNAUTHENTICATED), expirada ou encerrada (SESSION_EXPIRED)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+        "503":
+          description: Banco indisponível (UNAVAILABLE) — falha fechada
           content:
             application/json:
               schema: { $ref: "#/components/schemas/Error" }
@@ -53,11 +73,12 @@ paths:
           content: { application/json: { schema: { type: object } } }
         "401": { $ref: "#/components/responses/Unauthenticated" }
         "403":
-          description: Janela de cadastro encerrada
+          description: Janela de cadastro encerrada (ENROLL_WINDOW_CLOSED) ou Origin inválido (ORIGIN_MISMATCH)
           content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
+        "423": { description: Sessão LOCKED, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
   /api/auth/webauthn/register/verify:
     post:
-      summary: Verifica e grava a credencial (evento unlock_enrolled)
+      summary: Verifica e grava a credencial vinculada ao `device_id` deste dispositivo (evento unlock_enrolled)
       requestBody:
         required: true
         content: { application/json: { schema: { type: object, description: RegistrationResponseJSON } } }
@@ -69,10 +90,10 @@ paths:
     post:
       summary: Opções de autenticação para desbloquear sessão LOCKED
       responses:
-        "200": { description: PublicKeyCredentialRequestOptionsJSON (allowCredentials do dono, userVerification required), content: { application/json: { schema: { type: object } } } }
+        "200": { description: PublicKeyCredentialRequestOptionsJSON (allowCredentials = só as credenciais do dono com o device_id deste dispositivo; userVerification required), content: { application/json: { schema: { type: object } } } }
         "401": { $ref: "#/components/responses/Unauthenticated" }
         "409":
-          description: Sem credencial cadastrada (exige entrada completa)
+          description: Sem credencial cadastrada neste dispositivo (NO_CREDENTIAL — exige entrada completa)
           content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } }
   /api/auth/webauthn/unlock/verify:
     post:
@@ -94,7 +115,7 @@ components:
       type: object
       required: [error]
       properties:
-        error: { type: string, enum: [UNAUTHENTICATED, LOCKED, SESSION_EXPIRED, ENROLL_WINDOW_CLOSED, NO_CREDENTIAL, CHALLENGE_EXPIRED, INVALID] }
+        error: { type: string, enum: [UNAUTHENTICATED, LOCKED, SESSION_EXPIRED, UNAVAILABLE, ORIGIN_MISMATCH, ENROLL_WINDOW_CLOSED, NO_CREDENTIAL, CHALLENGE_EXPIRED, INVALID] }
   responses:
     Unauthenticated:
       description: Sem sessão válida

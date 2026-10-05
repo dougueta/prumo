@@ -2,6 +2,8 @@
 
 Fatos verificados em 2026-10-02 (docs do Next 16.3 instaladas em `node_modules/next/dist/docs/`,
 docs do Supabase Auth, `npm view`). Base: implementação da 001 (branch `001-setup-projeto`).
+Revisado em 2026-10-05 (remediação pós-analyze e decisões transversais da onda 1): R-02, R-05,
+R-06, R-09, R-10, R-11, R-12, R-15 e novos R-16 a R-19.
 
 ## R-01 · Provedor de identidade
 - **Decision**: **Supabase Auth** (já na stack, ADR 0002) para identidade — Google OAuth +
@@ -18,7 +20,10 @@ docs do Supabase Auth, `npm view`). Base: implementação da 001 (branch `001-se
 - **Rationale**: resolve o desvio da 001 (variáveis `NEXT_PUBLIC_*` são embutidas no build e
   impediriam o mesmo build de servir `local` e `preview`). Permite cookies **HttpOnly**
   (FR-023): sobrescrevemos as opções em `setAll` (`httpOnly: true`, `secure` fora de `local`,
-  `sameSite: "lax"`, `path: "/"`). Nova chave `SUPABASE_PUBLISHABLE_KEY` é lida **só no servidor
+  `sameSite: "lax"`, `path: "/"`) com **uma única** função `authCookieOptions()`, usada tanto no
+  adaptador de `cookies()` (Server Actions/Route Handlers) quanto no de
+  `NextRequest/NextResponse` do proxy — o padrão do `@supabase/ssr` não usa HttpOnly (pensado
+  para o cliente de navegador), então o refresh no proxy precisa da mesma sobrescrita. Nova chave `SUPABASE_PUBLISHABLE_KEY` é lida **só no servidor
   em runtime** (não é segredo, mas não precisa ir ao navegador).
 - **Alternatives**: entregar a chave publicável ao navegador em runtime via endpoint (funciona,
   mas cookies deixariam de ser HttpOnly e o JS do client teria tokens — pior para FR-023).
@@ -55,6 +60,10 @@ docs do Supabase Auth, `npm view`). Base: implementação da 001 (branch `001-se
   `userVerification: "required"`) cadastrada por dispositivo após a entrada completa; no
   desbloqueio, o servidor verifica a asserção e só então volta a servir dados. O bloqueio é
   **imposto no servidor** (estado `LOCKED` derivado de `last_active_at`), não só uma tela.
+  **Vínculo ao dispositivo** (remediação M3): cookie HttpOnly `prumo_device` (UUID, 400 d) gravado
+  na entrada completa; `app_sessions.device_id` e `webauthn_credentials.device_id`;
+  `allowCredentials` só com as credenciais daquele dispositivo. Sem isso, um computador sem
+  credencial ofereceria "Desbloquear" com a credencial do celular (fluxo híbrido via QR).
 - **Rationale**: o Supabase lançou passkeys em **beta** (maio/2026), voltadas a login de
   primeiro fator e com helpers de navegador — exigiria cliente Supabase no browser (R-02) e
   dependência beta para um dado financeiro. SimpleWebAuthn é maduro, MIT, sem custo.
@@ -71,7 +80,8 @@ docs do Supabase Auth, `npm view`). Base: implementação da 001 (branch `001-se
   "60s"`. Novo pedido substitui o token anterior (uso único nativo).
 - **Classificação do erro**: o Supabase responde igual para código errado e expirado; o app
   classifica pelo histórico (`access_events`): último `otp_requested` > 10 min ⇒ `expired`;
-  `login_succeeded` posterior ao pedido ⇒ `used`; senão `wrong_code`.
+  `login_succeeded` (com o mesmo `email_hash`, gravado obrigatoriamente) posterior ao pedido
+  ⇒ `used`; senão `wrong_code`.
 - **Rationale**: o código é digitado dentro do app instalado — link mágico abriria no Safari
   fora da PWA no iOS (FR-003).
 
@@ -108,9 +118,12 @@ docs do Supabase Auth, `npm view`). Base: implementação da 001 (branch `001-se
 ## R-09 · Rate limit e resposta neutra
 - **Decision**: contagem em janelas deslizantes sobre `access_events` (sem tabela extra),
   chaves `email_hash`/`ip_hash` = HMAC-SHA256(`AUTH_HASH_SECRET`, valor normalizado). Limites:
-  FR-005 (5 falhas/15 min por e-mail e por IP; 1 pedido/60 s e 5/h por e-mail; 10 pedidos/h
-  por IP). Resposta de `requestCode` com **piso de tempo de 1.500 ms** e mesmo texto para
-  qualquer caso (FR-002, SC-002).
+  FR-005 (5 verificações falhas/15 min por e-mail e por IP; 1 pedido/60 s e 5/h por e-mail).
+  **Só `otp_failed` conta como falha** (remediação H1): contar `email_refused` fazia o contador
+  por IP crescer apenas para e-mails não autorizados — oráculo de enumeração. O limite extra de
+  10 pedidos/h por IP foi retirado (não está na spec; X). Resposta de `requestCode` com **piso
+  de 1.500 ms** e de falhas de `verifyCode` com piso de 1.000 ms, mesmo texto para qualquer
+  caso (FR-002, SC-002).
 - **Conflito resolvido**: se o provedor de e-mail falhar, a resposta continua neutra (FR-002
   prevalece sobre a mensagem de indisponibilidade da spec); o evento `provider_error` aparece
   no histórico. Falhas do Google (callback) mostram a mensagem de indisponibilidade — não
@@ -125,9 +138,15 @@ docs do Supabase Auth, `npm view`). Base: implementação da 001 (branch `001-se
 - **Decision**: `src/proxy.ts` (substitui a trava Basic Auth da 001): renova tokens do Supabase
   (padrão `@supabase/ssr`), redireciona para `/entrar?next=` quem não tem cookie de sessão em
   rota não pública e aplica `Cache-Control: private, no-store` em páginas protegidas. A
-  autorização real é do DAL (`requireSession`) chamado em layout `(app)`, em cada Server Action
-  e em cada Route Handler protegido. Teste estático garante que todo handler/ação protegido
-  chama o DAL.
+  autorização real é do DAL (`requireSession`) chamado em **cada `page.tsx`**, em cada Server
+  Action, em cada Route Handler protegido e dentro de `getDataClient()`. **Não** no layout: o
+  guia (`authentication.md`, "Layouts and auth checks") avisa que layouts não re-renderizam na
+  navegação e não impedem que segmentos filhos rodem/apareçam no RSC payload. Teste estático
+  garante que toda página/handler/ação protegida chama o DAL.
+- **Cookies em Server Components**: não podem ser gravados (`cookies.md`). Logo, o DAL numa
+  página com sessão encerrada redireciona para o Route Handler `/auth/sair`, que limpa cookies.
+  O proxy **não** redireciona `/entrar` → `/` por presença de cookie (com JWT ainda válido de uma
+  sessão encerrada isso gerava laço); a página `/entrar` decide no servidor.
 
 ## R-11 · Cache e "voltar" após logout (FR-009)
 - **Decision**: páginas protegidas com `Cache-Control: private, no-store`; o service worker da
@@ -138,10 +157,13 @@ docs do Supabase Auth, `npm view`). Base: implementação da 001 (branch `001-se
 ## R-12 · Modo demonstração (ADR 0006)
 - **Decision**: interface `AuthService` com duas implementações: `supabase` e `demo`
   (selecionada por `isDemo()`, que vem de `loadEnv()` validado com a proteção cruzada
-  `VERCEL_ENV`). Demo: usuário fixo "Usuário Demonstração" (`demo@prumo.invalid`), entra
-  automaticamente; "Sair" grava cookie `prumo_demo_out=1`; a tela de entrada simula fluxos com
-  e-mails fictícios e mostra o código na tela ("Código de demonstração: 246810"); histórico =
-  lista sintética determinística + eventos da página em memória (somem ao recarregar).
+  `VERCEL_ENV`). Demo: usuário fixo "Usuário Demonstração" (`demo@prumo.invalid`) com
+  `DEMO_OWNER_ID` importado da 004, entra automaticamente; sessão demo = `prumo_demo_sid` da 004
+  (decisão transversal: um único mecanismo); "Sair" grava cookie `prumo_demo_out=1`; a tela de
+  entrada simula fluxos com e-mails fictícios e mostra o código na tela ("Código de
+  demonstração: 246810"); histórico = lista sintética determinística + eventos simulados,
+  guardados em memória do servidor por `prumo_demo_sid` (TTL 2 h). `scripts/start-demo.mjs`
+  passa a zerar `SUPABASE_*`, `AUTH_*` e `APP_ORIGIN` (senão o `.env.local` quebraria o boot).
 - **Produção**: o módulo demo não é alcançável quando `APP_ENV ≠ preview`; teste unitário prova
   que nenhum cookie/header/parâmetro ativa a demo em `production` (FR-026). Previews continuam
   atrás da Vercel Authentication (FR-027).
@@ -163,3 +185,32 @@ docs do Supabase Auth, `npm view`). Base: implementação da 001 (branch `001-se
 | `@simplewebauthn/server` | 14.0.3 | verificação WebAuthn (desbloqueio) |
 | `@simplewebauthn/browser` | 14.0.0 | cerimônia WebAuthn no navegador |
 | `msw` (dev) | 3.0.2 | simular Supabase Auth/Google em testes de contrato |
+
+`@axe-core/playwright` (a11y, T048) é introduzido e justificado pela **003**, integrada antes;
+a 006 não o reintroduz.
+
+## R-16 · Origem local: `localhost`, nunca IP
+- **Fato**: WebAuthn exige que o RP ID seja um domínio válido; endereços IP (`127.0.0.1`) são
+  recusados pelo navegador. `localhost` é aceito e é contexto seguro.
+- **Decision**: `APP_ORIGIN=http://localhost:<porta>` em dev (3000) e E2E (3100, por webServer do
+  Playwright); `site_url`/redirects do Supabase local alinhados.
+
+## R-17 · FR-027 verificado automaticamente
+- **Decision**: workflow `preview-protection.yml` no evento `deployment_status` (Preview com
+  sucesso) faz uma requisição sem bypass e exige 401/redirecionamento para o login da Vercel
+  (`checkPreviewProtection`, com teste unitário). Gratuito (GitHub Actions); não precisa de token
+  da Vercel.
+
+## R-18 · CI
+- **Fato**: o CI da 001 exclui `mailpit` do `supabase start` e só roda `test:unit`; nenhum job
+  conhece as variáveis novas.
+- **Decision**: ligar mailpit; job novo "Testes de contrato" (`test:contract`) sem renomear os
+  jobs da 001; `scripts/ci-supabase-env.mjs` exporta `SUPABASE_PUBLISHABLE_KEY` (nome único com a
+  004) e `AUTH_*` sintéticos; `npm run auth:provision` antes de integração/E2E.
+
+## R-19 · `getClaims()` e chaves JWT
+- **Fato**: `getClaims()` verifica o JWT localmente (JWKS) quando o projeto usa chaves
+  assimétricas; com chave simétrica (padrão do Supabase CLI local sem `signing_keys_path`) cai
+  para uma chamada ao Auth. Projetos novos do Supabase hospedado usam chaves assimétricas.
+- **Decision**: manter `getClaims()` (nunca `getSession()` para autorizar); meta "≤ 1 consulta"
+  medida em produção; em local o custo extra é aceito (plan §Riscos aceitos).
