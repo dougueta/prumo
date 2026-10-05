@@ -17,6 +17,11 @@ Regras: features MUST NOT editar `src/components/ui/`; variantes novas são pedi
 `md`, `icon` (exige `aria-label`). Prop `pending` → desabilita, mostra spinner e
 `aria-busy` (FR-040).
 
+Ajustes obrigatórios no código gerado (T021): sem `bg-black/*`/`text-white` (a paleta padrão
+foi removida) → `bg-overlay`, `text-primary-foreground`, `text-danger-foreground`; `dark:` só
+aqui em `ui/`, resolvido pela variante redefinida (data-model §1.1a). `no-unknown-classes`
+também vale para `ui/`.
+
 ## 2. Finanças (`src/components/finance/`)
 
 ### `Money` (S) — FR-025..FR-028, FR-005
@@ -36,14 +41,16 @@ type MoneyProps = {
 - Sempre `tabular-nums`; HTML: `<span data-money>` com `[data-money-value]` (visível +
   `sr-only` com `moneyToSpeech`) e `[data-money-mask]` (`R$ ••••`, sr "valor oculto"),
   alternados por `html[data-privacy="on"]` (FR-027).
-- Lança erro em desenvolvimento se `cents` não for inteiro seguro.
+- `cents` não inteiro/inseguro → `TypeError` em **qualquer** ambiente (dinheiro inválido é bug;
+  o `error.tsx` mais próximo mostra `ErrorState`, nunca um valor "chutado").
 
 ### `RelativeDate` (C) — FR-029
 ```ts
 type RelativeDateProps = { date: string /* YYYY-MM-DD */; variant?: "relative" | "absolute" };
 ```
 Renderiza `<time dateTime={date}>` com texto visível e `aria-label={dateToSpeech(date)}`.
-"Hoje" vem de `useToday()` (`TodayProvider` no root layout).
+"Hoje" vem de `useToday()` (`TodayProvider` no root layout:
+`{ today: string; fixed?: boolean }`; `fixed` desliga o recálculo — usado no catálogo, data-model §8).
 
 ### `PeriodLabel` (S) — FR-030
 `{ from: string; to?: string } | { month: string /* YYYY-MM */ }` → "Setembro de 2026",
@@ -57,11 +64,12 @@ type TransactionItemData = {
   amountCents: number;
   currency?: string;
   date: string;                                   // YYYY-MM-DD
-  category?: { name: string; icon: CategoryIconName; color: CategoryColor } | null; // null = "Sem categoria"
+  category?: { name: string; visual: CategoryVisualKey } | null; // null = "Sem categoria"; visual via categoryVisual()
   account: { name: string; institutionName: string; institutionIcon?: string };
   status?: "posted" | "pending";
   installment?: { number: number; total: number }; // "3/10"
-  isInternalTransfer?: boolean;                   // selo "Entre contas"
+  nature?: "regular" | "internal_transfer" | "card_payment" | "refund"; // selos "Entre contas" · "Pagamento de fatura" · "Estorno"
+  original?: { amountMinor: number; currency: string }; // compra internacional: "US$ 10,00" na linha secundária
   categorization?: SourceBadgeData;               // origem/confiança (§ SourceBadge)
 };
 type TransactionItemProps = {
@@ -74,7 +82,12 @@ type TransactionItemProps = {
 ```
 Layout: ícone de categoria (40px) · descrição (até 2 linhas, `line-clamp`, texto completo no
 `title`/leitor) · linha secundária (categoria · conta · data) · `Money` à direita (nunca
-empurrado para fora). Pendente → selo "Pendente" + opacidade do valor reduzida via token.
+empurrado para fora; valores ≥ R$ 1 bi usam `whitespace-nowrap` e a descrição encolhe).
+Pendente → selo "Pendente" + opacidade do valor reduzida via token. `nature` ≠ `regular` →
+selo de texto (nunca só ícone). Mapeamento a partir do modelo da 004 (feito pelas features
+012+): `amount_cents` → `amountCents`; `booked_on` → `date`; `nature` → `nature`;
+`original_amount_minor`/`original_currency` → `original`; `category_source`/`category_confidence`
+→ `categorization` (nível pelos limiares da 014); categoria de 1º nível → `categoryVisual()`.
 
 ### `SummaryCard` (S) — FR-033
 ```ts
@@ -84,7 +97,7 @@ type SummaryCardProps = {
   variant?: "balance" | "movement" | "neutral";   // repassa ao Money
   compact?: boolean;
   delta?: { cents: number; label: string; trend: "up" | "down" | "flat"; good: boolean };
-  // ex.: { cents: -12000, label: "vs. agosto", trend: "down", good: true } → "↓ R$ 120,00 vs. agosto"
+  // ex.: { cents: -12000, label: "vs. agosto", trend: "down", good: true } → "↓ −R$ 120,00 vs. agosto" (seta + sinal U+2212 + texto)
   state?: "ready" | "loading" | "error" | "empty";
   onRetry?: () => void;
   href?: string;
@@ -102,20 +115,22 @@ semântica `<ul>`/`<li>`.
 type SourceBadgeData =
   | { origin: "manual" }
   | { origin: "rule"; ruleName?: string }
-  | { origin: "ai"; confidence: "high" | "medium" | "low" };
+  | { origin: "ai"; confidence: "high" | "medium" | "low" }
+  | { origin: "source"; sourceName?: string };     // categoria informada pelo banco/arquivo (004: category_source='source')
 type SourceBadgeProps = SourceBadgeData & { onCorrect?: () => void };
 ```
-Textos: "Manual", "Regra", "IA · confiança alta|média", "IA · revisar" (baixa, cor `warning`).
+Textos: "Manual", "Regra", "Fonte" (popover: "Categoria informada por {sourceName|a
+instituição}."), "IA · confiança alta|média", "IA · revisar" (baixa, cor `warning`).
 Toque abre `Popover` explicando a origem ("Categoria sugerida pela IA com confiança média.
 Você pode corrigir — sua correção vira regra.") + botão "Corrigir" (se `onCorrect`). Os
 limiares de confiança são da feature 014; o componente só recebe o nível.
 
 ### `CategoryIcon` (S) / `InstitutionAvatar` (S) — FR-036
-`CategoryIcon { icon: CategoryIconName; color: CategoryColor; size?: "sm"|"md" }` — conjunto
-fechado de nomes (`CATEGORY_ICONS`: mercado, restaurante, transporte, moradia, saude,
-educacao, lazer, compras, assinaturas, viagem, pets, impostos, tarifas, salario, investimento,
-transferencia, outros, sem-categoria). `InstitutionAvatar { name: string }` → iniciais em
-círculo (`cinza`) quando não há ícone.
+`CategoryIcon { visual: CategoryVisualKey; size?: "sm"|"md" }` — ícone e cor vêm **só** do
+mapa fixo `CATEGORY_VISUALS` (data-model §1.4; features não escolhem cor de categoria).
+`categoryVisual({ systemKey?, slug? } | null): CategoryVisualKey`. `InstitutionAvatar { name:
+string; icon?: string }` → iniciais em círculo (`cinza`) por `institutionInitials` (data-model §5)
+quando não há ícone.
 
 ## 3. Estados (`src/components/states/`) — FR-037, FR-038
 
@@ -124,7 +139,7 @@ círculo (`cinza`) quando não há ícone.
 | `EmptyState` (S) | `title, description?, icon?, action?: {label, href? onClick?}, variant?: "empty" \| "no-results"` | `no-results` traz ação padrão "Limpar filtros" (callback obrigatório) |
 | `LoadingSkeleton` (S) | `variant: "list" \| "card" \| "page" \| "text"; rows?` | formato do conteúdo final; `aria-busy` no contêiner + texto sr "Carregando…" |
 | `SlowLoading` (C) | `startedAt?; thresholdMs = 10000; onRetry` | troca o esqueleto por "Está demorando mais que o normal." + "Tentar novamente" |
-| `ErrorState` (S) | `title?, description?, onRetry?, scope?: "page" \| "block"` | padrão "Não foi possível carregar." / "Verifique sua conexão e tente de novo."; `role="alert"` só em `block` novo |
+| `ErrorState` (S) | `title?, description?, onRetry?, scope?: "page" \| "block"` | padrão "Não foi possível carregar." / "Verifique sua conexão e tente de novo."; `role="alert"` só em `block` novo; `block` ocupa só o bloco (erro parcial) |
 | `OfflineBanner` (C) | — (no shell) | "Você está offline. Algumas ações não vão funcionar até a conexão voltar." |
 | `ComingSoon` (S) | `title, description?` | "Em breve" padronizado |
 
@@ -135,19 +150,27 @@ círculo (`cinza`) quando não há ícone.
 | `FormField` (C) | `name, label, help?, children` (integra react-hook-form) | erro abaixo do campo, `aria-describedby`, `aria-invalid` |
 | `MoneyInput` (C) | `name, label, direction?: "income"\|"expense"\|"choose"` | `inputMode="decimal"`, `parseMoneyInput`, formata no blur, entrega cents com sinal; seletor Entrada/Saída quando `choose` |
 | `DateInput` (C) | `name, label` | `<input type="date">` + chips "Hoje"/"Ontem" (fuso SP) |
-| `SelectField` (C) | `name, label, options: {value,label,icon?}[]` | categoria/conta com ícone |
-| `SubmitButton` (C) | `children` | `pending` automático pelo estado do formulário; ignora duplo envio |
+| `SelectField` (C) | `name, label, options: {value,label,icon?}[]` | categoria/conta com ícone; até 7 opções → `select`; **> 7 opções** → lista com busca em `ResponsiveDialog` (painel inferior `< md`) — FR-044 |
+| `SwitchField` (C) | `name, label, help?` | `switch` com rótulo clicável; estado anunciado |
+| `TextareaField` (C) | `name, label, help?, maxLength?` | contador de caracteres anunciado ao se aproximar do limite |
+| `SubmitButton` (C) | `children` | `pending` automático pelo estado do formulário; ignora duplo envio; **offline → não envia** e chama `notify.offlineAction()` (data-model §6) |
 | `useAppForm` | `useAppForm(schema, defaults)` | `mode: "onTouched"`, `shouldFocusError: true`, zod resolver |
 | `ConfirmDialog` (C) | `title, description?, confirmLabel, onConfirm, destructive?` | `alert-dialog`; foco inicial em "Cancelar"; texto nomeia ação e objeto |
 | `ResponsiveDialog` (C) | `open, onOpenChange, title, children` | `< md`: `sheet` inferior; `≥ md`: `dialog`; fecha com Esc e gesto de voltar (`useBackToClose`) |
-| `toast` | `notify.success(msg)`, `notify.error(msg)`, `notify.info(msg)`, `notify.undo(msg, onUndo)` | ≥ 5 s; `undo` fica até ser dispensado; anunciado (`aria-live`) |
+| `toast` | `notify.success(msg)`, `notify.error(msg)`, `notify.info(msg)`, `notify.undo(msg, onUndo)`, `notify.offlineAction()` | ≥ 5 s; `undo` fica até ser dispensado; anunciado (`aria-live`); `<Toaster>` único no **root layout** (vale também fora do shell) |
+| `runOnline` | `runOnline(action): Promise<boolean>` | usado por `SubmitButton`/`notify.undo`: sem conexão não chama `action` e mostra "Sem conexão: nada foi salvo…" |
 
 ## 5. Shell (`src/components/shell/`)
 
 `AppShell`, `BottomNav`, `SideNav`, `PageHeader { title; back?: string; actions?: Action[] }`
-(`Action = { label; icon; onClick? | href? }`, máx. 2 visíveis), `PrivacyToggle`,
-`ThemeSelect`, `DemoBadge` (movido da 001), `EnvIndicator`, `SkipLink`, `TodayProvider` /
+(`Action = { label; icon; onClick? | href? }`, máx. 2 visíveis; da 3ª em diante vão para o menu
+"Mais ações"; `back` renderiza link "Voltar" com `aria-label`; título em `h1`; `pt-safe`),
+`PrivacyToggle`, `ThemeSelect`, `DemoBadge` (movido da 001 para `shell/`, **renderizado no
+root layout**), `EnvIndicator` (também no root layout), `SkipLink`, `TodayProvider` /
 `useToday`, `useOnline`, `useBackToClose`, `Logo`.
+
+Telas fora do shell (`/entrar`, `/entrar/codigo`, `/desbloquear` da 006; `/~offline`; 404 raiz)
+usam os mesmos primitivos, `forms/`, `states/`, `Logo` e tokens — sem `AppShell`.
 
 ## 6. Funções puras (`src/lib/format.ts`, `src/lib/preferences.ts`)
 
@@ -171,6 +194,8 @@ data-model §5. `parseTheme`, `parsePrivacy`, `THEME_COOKIE`, `PRIVACY_COOKIE`.
 | Confirmação destrutiva | "Excluir {objeto} '{nome}'?" · "Esta ação não pode ser desfeita." · "Excluir" / "Cancelar" |
 | Desfazer | "{Objeto} excluído." · ação "Desfazer" |
 | Em breve | "Em breve" · "Esta seção chega numa próxima versão do Prumo." |
+| Página inexistente | "Página não encontrada" · "O endereço pode ter mudado." · ação "Voltar ao início" |
+| Erro inesperado (raiz) | "Algo deu errado." · "Tente de novo em instantes." · "Tentar novamente" |
 | Valor oculto (leitor) | "valor oculto" |
 | Valor ausente (leitor) | "valor indisponível" |
 

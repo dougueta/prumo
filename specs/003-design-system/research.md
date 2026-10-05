@@ -193,10 +193,19 @@ Documentação consultada: `node_modules/next/dist/docs/` da versão instalada (
   usuário + 2 agentes); documentação só em Markdown (não mostra estados interativos nem temas).
 
 ## R-13 · Coordenação com features paralelas da onda 1
-- **006 (login)**: planeja `requireSession` no layout `(app)` e `/entrar` fora do shell. A 003
-  cria exatamente o route group `src/app/(app)/` com o shell; a 006 só acrescenta a checagem
-  de sessão nesse layout. A 003 **não** altera `src/proxy.ts`.
-- **004 (modelo de dados)**: os componentes recebem *view models* próprios (contracts §3)
-  — a 004 não precisa existir; features 012+ fazem o mapeamento domínio → view model.
-- **001**: a 003 implementa **depois do merge da 001 na `main`** (rebase obrigatório antes do
-  T001; hoje a branch `003-design-system` parte de uma `main` só com documentação).
+Decisões transversais fixadas em 2026-10-05 (pós-analyze; ordem de merge **004 → 003 → 006 → 002**):
+- **006 (login)**: a 003 cria o route group `src/app/(app)/` (layout com AppShell, Início,
+  remoção de `src/app/page.tsx`). A 006 não recria esses arquivos: põe `requireSession()` em
+  cada página/action/handler protegido e em `getDataClient()` (o layout não re-renderiza na
+  navegação no Next 16). `/entrar`, `/entrar/codigo` e `/desbloquear` ficam fora do shell
+  (contracts/navigation.md §2.1); a tela de segurança é `/mais/seguranca` (decisão do Doug).
+  `DemoBadge` fica no **root layout**, para valer também nessas telas. A 003 **não** altera
+  `src/proxy.ts`. `@axe-core/playwright` entra pela 003. A 003 ajusta `home.spec.ts`/`pwa.spec.ts`
+  ao shell; a 006 depois ajusta para sessão autenticada.
+- **004 (modelo de dados)**: os componentes recebem *view models* próprios
+  (contracts/components.md §2). O mapeamento domínio → view model (natureza, moeda original,
+  origem `source`, ícone/cor por `categoryVisual`) fica documentado no contrato; a 004 não muda.
+- **002 (revisor)**: os nomes dos jobs do CI da 001 ficam preservados; o PR leva os rótulos
+  `autor:claude` + `iniciativa:0` e o milestone `0 · Plataforma`.
+- **001**: a 003 implementa **depois** de a emenda v1.1.0 e a 001 estarem na `main` (rebase
+  obrigatório antes do T001).
