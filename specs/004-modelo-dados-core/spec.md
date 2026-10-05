@@ -207,6 +207,12 @@ registro de auditoria com autor, ação, campos alterados (antes/depois) e data/
 3. **Given** um lote de importação concluído, **When** o Doug o desfaz, **Then** todas as
    transações criadas por ele são excluídas logicamente com motivo "lote desfeito",
    permanecem restauráveis e o lote passa a "desfeito".
+4. **Given** um lote desfeito cujas transações foram excluídas com motivo "lote desfeito",
+   **When** o Doug reimporta o mesmo arquivo, **Then** essas transações são **restauradas**
+   (não duplicadas), a restauração é auditada e o novo lote informa quantas foram restauradas.
+5. **Given** um lote que falhou no meio com parte das transações gravadas, **When** o Doug o
+   desfaz, **Then** as transações gravadas por ele são excluídas logicamente com motivo
+   "lote desfeito" e o lote passa a "desfeito".
 
 ---
 
@@ -264,6 +270,12 @@ transação, efetivada, com o novo valor e auditoria da mudança.
   mesmo id externo em contas diferentes → transações distintas.
 - **Mesmo arquivo reimportado** → lote detectado como repetido pela impressão digital, sem
   novas transações.
+- **Arquivo de lote desfeito reimportado** → não é sinalizado como repetido; as transações
+  excluídas pelo desfazer são restauradas (Remediação 2026-10-05, decisão D-C).
+- **Mesmo lote enviado em várias partes** (arquivo grande) → a ordem de ocorrência entre
+  lançamentos idênticos vale para o lote inteiro, não para cada parte.
+- **Lote em revisão** (PDF, 010) → enquanto em revisão, nenhuma transação é gravada; as linhas
+  em revisão ficam fora do modelo core até a confirmação.
 - **Valor zero** (ex.: estorno anulado, tarifa isenta) → aceito e registrado.
 - **Valor fracionário abaixo do centavo, texto ou nulo** → rejeitado com erro explícito.
 - **Data futura** (ex.: parcelas futuras de cartão) → aceita; data inválida ou fora de
@@ -282,7 +294,8 @@ transação, efetivada, com o novo valor e auditoria da mudança.
 - **Gravação concorrente** (sincronização e edição manual ao mesmo tempo) → a edição manual
   prevalece nos campos que ela alterou; nenhuma das duas é perdida silenciosamente.
 - **Falha no meio de um lote** (timeout, queda) → lote marcado "falhou" com contadores
-  parciais; reprocessar o lote não duplica o que já foi gravado.
+  parciais; reprocessar (em um lote novo) não duplica o que já foi gravado; o lote que falhou
+  pode ser desfeito.
 - **Offline / ambiente de dados indisponível** → operações falham com erro explícito e
   recuperável; nenhuma gravação parcial sem auditoria.
 - **Parcela inconsistente** (n > m, m < 1) → rejeitada.
@@ -314,7 +327,8 @@ transação, efetivada, com o novo valor e auditoria da mudança.
 **Contas**
 - **FR-007**: O sistema MUST suportar os tipos de conta: corrente, carteira digital, cartão de
   crédito, poupança e investimento (este último sem detalhamento de ativos).
-- **FR-008**: Toda conta MUST ter nome, tipo, instituição, moeda (BRL por padrão), origem
+- **FR-008**: Toda conta MUST ter nome, tipo, instituição, moeda (somente BRL nesta versão —
+  Remediação 2026-10-05), origem
   (`pluggy` ou `manual`), situação (ativa/arquivada) e, opcionalmente, apelido, 4 últimos
   dígitos e identificador externo.
 - **FR-009**: Contas de cartão de crédito MUST aceitar limite (em centavos), dia de fechamento
@@ -365,7 +379,11 @@ transação, efetivada, com o novo valor e auditoria da mudança.
 
 **Proteção de edição manual**
 - **FR-024**: Todo campo editado manualmente pelo dono MUST ficar marcado como protegido e
-  MUST NOT ser sobrescrito por sincronização, reimportação, regra automática ou IA.
+  MUST NOT ser sobrescrito por sincronização, reimportação, regra automática ou IA. Em
+  transações a proteção é por campo (marcação); em contas é por partição de campos — os campos
+  editáveis pelo dono (apelido, dias de fechamento/vencimento, saldo inicial) nunca são
+  gravados por atores automáticos, e os campos informados pela fonte numa conta conectada
+  (nome, limite, saldo informado, 4 últimos dígitos) não são editáveis pelo dono.
 - **FR-025**: O dono MUST poder remover a proteção de um campo ("voltar ao automático").
 - **FR-026**: A categoria de cada transação MUST registrar a origem da atribuição (`manual`,
   `regra`, `ia`, `fonte`) e, quando automática, a confiança (0–100%); atribuição manual
@@ -382,7 +400,8 @@ transação, efetivada, com o novo valor e auditoria da mudança.
   "Pagamento de fatura", além de categorias para salário e tarifas bancárias.
 - **FR-030**: O dono MUST poder criar, renomear, ocultar, mover (trocar de pai), excluir
   logicamente e restaurar categorias; categorias de sistema podem ser renomeadas, mas não
-  excluídas.
+  excluídas nem movidas; categoria que contém subcategoria de sistema não pode ser excluída;
+  categoria com subcategorias não pode virar subcategoria.
 - **FR-031**: Ao excluir categoria com transações, o dono MUST escolher a categoria de destino
   (padrão "Sem categoria"); a reatribuição MUST ser auditada.
 - **FR-032**: Nome de categoria MUST ser único entre irmãs do mesmo pai (sem diferenciar
@@ -392,11 +411,17 @@ transação, efetivada, com o novo valor e auditoria da mudança.
 - **FR-033**: Toda importação ou execução de sincronização MUST criar um lote com: origem,
   conta(s) alvo, iniciador, impressão digital do arquivo (quando houver), período coberto,
   situação (`em_processamento`, `em_revisao`, `concluido`, `falhou`, `desfeito`), contadores
-  (lidas, criadas, atualizadas, ignoradas por duplicidade, rejeitadas) e datas de início/fim.
+  (lidas, criadas, atualizadas, restauradas, ignoradas por duplicidade, protegidas,
+  rejeitadas) e datas de início/fim. Enquanto `em_revisao`, o lote MUST NOT receber
+  transações (a revisão acontece fora do modelo core); a confirmação devolve o lote a
+  `em_processamento` para a gravação.
 - **FR-034**: Arquivo com a mesma impressão digital já importado com sucesso para a mesma conta
   MUST ser sinalizado como repetido antes de processar.
-- **FR-035**: O dono MUST poder desfazer um lote concluído; isso exclui logicamente todas as
-  transações criadas pelo lote (restauráveis), informando quantas tinham edições manuais.
+- **FR-035**: O dono MUST poder desfazer um lote concluído ou que falhou; isso exclui
+  logicamente todas as transações criadas pelo lote (restauráveis), informando quantas tinham
+  edições manuais. Reimportar o arquivo de um lote desfeito MUST restaurar as transações
+  excluídas pelo desfazer (motivo "lote desfeito"), com auditoria, e o novo lote MUST contar
+  as restauradas (decisão D-C, 2026-10-05).
 - **FR-036**: Lotes MUST NOT ser excluídos fisicamente.
 
 **Exclusão lógica e auditoria**
@@ -485,6 +510,24 @@ transação, efetivada, com o novo valor e auditoria da mudança.
   intocados.
 - Q: Saldo armazenado ou calculado? → A: Ambos — guarda o saldo da fonte com data de
   referência e oferece o saldo calculado a partir das transações; exibe a divergência.
+
+### Remediação pós-analyze 2026-10-05
+
+Ajustes após `/speckit-analyze` e decisões transversais da onda 1 (FRs não renumerados):
+
+- **D-C (Doug)**: reimportar o mesmo arquivo de um lote desfeito restaura as transações
+  excluídas pelo desfazer, com auditoria e contador de restauradas no novo lote (FR-035,
+  US5 cenário 4).
+- Lote que falhou também pode ser desfeito (FR-035, US5 cenário 5).
+- Lote "em revisão" não recebe transações; a revisão da 010 acontece fora do core (FR-033).
+- Ordem de ocorrência entre lançamentos idênticos vale para o lote inteiro (FR-022).
+- Proteção de edição manual em contas é por partição de campos (FR-024).
+- Moeda da conta somente BRL nesta versão (FR-008); outras moedas, por proposta futura.
+- "Sem categoria" tem uma única representação: transação sem categoria atribuída, exibida
+  com o nome da categoria de sistema "Sem categoria" (FR-029/FR-031).
+- Categoria de sistema não muda de pai; categoria que contém subcategoria de sistema não pode
+  ser excluída; categoria com subcategorias não pode virar subcategoria (FR-027/FR-030).
+- Restaurar uma categoria a reativa, mas não desfaz a reatribuição das transações (FR-030).
 
 ## Assumptions
 

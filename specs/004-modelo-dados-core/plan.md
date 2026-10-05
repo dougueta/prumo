@@ -36,10 +36,10 @@ no client; owner sempre explícito; mesmo comportamento nas duas implementaçõe
 | Princípio | Verificação nesta feature | Status |
 |---|---|---|
 | I. Spec-first | Deriva da spec 004 aprovada (Gate 1, 3 clarificações); branch `004-modelo-dados-core` | ✅ |
-| II. Privacidade | RLS + `FORCE RLS` nas 7 tabelas; sem policy de DELETE; `anon` sem acesso; só 4 últimos dígitos; chave secreta só em `server-only` com filtro de dono obrigatório; testes só com dados sintéticos e 2 donos sintéticos | ✅ |
+| II. Privacidade | RLS + `FORCE RLS` nas 7 tabelas; matriz GRANT/REVOKE explícita (sem DELETE/TRUNCATE; `anon` sem tabela nem função); sem policy de DELETE; só 4 últimos dígitos; chave secreta só em `server-only` com filtro de dono obrigatório; testes só com dados sintéticos e 2 donos sintéticos | ✅ |
 | III. Dinheiro exato | `BIGINT *_cents`; `Cents` validado como inteiro seguro; `parseCentsStrict` rejeita fração; `DATE` São Paulo; `TIMESTAMPTZ` UTC; moeda original separada | ✅ |
 | IV. Rastreabilidade | `source`, `external_id`, `identity_key`, `batch_id` obrigatórios; unicidade inclui excluídas; auditoria atômica append-only; DELETE físico bloqueado por trigger | ✅ |
-| V. Test-first | Tasks teste → implementação; bateria de contrato roda nas duas implementações no CI | ✅ |
+| V. Test-first | Toda task de implementação tem teste vermelho antes (inclusive schema, RLS, auditoria e guardas na Phase 2); bateria de contrato roda nas duas implementações no CI | ✅ |
 | VI. IA assistente | `category_source` + `category_confidence`; travas impedem IA/regra/sync de sobrescrever edição manual; "Sem categoria" como degradação | ✅ |
 | VII. Donos de dados / demo | Todas as tabelas com dona 004 registrada (data-model §1); repositórios Supabase + memória; demo com sessão própria | ✅ |
 | VIII. Revisão independente | PR `autor:claude` → revisão Gemini | ✅ |
@@ -79,8 +79,9 @@ src/
 │   ├── default-categories.ts       # taxonomia (data-model §4) — fonte única
 │   └── errors.ts                   # CoreError + mapeamento de erros do banco
 ├── data/core/
+│   ├── index.ts                    # superfície pública: porta, tipos, fábricas, CoreError, DEMO_OWNER_ID
 │   ├── ports.ts                    # CoreStore (contracts/core-store.md)
-│   ├── context.ts                  # OwnerContext, registerOwnerContextProvider, getCoreStore
+│   ├── context.ts                  # OwnerContext, DEMO_OWNER_ID, registerOwnerContextProvider, getCoreStore
 │   ├── synthetic-adapter.ts        # fromSyntheticDataset (data-model §7)
 │   ├── memory/memory-store.ts      # MemoryCoreStore
 │   ├── memory/demo-sessions.ts     # DemoSessions (LRU 50, TTL 2 h)
@@ -90,17 +91,19 @@ src/
 └── proxy.ts                        # + cookie prumo_demo_sid em preview (contracts/owner-context.md)
 scripts/generate-category-seed.ts   # gera a migração de seed (R-12)
 supabase/migrations/
-├── <ts>_core_schema.sql            # extensões, utilitárias, tabelas, índices, guardas
-├── <ts>_core_audit.sql             # audit_log, core_audit(), imutabilidade, proibição de DELETE
-├── <ts>_core_rls.sql               # RLS + policies + REVOKE
+├── <ts>_core_schema.sql            # extensões, utilitárias, tabelas, índices, guardas (INSERT/UPDATE)
+├── <ts>_core_audit.sql             # audit_log, core_audit(), imutabilidade, proibição de DELETE/TRUNCATE
+├── <ts>_core_rls.sql               # RLS + FORCE + policies + matriz GRANT/REVOKE (data-model §3)
 ├── <ts>_core_functions.sql         # funções core_* (data-model §5)
 └── <ts>_core_seed_catalog.sql      # gerado: category_templates + catálogo de instituições
 tests/
 ├── contract/core-store.contract.ts # bateria única (describeCoreStoreContract)
 ├── helpers/supabase-test.ts        # usuários de teste (Admin API), clientes user/service
-├── unit/core/                      # domínio + memory-store.contract.test.ts + adapter + demo
-└── integration/core/               # supabase-store.contract, rls, audit, guards, perf
-scripts/ci-supabase-env.mjs         # + SUPABASE_TEST_PUBLISHABLE_KEY (só testes)
+├── unit/core/                      # domínio, errors, memory-store.contract.test.ts, adapter, demo
+├── unit/demo-cookie.test.ts        # cookie prumo_demo_sid no proxy
+└── integration/core/               # schema, rls, audit, guards, batch-state, concurrency,
+                                    # supabase-store.contract, resilience, synthetic-supabase, perf (*.int.test.ts)
+scripts/ci-supabase-env.mjs         # + SUPABASE_PUBLISHABLE_KEY (mascarada; usada só por testes na 004)
 ```
 
 **Structure Decision**: domínio puro em `src/domain/core/` + adaptadores em `src/data/core/`
@@ -118,14 +121,22 @@ importar `supabase/` ou `memory/` diretamente é proibido por regra de lint
   triggers/funções e a bateria de contrato prova equivalência.
 - **Command → Audit**: toda gravação carrega `Actor`; auditoria é efeito colateral atômico.
 
-### Algoritmo — `identityKey(row, occurrence)` (R-06, FR-021/022)
-1. `row.externalId` presente → `"ext:" + externalId.trim()` (≤ 140).
+### Algoritmo — identidade da transação (R-06, FR-021/022)
+Divisão de responsabilidade: **TS normaliza e calcula a base; o banco conta a ocorrência e
+monta a chave** (a memória faz o mesmo com o mesmo código TS).
+1. `row.externalId` presente → `externalId = externalId.trim()` (1..140); chave
+   `"ext:" + externalId` (o banco monta e o CHECK garante a coerência).
 2. Senão → `norm = normalizeDescription(descriptionOriginal)` (NFKD, remove `\p{M}`,
-   maiúsculas, colapsa `\s+`, trim).
-3. `payload = [accountId, bookedOn, String(amountCents), norm, String(occurrence)].join("|")`.
-4. `"fp:" + sha256hex(payload)`.
-5. `occurrence` é calculado por `assignOccurrences(rows)`: percorre as linhas na ordem recebida
-   e conta 1..k por chave `(accountId, bookedOn, amountCents, norm)` **dentro da chamada/lote**.
+   maiúsculas, colapsa `\s+`, trim) e
+   `fpBase = sha256hex([accountId, bookedOn, String(amountCents), norm].join("|"))`
+   (`fingerprintBase(row)` em `identity.ts`; enviado em `p_rows.fp_base`).
+3. Ocorrência: o banco (ou a memória) lê `import_batches.fp_occurrences[fpBase]`, soma 1 e
+   grava — contagem no **lote inteiro**, ordem de chegada das linhas, mesmo em várias chamadas.
+4. Chave: `fpIdentity(fpBase, k) = "fp:" + sha256hex(fpBase + "|" + k)`, idêntica a
+   `core_fp_identity` em SQL (teste de equivalência com vetores fixos).
+5. Manual: `"man:" + id`.
+Motivo de a normalização ficar só em TS: `unaccent` ≠ NFKD; uma única implementação evita
+divergência entre memória e Supabase.
 
 ### Algoritmo — `applyPatch(existing, patch, actor)` (R-07/R-08, FR-020/024)
 1. Se `existing.deletedAt` e o patch não é `restore` → `forbidden_operation:deleted`.
@@ -146,30 +157,46 @@ importar `supabase/` ou `memory/` diretamente é proibido por regra de lint
 Igual a data-model §5 (`core_account_balances`), somando apenas `posted`, não excluídas,
 `openingBalanceOn ≤ bookedOn ≤ d`; `divergence = reported − computed(reportedOn)`.
 
+### Algoritmo — reimportação de lote desfeito (D-C, FR-035)
+No upsert, conflito de identidade com transação excluída por `batch_undone` → restaura
+(`deleted_at/deleted_reason := null`, auditoria `restore` com `reason='reimport'` e
+`batchId` do lote novo), sem mudar fatos nem travas → `outcome = "restored"`,
+`count_restored += 1`. Excluídas por outro motivo continuam excluídas (`duplicate`). A regra é
+por linha: cobre o mesmo arquivo (decisão do Doug) e também arquivos que se sobrepõem a ele.
+
 ### Algoritmo — `undoBatch(id)` (FR-035)
-1. Lote do dono em `completed` (senão `forbidden_operation:batch_state`).
+1. Lote do dono em `completed` ou `failed` (senão `forbidden_operation:batch_state`).
 2. Seleciona transações `batch_id = id` não excluídas; `withManualEdits` = quantas têm
    `lockedFields ≠ ∅`.
 3. `softDelete(ids, "batch_undone")` (desfaz vínculos dependentes) e lote → `undone`, com
    `prumo.action = 'undo_batch'`; tudo numa transação.
 
 ### Algoritmo — `removeCategory(id, {targetId, children})` (FR-031)
-1. Categoria do dono, não de sistema (senão `forbidden_operation:system_category`).
+1. Categoria do dono, não de sistema (senão `forbidden_operation:system_category`) e sem
+   filho de sistema (senão `forbidden_operation:system_child`).
 2. `target = targetId ?? bySystemKey("uncategorized")`; target não pode ser a própria
-   categoria nem filha dela.
-3. `children = move`: filhos ganham `parent_id = target` se target for de 1º nível, ou
-   viram 1º nível caso contrário; `delete`: filhos excluídos logicamente e suas transações
-   reatribuídas ao target.
-4. Transações da categoria → `category_id = target` com `prumo.action = 'reassign'`
-   (preservando `category_source`); categoria → `deleted_at = now()`.
+   categoria nem filha dela (`validation`); target `uncategorized` ⇒ `category_id = NULL`
+   (representação única de "sem categoria").
+3. `children = move`: filhos ganham `parent_id = target` se target for de 1º nível e não for
+   `uncategorized`; caso contrário viram 1º nível (mantendo seu `kind`); `delete`: filhos
+   excluídos logicamente e suas transações reatribuídas ao target.
+4. Transações da categoria → `category_id = target` (ou `NULL`) com `prumo.action = 'reassign'`
+   (preservando `category_source`; `NULL` ⇒ `category_source = NULL`); categoria →
+   `deleted_at = now()` (auditoria `reason='user'`).
 
 ### Máquinas de estado
-- **Lote**: `processing → in_review | completed | failed`; `in_review → completed | failed`;
-  `completed → undone`. Proibidas: saídas de `failed`/`undone`, voltar a `processing`.
-- **Transação**: `pending → posted`; qualquer → excluída (com motivo) → restaurada.
-  Proibidas: `posted → pending`; DELETE físico; restaurar `merged` com sobrevivente excluído.
-- **Conta**: `ativa ⇄ arquivada`. Proibida: exclusão.
-- **Categoria**: `ativa ⇄ oculta`; `ativa → excluída → restaurada`. Proibida: excluir sistema.
+- **Lote** (data-model §2.4): `processing → in_review | completed | failed`;
+  `in_review → processing (resume) | failed`; `completed → undone`; `failed → undone`.
+  Proibidas: saídas de `undone`; de `completed` ou `failed` para qualquer estado que não
+  `undone`; `in_review → completed`. Gravação de transações só em `processing`.
+- **Transação**: `pending → posted`; qualquer → excluída (com motivo) → restaurada (volta ao
+  status que tinha); `batch_undone` → restaurada também por reimportação (D-C).
+  Proibidas: `posted → pending`; DELETE/TRUNCATE físico; restaurar `merged` com sobrevivente
+  excluído (`forbidden_operation:merged_survivor_deleted`).
+- **Conta**: `ativa ⇄ arquivada`. Proibidas: exclusão; gravar transação em arquivada.
+- **Categoria**: `ativa ⇄ oculta`; `ativa → excluída → restaurada`. Proibidas: excluir ou
+  mover categoria de sistema; excluir categoria com filho de sistema; dar pai a categoria
+  com filhos (3º nível).
 
 ### Bibliotecas
 - **Permitidas**: as da 001 + `node:crypto` (sha256), `server-only`.
@@ -190,8 +217,27 @@ Funcionalidade: Idempotência de importação
 
   Cenário: Dois cafés idênticos no mesmo CSV
     Dado um lote csv com duas linhas (2026-09-12, -800, "CAFE FICTICIO")
-    Quando importo o lote duas vezes
+    Quando importo o arquivo em um lote e depois em um lote novo
     Então existem exatamente 2 transações com identity_key distintas iniciadas por "fp:"
+    E o segundo lote tem count_duplicate = 2
+
+  Cenário: Cafés idênticos em chamadas diferentes do mesmo lote
+    Dado um lote csv em processing
+    Quando envio a 1ª linha (2026-09-12, -800, "CAFE FICTICIO") numa chamada e a 2ª, idêntica, em outra
+    Então existem 2 transações e fp_occurrences do lote registra 2 para essa base
+
+  Cenário: Reimportar arquivo de lote desfeito restaura (D-C)
+    Dado um lote csv de 30 transações desfeito (30 com deleted_reason "batch_undone")
+    Quando reimporto o mesmo arquivo em um lote novo
+    Então SELECT count(*) FROM transactions WHERE deleted_at IS NULL AND batch_id = <lote antigo> retorna 30
+    E o novo lote tem count_restored = 30 e count_created = 0
+    E audit_log tem 30 entradas action "restore" com reason "reimport" e batch_id = <lote novo>
+
+  Cenário: Lote em revisão não recebe transações
+    Dado um lote pdf em in_review
+    Quando chamo upsertMany nesse lote
+    Então recebo forbidden_operation:batch_closed e nenhuma linha em transactions
+    E após resume o lote volta a processing e aceita a gravação
 
 Funcionalidade: Proteção de edição manual
   Cenário: Sincronização não sobrescreve categoria manual
@@ -232,6 +278,31 @@ Funcionalidade: Nada some silenciosamente
     Então o retorno é {deleted: 30, withManualEdits: 2}
     E as 30 têm deleted_reason "batch_undone" e o lote status "undone"
 
+  Cenário: TRUNCATE é bloqueado
+    Quando executo TRUNCATE transactions como postgres
+    Então recebo erro core.hard_delete_forbidden e as linhas continuam existindo
+
+  Cenário: Privilégios mínimos
+    Quando consulto has_table_privilege('authenticated', 'public.transactions', 'DELETE')
+    Então o resultado é false
+    E has_function_privilege('anon', 'public.core_upsert_transactions(uuid,jsonb,uuid,jsonb)', 'EXECUTE') é false
+
+Funcionalidade: Contas e categorias
+  Cenário: Sincronização não sobrescreve campo do dono na conta
+    Dado uma conta pluggy de cartão com due_day 12 definido pelo usuário
+    Quando a sincronização faz upsert da conta com due_day 15
+    Então SELECT due_day FROM accounts WHERE id = X retorna 12
+
+  Cenário: Excluir categoria com destino padrão
+    Dado a categoria "Lazer" com 3 transações
+    Quando a excluo sem destino
+    Então as 3 têm category_id NULL e audit_log tem 3 entradas "reassign"
+    E categories.deleted_at de "Lazer" não é nulo
+
+  Cenário: Categoria de sistema protegida
+    Quando tento excluir "Impostos, tarifas e juros" (contém "Tarifas bancárias" de sistema)
+    Então recebo forbidden_operation:system_child
+
 Funcionalidade: Modo demonstração
   Cenário: Mesmo contrato em memória
     Dado APP_ENV=preview
@@ -248,7 +319,10 @@ Nenhuma. Migrações chegam à produção pelo job `deploy-db` da 001 após merg
 |---|---|
 | Divergência entre triggers SQL e domínio TS | Bateria de contrato única obrigatória no CI para as duas implementações |
 | Chave secreta ignorando RLS em jobs | Filtro de dono obrigatório no repositório + `core_resolve_owner` + teste que roda o contrato em modo `service` com 2 donos |
-| 006 ainda não mergeada | Contrato `owner-context.md`; 004 não depende de UI/login; testes criam usuários pela Admin API |
+| 006 ainda não mergeada | Ordem de merge da onda 1: 004 → 003 → 006 → 002. Contrato `owner-context.md` (provedor implementado pela 006); 004 não depende de UI/login; testes criam usuários pela Admin API |
+| Conflito em `src/proxy.ts` com a 006 | A 004 só acrescenta o cookie demo em preview, sem referenciar a trava da 001; a 006 reescreve preservando-o |
+| GRANTs ausentes (CLI 2.119 não expõe objetos novos) | Matriz explícita no data-model §3, testada em T034 |
+| Ocorrência `fp:` dependente de chamadas | Contador no lote (`fp_occurrences`), testado em T022/T072 |
 | 001 ainda não está na `main` do repositório | Implementação só inicia após merge da 001; rebase da branch antes da Phase 1 |
 | Sessões demo perdidas entre instâncias serverless | Aceito e documentado (dados fictícios, selo de demonstração) |
 | Mudança de schema pedida por feature futura | Proposta na spec da 004 (Constitution VII); migrações aditivas |

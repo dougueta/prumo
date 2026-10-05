@@ -22,7 +22,7 @@ de servidor `src/lib/supabase/server.ts` (chave secreta, `server-only`), env só
   (`SECURITY INVOKER`, chamadas via `rpc()`), que recebem o **ator** (`p_actor jsonb`) e o
   publicam na transação com `set_config('prumo.actor', …, true)`. Os triggers de auditoria e de
   proteção leem esse valor. DML direto continua sujeito a RLS e triggers; sem ator explícito,
-  o trigger assume `usuario` quando há `auth.uid()` e `sistema` caso contrário.
+  o trigger assume `user` quando há `auth.uid()` e `system` caso contrário.
 - **Rationale**: PostgREST executa cada chamada numa transação própria; só uma função consegue
   definir o ator e executar a alteração na mesma transação (FR-040: auditoria atômica). Também
   permite upsert em lote com contadores (FR-033) numa ida ao banco.
@@ -41,6 +41,10 @@ de servidor `src/lib/supabase/server.ts` (chave secreta, `server-only`), env só
     filtra por `owner_id` em toda consulta e as funções `core_*` resolvem o dono por
     `core_resolve_owner(p_owner_id)` — aceita `p_owner_id` apenas quando `auth.role() =
     'service_role'`; com JWT, usa `auth.uid()` e rejeita divergência.
+  - **Privilégios** (Remediação 2026-10-05): a CLI 2.119 da 001 não expõe objetos novos aos
+    papéis da Data API (`auto_expose_new_tables` não definido em `supabase/config.toml`), então
+    a migração concede explicitamente `SELECT/INSERT/UPDATE` e `EXECUTE` mínimos e nunca
+    `DELETE`/`TRUNCATE` (matriz em data-model §3), no padrão do `health_ping` da 001.
 - **Rationale**: a chave secreta ignora RLS; sem filtro explícito, um bug de job vazaria dados.
   O padrão `(select auth.uid())` evita reavaliação por linha (recomendação Supabase).
 - **Alternatives**: só service role com filtro na aplicação (sem rede de segurança no banco);
@@ -52,7 +56,11 @@ de servidor `src/lib/supabase/server.ts` (chave secreta, `server-only`), env só
   `getCoreStore()` em `local`/`production` exige contexto explícito (testes/jobs); em
   `preview` usa a memória com dono fixo de demonstração. Variável nova
   `SUPABASE_PUBLISHABLE_KEY` (cliente com JWT) é **introduzida pela 006** em `env.ts`; os
-  testes de RLS da 004 leem a chave publicável diretamente de `supabase status` (fora de `src/`).
+  testes de RLS da 004 usam o mesmo nome, exportado por `scripts/ci-supabase-env.mjs` (CI) ou
+  lido de `supabase status -o env` pelo helper de testes (local), sempre fora de `src/`.
+  Remediação 2026-10-05: a 006 implementa o provedor (adaptador `requireSession` +
+  `getDataClient`), importa `DEMO_OWNER_ID` da 004 e usa `prumo_demo_sid` como `sessionId`
+  demo; ordem de merge 004 → 003 → 006 → 002.
 - **Rationale**: 004 e 006 rodam em paralelo na onda 1; o contrato evita bloqueio mútuo.
 
 ## R-05 · Domínios enumerados: `VARCHAR + CHECK` × `ENUM`
@@ -66,22 +74,28 @@ de servidor `src/lib/supabase/server.ts` (chave secreta, `server-only`), env só
   identity_key)` válida **também para excluídas** (reimportar não ressuscita uma transação que o
   Doug excluiu). Formatos:
   - `ext:<external_id>` quando a origem tem id (Pluggy, OFX `FITID`, PDF com id);
-  - `fp:<sha256 hex>` de `account_id|booked_on|amount_cents|norm(description_original)|occurrence`
-    quando não há id (CSV);
+  - `fp:<sha256 hex>` = `sha256(fp_base|occurrence)`, com `fp_base =
+    sha256(account_id|booked_on|amount_cents|norm(description_original))`, quando não há id (CSV);
   - `man:<uuid>` para manuais.
-  `norm()` = NFKD, remove diacríticos, maiúsculas, colapsa espaços, `trim`. `occurrence` =
-  posição 1..k entre linhas com mesmo (data, valor, descrição normalizada) **dentro do mesmo
-  lote**. Calculado em TS (`src/domain/core/identity.ts`) com `node:crypto` (servidor) — a
-  memória usa a mesma função.
+  `norm()` = NFKD, remove diacríticos, maiúsculas, colapsa espaços, `trim`. **Remediação
+  2026-10-05**: `fp_base` é calculado só em TS (`fingerprintBase()` em
+  `src/domain/core/identity.ts`, `node:crypto`) e enviado em `p_rows`; a `occurrence` (1..k
+  entre linhas com a mesma base) é contada **no lote inteiro** pelo contador
+  `import_batches.fp_occurrences`, atualizado pela função de upsert (e pela memória com a
+  mesma regra); o banco monta a chave com `core_fp_identity()` e valida a coerência de `ext:`
+  por CHECK. Motivos: (1) `unaccent` do Postgres ≠ NFKD — normalizar nos dois lados
+  divergiria; (2) contar por chamada perderia cafés idênticos enviados em chamadas
+  diferentes do mesmo lote.
 - **Rationale**: determinístico, independente de ordem global do arquivo, distingue dois cafés
-  idênticos (US1 cenário 4). Dedup **entre** origens é da 011.
+  idênticos (US1 cenário 4). Dedup **entre** origens é da 011. Reimportação de linhas
+  excluídas por `batch_undone` as restaura (decisão D-C do Doug).
 - **Alternatives**: hash do arquivo inteiro (não detecta sobreposição parcial entre extratos);
   `UNIQUE` parcial só para não excluídas (reimportação recriaria o que o Doug apagou).
 
 ## R-07 · Proteção de campos manuais (FR-024–FR-026)
 - **Decision**: `locked_fields TEXT[] NOT NULL DEFAULT '{}'`. Trigger `BEFORE UPDATE`:
-  - ator `usuario` alterando campo editável → adiciona o campo a `locked_fields`;
-  - ator automático (`sincronizacao`, `importacao`, `ia`, `regra`, `sistema`) tentando alterar
+  - ator `user` alterando campo editável → adiciona o campo a `locked_fields`;
+  - ator automático (`sync`, `import`, `ai`, `rule`, `system`) tentando alterar
     campo em `locked_fields` → **mantém o valor antigo** (descarte silencioso para o dado,
     mas contado no retorno da função de upsert como `protected`);
   - `core_unlock_field()` remove o campo ("voltar ao automático").
@@ -94,14 +108,14 @@ de servidor `src/lib/supabase/server.ts` (chave secreta, `server-only`), env só
 - **Decision**: no upsert, conflito de identidade com linha existente `pending` → atualiza
   `amount_cents`, `booked_on`, `description_original`, `merchant`, `status`, `occurred_at`
   (exceto campos travados) e audita valores anteriores. Linha existente `posted` → nenhum
-  fato muda (`ignored_duplicate`), apenas campos automáticos não travados podem ser
+  fato muda (`duplicate`), apenas campos automáticos não travados podem ser
   atualizados (ex.: `merchant` vazio). Transição `posted → pending` é proibida.
   Cancelamento detectado pela 008 usa `core_soft_delete_transactions(reason='canceled_at_source')`.
 
 ## R-09 · Saldos (Clarificação Q3)
 - **Decision**: `accounts.reported_balance_cents BIGINT NULL` + `reported_balance_on DATE NULL`
   (vindos da fonte), `opening_balance_cents BIGINT NOT NULL DEFAULT 0` + `opening_balance_on
-  DATE NULL` (contas manuais). Função `core_account_balances(p_owner_id, p_as_of)` calcula
+  DATE NULL` (contas manuais). Função `core_account_balances(p_as_of, p_owner_id)` calcula
   `computed = opening + Σ amount (posted, não excluídas, opening_on ≤ booked_on ≤ as_of)` e
   `divergence = reported − computed(reported_balance_on)`. Pendentes ficam fora do calculado.
 - **Rationale**: saldo do banco fiel + checagem de integridade das importações; nada é
@@ -140,7 +154,7 @@ de servidor `src/lib/supabase/server.ts` (chave secreta, `server-only`), env só
   `fromSyntheticDataset(generateDataset({ seed: 42, months: 12, anchorDate }))`. Isolamento por
   sessão: `src/proxy.ts` atribui cookie `prumo_demo_sid` (UUID, `HttpOnly`, `SameSite=Lax`,
   só em `preview`); um registro `DemoSessions` mantém até 50 lojas (LRU, TTL 2 h) por instância.
-  Dono fixo `00000000-0000-4000-8000-00000000d3e0`.
+  Dono fixo `DEMO_OWNER_ID` = `00000000-0000-4000-8000-00000000d3e0` (exportado por `@/data/core`; a 006 importa).
 - **Rationale**: Next 16 permite definir cookies na resposta do proxy
   (`node_modules/next/dist/docs/01-app/01-getting-started/16-proxy.md`, "Using Cookies").
   Gravações valem "durante a sessão" (spec FR-047); perda ao trocar de instância serverless é
@@ -163,5 +177,5 @@ de servidor `src/lib/supabase/server.ts` (chave secreta, `server-only`), env só
   `tests/integration/core/supabase-store.contract.int.test.ts` (Supabase local/CI). Testes de
   RLS criam 2 usuários via Admin API do Supabase local (`auth.admin.createUser`) e usam
   clientes com JWT (chave publicável lida de `supabase status -o env`; o script
-  `scripts/ci-supabase-env.mjs` passa a exportar `SUPABASE_TEST_PUBLISHABLE_KEY` só para
+  `scripts/ci-supabase-env.mjs` passa a exportar `SUPABASE_PUBLISHABLE_KEY` só para
   testes). Teste de desempenho com 100 mil transações geradas por `generate_series` (SC-007).

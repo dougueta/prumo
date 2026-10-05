@@ -26,7 +26,7 @@ auth.users (Supabase) ──1:N── institutions (owner_id NULL = catálogo de
 
 | Tabela | Dona | Escopo | Exclusão |
 |---|---|---|---|
-| `institutions` | 004 | catálogo global (`owner_id NULL`) + do dono | lógica (`deleted_at`) |
+| `institutions` | 004 | catálogo global (`owner_id NULL`) + do dono | nenhuma nesta versão (sem FR); DELETE proibido |
 | `accounts` | 004 | dono | arquivamento (`archived_at`); DELETE proibido |
 | `transactions` | 004 | dono | lógica (`deleted_at` + motivo); DELETE proibido |
 | `categories` | 004 | dono | lógica; categorias de sistema nunca |
@@ -73,6 +73,17 @@ AS $$ SELECT COALESCE(
 
 Ator (`jsonb`): `{"type": "user"|"sync"|"import"|"ai"|"rule"|"system", "ref": "<texto ≤100>"?,
 "batchId": "<uuid>"?}` — rótulos pt-BR: usuário, sincronização, importação, IA, regra, sistema.
+Risco aceito (single-user): com JWT, o ator informado em `p_actor` é aceito como declarado
+(motores 014/015 rodam em requisições do próprio dono); o dono é o único principal.
+
+```sql
+-- Identidade por impressão digital (R-06): base calculada em TS, ocorrência derivada no banco.
+CREATE FUNCTION public.core_fp_identity(p_base TEXT, p_occurrence INT) RETURNS TEXT
+LANGUAGE sql IMMUTABLE PARALLEL SAFE SET search_path = ''
+AS $$ SELECT 'fp:' || encode(sha256(convert_to(p_base || '|' || p_occurrence::text, 'UTF8')), 'hex') $$;
+```
+A mesma fórmula existe em TS (`fpIdentity(base, occurrence)` em `src/domain/core/identity.ts`);
+um teste de integração compara as duas para vetores fixos.
 
 ### 2.2 `institutions`
 
@@ -85,7 +96,6 @@ CREATE TABLE public.institutions (
   bank_code        VARCHAR(3)   NULL CHECK (bank_code ~ '^[0-9]{3}$'),     -- COMPE
   external_ref     VARCHAR(100) NULL,                                       -- id no provedor Open Finance
   name_key         TEXT GENERATED ALWAYS AS (public.core_name_key(name)) STORED,
-  deleted_at       TIMESTAMPTZ  NULL,
   created_at       TIMESTAMPTZ  NOT NULL DEFAULT now(),
   updated_at       TIMESTAMPTZ  NOT NULL DEFAULT now(),
   UNIQUE (id, owner_id)
@@ -93,13 +103,13 @@ CREATE TABLE public.institutions (
 CREATE UNIQUE INDEX institutions_catalog_name_uq ON public.institutions (name_key)
   WHERE owner_id IS NULL;
 CREATE UNIQUE INDEX institutions_owner_name_uq ON public.institutions (owner_id, name_key)
-  WHERE owner_id IS NOT NULL AND deleted_at IS NULL;
+  WHERE owner_id IS NOT NULL;
 CREATE UNIQUE INDEX institutions_owner_extref_uq ON public.institutions (owner_id, external_ref)
   WHERE external_ref IS NOT NULL;
 ```
 
 Catálogo de referência (migração gerada, UUIDs fixos `00000000-0000-4000-a000-000000000NNN`
-onde NNN = código COMPE): Mercado Pago (323, `digital_wallet`), Caixa Econômica Federal (104,
+onde NNN = código COMPE; "Outra instituição" usa NNN = `999`): Mercado Pago (323, `digital_wallet`), Caixa Econômica Federal (104,
 `bank`), PicPay (380, `digital_wallet`), C6 Bank (336, `bank`), Nubank (260), Banco Inter (077),
 Itaú (341), Bradesco (237), Banco do Brasil (001), Santander (033); e "Outra instituição"
 (`other`, sem código). Catálogo não é dado pessoal (FR-005).
@@ -115,7 +125,7 @@ CREATE TABLE public.accounts (
   nickname               VARCHAR(40)  NULL,
   type                   VARCHAR(20)  NOT NULL CHECK (type IN
                            ('checking','digital_wallet','credit_card','savings','investment')),
-  currency               CHAR(3)      NOT NULL DEFAULT 'BRL' CHECK (currency ~ '^[A-Z]{3}$'),
+  currency               CHAR(3)      NOT NULL DEFAULT 'BRL' CHECK (currency = 'BRL'),  -- só BRL nesta versão
   source                 VARCHAR(10)  NOT NULL CHECK (source IN ('pluggy','manual')),
   external_id            VARCHAR(100) NULL,
   last4                  CHAR(4)      NULL CHECK (last4 ~ '^[0-9]{4}$'),         -- FR-004
@@ -142,6 +152,17 @@ CREATE INDEX accounts_owner_active_idx ON public.accounts (owner_id) WHERE archi
 Trigger `accounts_guard` (BEFORE INSERT/UPDATE): `institution_id` MUST ser do catálogo ou do
 mesmo dono; `owner_id`, `source`, `external_id` imutáveis após criação.
 
+**Partição de campos (FR-024 em contas)** — aplicada pelo `accounts_guard` com o ator corrente:
+
+| Grupo | Campos | Ator `user` | Atores automáticos |
+|---|---|---|---|
+| Do dono | `nickname`, `closing_day`, `due_day`, `opening_balance_cents`, `opening_balance_on`, `archived_at` | edita | **nunca** grava (valor antigo mantido, sem erro) |
+| Da fonte (conta `pluggy`) | `name`, `type`, `institution_id`, `last4`, `credit_limit_cents`, `reported_balance_*` | `forbidden_operation:source_field` | grava |
+| Conta `manual` | todos os acima | edita | só `reported_balance_*` (ex.: saldo de extrato importado) |
+
+Assim nenhuma edição do dono é sobrescrita por sincronização sem precisar de marcação por campo
+(YAGNI: travas por campo só em transações, onde automáticos e dono disputam os mesmos campos).
+
 ### 2.4 `import_batches`
 
 ```sql
@@ -160,8 +181,11 @@ CREATE TABLE public.import_batches (
   count_read       INTEGER NOT NULL DEFAULT 0 CHECK (count_read >= 0),
   count_created    INTEGER NOT NULL DEFAULT 0 CHECK (count_created >= 0),
   count_updated    INTEGER NOT NULL DEFAULT 0 CHECK (count_updated >= 0),
+  count_restored   INTEGER NOT NULL DEFAULT 0 CHECK (count_restored >= 0),   -- D-C
   count_duplicate  INTEGER NOT NULL DEFAULT 0 CHECK (count_duplicate >= 0),
+  count_protected  INTEGER NOT NULL DEFAULT 0 CHECK (count_protected >= 0),
   count_rejected   INTEGER NOT NULL DEFAULT 0 CHECK (count_rejected >= 0),
+  fp_occurrences   JSONB   NOT NULL DEFAULT '{}'::jsonb,      -- {fp_base: k} ocorrências já vistas no lote (R-06)
   error_summary    VARCHAR(500) NULL,                         -- sem dados sensíveis
   started_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
   finished_at      TIMESTAMPTZ NULL,
@@ -178,13 +202,22 @@ CREATE INDEX import_batches_file_idx ON public.import_batches (owner_id, account
 **Máquina de estados** (trigger `import_batches_state_guard`):
 
 ```text
-processing ──► in_review ──► completed ──► undone
-     │             │
-     ├──► completed└──► failed
-     └──► failed
+              resume (confirmação da revisão)
+           ┌──────────────────────────────┐
+           ▼                              │
+processing ──► in_review ─────────────────┘
+     │             └──► failed (revisão descartada) ──► undone
+     ├──► completed ──► undone
+     └──► failed ──► undone
 ```
-Proibidas: qualquer saída de `failed` ou `undone`; `completed → processing|in_review|failed`;
-`in_review → processing`. `finished_at` é preenchido ao entrar em `completed|failed`.
+Permitidas: `processing → in_review | completed | failed`; `in_review → processing | failed`;
+`completed → undone`; `failed → undone`. Proibidas: qualquer saída de `undone`;
+`completed → processing | in_review | failed`; `failed → processing | in_review | completed`;
+`in_review → completed` (só se conclui gravando, via `processing`); qualquer transição para
+`processing` a partir de outro estado que não `in_review`. INSERT só com `status='processing'`
+e contadores zerados. `finished_at` é preenchido ao entrar em `completed | failed`.
+**Gravação de transações só com o lote em `processing`** (`core.forbidden:batch_closed` nos
+demais): a revisão da 010 mantém as linhas em staging próprio da 010 e só grava após `resume`.
 
 ### 2.5 `categories` e `category_templates`
 
@@ -229,9 +262,20 @@ CREATE UNIQUE INDEX categories_template_uq ON public.categories (owner_id, templ
 CREATE INDEX categories_owner_parent_idx ON public.categories (owner_id, parent_id);
 ```
 
-Trigger `categories_guard` (BEFORE INSERT/UPDATE): pai MUST ser de 1º nível (máx. 2 níveis,
-FR-027) e não excluído; filho **herda `kind`** do pai (FR-028) e mudança de `kind` do pai
-propaga aos filhos; categoria com `system_key` não pode receber `deleted_at` nem ganhar pai.
+Trigger `categories_guard` (BEFORE INSERT/UPDATE):
+- pai MUST ser de 1º nível e não excluído (máx. 2 níveis, FR-027);
+- categoria que tem filhos não excluídos MUST NOT ganhar pai (`forbidden_operation:depth`);
+- filho **herda `kind`** do pai (FR-028) e mudança de `kind` do pai propaga aos filhos;
+- categoria com `system_key`: `parent_id` imutável (nunca muda de pai; `bank_fees` nasce como
+  subcategoria de "Impostos, tarifas e juros") e nunca recebe `deleted_at`;
+- excluir categoria que tem filho com `system_key` → `forbidden_operation:system_child`
+  (na prática, "Impostos, tarifas e juros" não é excluível);
+- a categoria de sistema `uncategorized` não é atribuível a transações (ver §2.6, M6).
+
+Exclusão lógica de categoria registra o motivo na auditoria (`audit_log.reason = 'user'`);
+categorias só são excluídas pelo dono, então não há coluna de motivo própria.
+Restaurar categoria só a reativa (nome único entre irmãs revalidado → `conflict`); não desfaz
+reatribuições já feitas.
 
 ### 2.6 `transactions`
 
@@ -290,7 +334,10 @@ CREATE TABLE public.transactions (
   CHECK (category_source IS DISTINCT FROM 'manual' OR category_confidence IS NULL),
   CHECK (locked_fields <@ ARRAY['description','merchant','category_id','nature',
          'related_transaction_id','notes','amount_cents','booked_on','status']::TEXT[]),
-  CHECK (identity_key ~ '^(ext:.+|fp:[0-9a-f]{64}|man:[0-9a-f-]{36})$')
+  CHECK (identity_key ~ '^(ext:.+|fp:[0-9a-f]{64}|man:[0-9a-f-]{36})$'),
+  CHECK ((external_id IS NOT NULL) = (identity_key LIKE 'ext:%')),
+  CHECK (external_id IS NULL OR identity_key = 'ext:' || external_id),  -- coerência ext: (H3)
+  CHECK ((source = 'manual') = (identity_key LIKE 'man:%'))
 );
 
 -- Extrato (FR-042, SC-007): dono + data desc, desempate por id; só ativas.
@@ -311,7 +358,8 @@ CREATE INDEX tx_deleted_idx      ON public.transactions (owner_id, deleted_at) W
 
 | Campo | Manual (`source='manual'`) | Importada | Quem pode mudar após criação |
 |---|---|---|---|
-| `owner_id`, `account_id`, `source`, `external_id`, `identity_key`, `batch_id` | imutável¹ | imutável | ninguém |
+| `owner_id`, `source`, `external_id`, `identity_key`, `batch_id` | imutável | imutável | ninguém |
+| `account_id` | editável (usuário)¹ | imutável | manual: só usuário |
 | `amount_cents`, `booked_on` | editável (usuário) | imutável | importada: só `sync/import` se `OLD.status='pending'` (R-08) |
 | `description_original` | = descrição do lançamento | imutável | idem acima |
 | `occurred_at`, `merchant` | editável | automático | `merchant` é travável |
@@ -322,8 +370,20 @@ CREATE INDEX tx_deleted_idx      ON public.transactions (owner_id, deleted_at) W
 ¹ `account_id` de transação manual pode mudar (transferir lançamento manual para outra conta),
 desde que a conta seja do mesmo dono — a `identity_key` `man:` não depende da conta.
 
+`transactions_guard` em **INSERT** (FR-013–FR-018): conta do dono e não arquivada; `batch_id`
+obrigatório quando `source ≠ 'manual'`, do mesmo dono, com lote em `processing` e mesma
+`source`; `identity_key` no formato e coerente com `external_id`/`source` (CHECKs acima);
+`category_id` igual à categoria `uncategorized` do dono é normalizado para `NULL`;
+`related_transaction_id` não excluída; `locked_fields` vazio na criação de importada.
+
+**Sem categoria (representação única)**: `category_id IS NULL` ⇔ "sem categoria". A categoria de
+sistema `uncategorized` existe só como rótulo renomeável e destino nominal de exclusões
+(FR-031); atribuí-la grava `NULL` (com `category_source NULL`). Escolha manual de "Sem
+categoria" trava `category_id` (fica em `locked_fields` com valor `NULL`), protegendo-a da IA.
+
 Proteção (R-07): ator `user` alterando campo travável → `locked_fields := locked_fields ∪ {campo}`
-(categoria manual também força `category_source='manual'`, `category_confidence=NULL`); ator
+(categoria manual também força `category_source='manual'` — ou `NULL` se "sem categoria" —,
+`category_confidence=NULL`); ator
 automático alterando campo de `locked_fields` → `NEW.campo := OLD.campo`.
 Natureza: `internal_transfer`/`card_payment` exigem categoria de sistema correspondente
 quando `category_source <> 'manual'` (o trigger atribui `internal_transfer`/`card_payment`).
@@ -371,17 +431,21 @@ CREATE INDEX audit_batch_idx  ON public.audit_log (batch_id) WHERE batch_id IS N
   `search_path=''`, mesma transação (FR-040). `changes` contém apenas colunas alteradas,
   exceto `updated_at`, `name_key`. Ação derivada: `deleted_at` NULL→valor = `soft_delete`
   (ou `merge` se `deleted_reason='merged'`); valor→NULL = `restore`; `archived_at` → `archive`/
-  `unarchive`; `status` de lote → `undo_batch`; caso contrário `update` (ou a ação explícita em
-  `prumo.action`, ex.: `reassign`, `unlock`).
+  `unarchive`; `status` de lote passando a `undone` → `undo_batch`; caso contrário `update`
+  (ou a ação explícita em `prumo.action`, ex.: `reassign`, `unlock`). `reason` recebe o
+  `deleted_reason` (transações) ou `'user'` (categorias); restauração por reimportação (D-C)
+  grava `restore` com `reason = 'reimport'` e `batch_id` do novo lote.
 - Append-only: triggers `audit_log_immutable` `BEFORE UPDATE OR DELETE` e `BEFORE TRUNCATE`
   lançam `core.audit_immutable` para **qualquer** papel; RLS só `SELECT`.
 - Nunca contém segredos: tabelas core não têm colunas de credencial (FR-041).
 
 ### 2.8 Proibição de DELETE físico (FR-037)
 
-Trigger `core_forbid_delete` `BEFORE DELETE` em `accounts`, `transactions`, `categories`,
-`import_batches` e `institutions` (linhas de dono) → `RAISE EXCEPTION 'core.hard_delete_forbidden'`.
-Além disso, nenhuma policy RLS de DELETE existe. `updated_at` mantido por trigger
+Trigger `core_forbid_delete` `BEFORE DELETE` (por linha) em `accounts`, `transactions`,
+`categories`, `import_batches` e `institutions` → `RAISE EXCEPTION 'core.hard_delete_forbidden'`;
+trigger `core_forbid_truncate` `BEFORE TRUNCATE` (por comando) nessas 5 tabelas e em
+`category_templates` → mesma exceção (TRUNCATE não dispara triggers de linha). Além disso,
+nenhuma policy RLS de DELETE existe e `DELETE`/`TRUNCATE` são revogados (§3). `updated_at` mantido por trigger
 `core_touch_updated_at` em todas as tabelas mutáveis.
 
 ## 3. RLS (policies explícitas)
@@ -415,11 +479,41 @@ CREATE POLICY category_templates_select ON public.category_templates FOR SELECT 
 CREATE POLICY audit_log_select ON public.audit_log FOR SELECT TO authenticated
   USING (owner_id = (SELECT auth.uid()));
 
-REVOKE ALL ON ALL TABLES IN SCHEMA public FROM anon;          -- anon nunca lê dado core
-REVOKE INSERT, UPDATE, DELETE ON public.audit_log, public.category_templates FROM authenticated;
-REVOKE DELETE ON public.accounts, public.transactions, public.categories,
-                 public.import_batches, public.institutions FROM authenticated;
 ```
+
+#### Privilégios (GRANT/REVOKE explícitos)
+
+A CLI 2.119 da 001 (`supabase/config.toml`, `auto_expose_new_tables` não definido) **não**
+expõe tabelas/funções novas aos papéis da Data API: sem GRANT, `authenticated` e
+`service_role` recebem `permission denied`. A migração `<ts>_core_rls.sql` declara a matriz
+abaixo (padrão do `health_ping` da 001) — nada de `GRANT ALL`:
+
+| Objeto | `anon` | `authenticated` | `service_role` |
+|---|---|---|---|
+| `accounts`, `transactions`, `categories`, `import_batches`, `institutions` | — | `SELECT, INSERT, UPDATE` | `SELECT, INSERT, UPDATE` |
+| `category_templates` | — | `SELECT` | `SELECT` |
+| `audit_log` | — | `SELECT` | `SELECT` |
+| funções `core_*` do contrato (§5) | — | `EXECUTE` | `EXECUTE` |
+| `core_audit`, `core_forbid_*`, guardas, `core_touch_updated_at` (trigger) | — | — | — |
+| `core_name_key`, `core_fp_identity`, `core_resolve_owner`, `core_current_actor` | — | `EXECUTE` | `EXECUTE` |
+
+```sql
+REVOKE ALL ON public.institutions, public.accounts, public.transactions, public.categories,
+              public.category_templates, public.import_batches, public.audit_log
+  FROM PUBLIC, anon, authenticated, service_role;
+GRANT SELECT, INSERT, UPDATE ON public.institutions, public.accounts, public.transactions,
+              public.categories, public.import_batches TO authenticated, service_role;
+GRANT SELECT ON public.category_templates, public.audit_log TO authenticated, service_role;
+-- para cada função core_* listada: REVOKE ALL ON FUNCTION … FROM PUBLIC, anon;
+--                                  GRANT EXECUTE ON FUNCTION … TO authenticated, service_role;
+-- funções de trigger: REVOKE ALL ON FUNCTION … FROM PUBLIC, anon, authenticated, service_role;
+```
+`DELETE`, `TRUNCATE`, `REFERENCES` e `TRIGGER` nunca são concedidos.
+
+**Premissa declarada (testada em T034/T047)**: com `FORCE ROW LEVEL SECURITY` e sem policy de
+INSERT, as inserções do trigger `core_audit` (`SECURITY DEFINER`, dono `postgres`) e do seed
+(migração, papel `postgres`) dependem de `postgres` ter `BYPASSRLS` no Supabase. Se não tiver,
+a migração cria policy `INSERT` restrita ao papel `postgres` nessas tabelas.
 
 `service_role` ignora RLS por definição do Supabase: o repositório em modo `service` filtra
 por `owner_id` em toda consulta e as funções resolvem o dono por `core_resolve_owner` (R-03);
@@ -468,10 +562,14 @@ Fonte única: `src/domain/core/default-categories.ts` → migração gerada `cat
 | 22 | ⚙ Pagamento de fatura (`card_payment`) | natureza `card_payment` (016/018) |
 | 23 | Investimentos | Aplicações · Resgates (movimentação patrimonial; 025/027) |
 
-**Sem categoria** ⚙ (`uncategorized`, `kind='expense'` por convenção de armazenamento):
-consumidores MUST classificar transações sem categoria **pelo sinal** (negativo = saída,
-positivo = entrada); categoria padrão de destino em exclusões (FR-031) e de degradação da IA
+**Sem categoria** ⚙ (`uncategorized`, `kind='expense'` por convenção de armazenamento): é só
+o **rótulo** (renomeável) de "transação sem categoria" — transações nunca a referenciam;
+"sem categoria" é sempre `category_id IS NULL` (§2.6). Consumidores MUST classificar
+transações sem categoria **pelo sinal** (negativo = saída, positivo = entrada). É o destino
+nominal padrão em exclusões (FR-031: reatribuir a ela grava `NULL`) e a degradação da IA
 (Constitution VI). Total: 24 categorias de 1º nível e 75 subcategorias.
+"Investimentos" (#23) é `neutral` mas `origin='default'` (excluível); só #21, #22 e
+`uncategorized` são neutras de sistema.
 
 ## 5. Funções do contrato (`core_*`, `SECURITY INVOKER` salvo indicação)
 
@@ -482,35 +580,75 @@ Todas recebem `p_owner_id UUID DEFAULT NULL` (resolvido por `core_resolve_owner`
 | Função | Retorno | Requisitos |
 |---|---|---|
 | `core_bootstrap_owner()` | `jsonb {created: int}` | FR-029 — idempotente; copia `category_templates` |
-| `core_upsert_transactions(p_batch_id, p_rows jsonb)` | `jsonb {created, updated, duplicate, protected, rejected, results[]}` | FR-013–FR-024, R-06/R-08; máx. 1.000 linhas |
+| `core_upsert_transactions(p_batch_id, p_rows jsonb)` | `jsonb {created, updated, restored, duplicate, protected, rejected, results[]}` | FR-013–FR-024, FR-035 (D-C), R-06/R-08; máx. 1.000 linhas |
 | `core_create_manual_transaction(p_row jsonb)` | `transactions` | FR-019 |
 | `core_update_transaction(p_id, p_patch jsonb)` | `transactions` | FR-019/020/024 |
 | `core_unlock_field(p_id, p_field)` | `transactions` | FR-025 |
 | `core_soft_delete_transactions(p_ids uuid[], p_reason, p_merged_into)` | `int` | FR-023/037; desfaz vínculos |
 | `core_restore_transactions(p_ids uuid[])` | `int` | US4 cenário 4 |
-| `core_create_batch(p jsonb)` / `core_finish_batch(p_id, p_status, p_error)` | `import_batches` | FR-033 |
-| `core_find_completed_batch_by_file(p_account_id, p_sha256)` | `import_batches` | FR-034 |
-| `core_undo_batch(p_id)` | `jsonb {deleted, withManualEdits}` | FR-035 |
+| `core_create_batch(p jsonb)` / `core_finish_batch(p_id, p_status, p_error)` | `import_batches` | FR-033; `p_status IN ('in_review','completed','failed')` |
+| `core_resume_batch(p_id)` | `import_batches` | FR-033; `in_review → processing` (confirmação da revisão) |
+| `core_find_completed_batch_by_file(p_account_id, p_sha256)` | `import_batches` | FR-034 (só `completed`; lote `undone` não sinaliza) |
+| `core_undo_batch(p_id)` | `jsonb {deleted, withManualEdits}` | FR-035; lote `completed` ou `failed` |
+| `core_list_audit(p_entity_type, p_entity_id, p_after_id BIGINT, p_limit INT)` (STABLE) | `SETOF audit_log` | FR-043; paginado (≤ 500 por página, `max_rows` 1.000 da 001) |
 | `core_upsert_account(p jsonb)` / `core_archive_account(p_id, p_archived bool)` | `accounts` | FR-007–FR-012 |
 | `core_set_reported_balance(p_account_id, p_cents, p_on)` | `accounts` | FR-010 |
-| `core_account_balances(p_as_of DATE)` (STABLE) | `TABLE(account_id, reported_cents, reported_on, computed_cents, computed_at_reported_cents, divergence_cents)` | FR-010, R-09 |
+| `core_account_balances(p_as_of DATE)` (STABLE; + `p_owner_id` como todas) | `TABLE(account_id, reported_cents, reported_on, computed_cents, computed_at_reported_cents, divergence_cents)` | FR-010, R-09 |
 | `core_create_category(p jsonb)` / `core_update_category(p_id, p_patch jsonb)` | `categories` | FR-030 |
 | `core_delete_category(p_id, p_target_id, p_children text)` | `jsonb {reassigned}` | FR-031; `p_children IN ('move','delete')` |
 | `core_restore_category(p_id)` | `categories` | FR-030 |
 
+### Formato de `p_rows` (gerado pelo repositório a partir de `IncomingTx`)
+Cada elemento: `{account_id, source, external_id?, fp_base?, amount_cents, booked_on,
+occurred_at?, description_original, merchant?, status, nature?, category_id?,
+category_source?, category_confidence?, installment_number?, installment_total?,
+installment_group?, original_amount_minor?, original_currency?}`. Exatamente um de
+`external_id` / `fp_base` (`^[0-9a-f]{64}$`, calculado em TS por `fingerprintBase()`, R-06).
+O banco **não** recebe `identity_key` pronto: deriva `'ext:' || external_id` ou
+`core_fp_identity(fp_base, ocorrência)`.
+
 ### Algoritmo — `core_upsert_transactions` (por linha, em ordem, numa única transação)
-1. Validar lote: do dono, `status IN ('processing','in_review')`; senão `core.batch_closed`.
-2. Validar linha (conta do dono e não arquivada, tipos, faixas) → falha = `rejected` com
-   campo, sem abortar o lote (resultado por linha `{index, outcome, id?, field?}`).
-3. `INSERT … ON CONFLICT ON CONSTRAINT tx_identity_uq DO NOTHING RETURNING id` → `created`.
-4. Conflito: carregar existente `FOR UPDATE`.
+1. Validar lote: do dono, `status = 'processing'`, mesma `source` das linhas; senão
+   `core.forbidden:batch_closed` (inclui `in_review`). Bloquear o lote `FOR UPDATE`
+   (serializa chamadas concorrentes no mesmo lote).
+2. Validar linha (conta do dono e não arquivada, tipos, faixas, exatamente um de
+   `external_id`/`fp_base`) → falha = `rejected` com campo, sem abortar a chamada (resultado
+   por linha `{index, outcome, id?, field?}`). Linha rejeitada não consome ocorrência.
+3. Identidade: com `external_id` → `ext:`. Com `fp_base` → `k = fp_occurrences[fp_base] + 1`
+   (ausente = 0), grava `fp_occurrences[fp_base] = k` no lote e usa
+   `core_fp_identity(fp_base, k)`. Como o contador vive no lote, a ocorrência vale para o
+   **lote inteiro**, mesmo com várias chamadas (fatias de 1.000 ou paginação do conector).
+   Pré-condição do contrato: cada linha do arquivo é enviada **uma vez** por lote; reenvio
+   idempotente é feito com **lote novo** (recomeça em 1 e reconhece as mesmas identidades).
+   Uma chamada que falha é revertida inteira (inclusive o contador), então repeti-la é seguro.
+4. `INSERT … ON CONFLICT ON CONSTRAINT tx_identity_uq DO NOTHING RETURNING id` → `created`.
+5. Conflito: carregar existente `FOR UPDATE` (serializa com edição manual concorrente; a
+   edição manual que commitar antes já está em `locked_fields` e é respeitada; a que vier
+   depois aplica sobre o valor da fonte e trava — nenhuma das duas some sem auditoria).
+   - existente excluída com `deleted_reason = 'batch_undone'` → **restaura** (D-C:
+     `deleted_at/deleted_reason := NULL`, `prumo.action='restore'`, `reason='reimport'`,
+     `batch_id` da auditoria = lote novo); fatos não mudam; → `restored`;
+   - existente excluída por outro motivo (`user`, `merged`, `canceled_at_source`) →
+     permanece excluída → `duplicate`;
    - existente `pending` e linha difere em fato (valor, data, descrição original, status,
      horário) → `UPDATE` (trigger aplica travas e audita) → `updated`;
    - existente `posted` (ou pendente sem diferença) → atualiza só campos automáticos vazios e
      não travados (`merchant`, `occurred_at`) → `duplicate`;
-   - linha tentou mudar campo travado → conta também em `protected`.
-   - existente excluída logicamente → permanece excluída → `duplicate`.
-5. Atualizar contadores do lote (`count_read += n`, …) e retornar o resumo.
+   - linha tentou mudar campo travado → conta também em `protected` (não exclusivo).
+6. Atualizar contadores do lote (`count_read += n`, `count_created`, `count_updated`,
+   `count_restored`, `count_duplicate`, `count_protected`, `count_rejected`) e retornar o resumo.
+
+**Falha no meio de um lote** (edge case): cada chamada é atômica. Se a chamada N falha
+(`unavailable`/erro), as chamadas 1..N−1 permanecem gravadas; o repositório (ou o conector)
+chama `finish(id, 'failed', erro)` e o lote guarda os contadores parciais. Reprocessar = lote
+novo (identidades iguais → `duplicate`); limpar = `undo` do lote `failed` (FR-035).
+
+### Algoritmo — `core_undo_batch(p_id)`
+1. Lote do dono em `completed` ou `failed`; senão `core.forbidden:batch_state`.
+2. Seleciona transações `batch_id = p_id` não excluídas; `withManualEdits` = quantas têm
+   `locked_fields ≠ '{}'`.
+3. `core_soft_delete_transactions(ids, 'batch_undone')` (desfaz vínculos dependentes) e lote →
+   `undone` (`prumo.action='undo_batch'`), numa única transação.
 
 ### Algoritmo — `core_account_balances(p_as_of)`
 1. Para cada conta do dono: `computed(d) = opening_balance_cents + Σ amount_cents` de
@@ -539,12 +677,17 @@ Espelham as colunas em `camelCase`: `Institution`, `Account`, `Transaction`, `Ca
 | — | 1 `import_batch` por conta: `source='ofx'`, `status='completed'`, `initiated_by='system'` |
 | `transactions[].id` | `source='ofx'`, `external_id=id`, `identity_key='ext:'+id`, `status='posted'` |
 | `amountCents`, `date`, `description` | `amount_cents`, `booked_on`, `description_original` |
-| `kind`: `transfer_internal` / `card_bill_payment` / `refund` | `nature`: `internal_transfer` / `card_payment` / `refund`; `transferGroupId` → `related_transaction_id` entre as duas pernas |
-| `kind`: `salary`, `subscription`, `fee`, `income_other`, `purchase`/`installment`/`international` | categoria (`category_source='source'`, sem confiança): Salário, Assinaturas e serviços › Streaming/Aplicativos, Tarifas bancárias, Outras receitas, Sem categoria |
-| `installment` | `installment_number/total/group` |
-| `originalCurrency` | `original_currency`, `original_amount_minor` |
+| `kind`: `transfer_internal` / `card_bill_payment` / `refund` | `nature`: `internal_transfer` / `card_payment` / `refund`; `transferGroupId` → `related_transaction_id` entre as duas pernas; categoria: Transferência entre contas / Pagamento de fatura / Reembolsos › Estornos |
+| `kind`: `salary`, `subscription`, `fee`, `income_other` | categoria (`category_source='source'`, sem confiança): Salário › Salário, Assinaturas e serviços › Streaming, Tarifas bancárias, Outras receitas › Diversos |
+| `kind`: `purchase`/`installment`/`international` | sem categoria (`category_id NULL`, `category_source NULL`) |
+| `installment` (`number`, `total`, `groupId`) | `installment_number/total/group` |
+| `originalCurrency` (`code`, `amountMinor`) | `original_currency`, `original_amount_minor` |
+| `institutionId`/`accountId`/`id` (strings `inst-*`, `acc-*`) | UUIDs v5 determinísticos a partir do id sintético (mesma semente ⇒ mesmos UUIDs) |
 
-Invariante testada: Σ `amount_cents` do modelo = Σ `amountCents` do dataset (SC-006).
+Invariantes testadas: Σ `amount_cents` do modelo = Σ `amountCents` do dataset, no total e
+**por mês** (SC-006); o mesmo dataset gravado no Supabase (via `upsertMany`) dá as mesmas somas.
+Demo: `anchorDate` = data de hoje em America/Sao_Paulo na criação da sessão (dados sempre
+"recentes"; determinístico dentro do dia).
 
 ## 8. Volume e desempenho
 

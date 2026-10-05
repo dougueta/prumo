@@ -46,3 +46,7 @@ Problemas comuns:
 - `core.hard_delete_forbidden` → use `softDelete`; DELETE físico é proibido por design.
 - `core.forbidden:imported_fact` → valor/data de transação importada não se edita; exclua e
   crie uma manual.
+- `core.forbidden:batch_closed` → o lote não está em `processing` (ex.: `in_review` — chame
+  `batches.resume` após a revisão; ou já concluído — crie um lote novo para reprocessar).
+- `permission denied for table …` → faltou GRANT na migração (matriz do data-model §3); a CLI
+  da 001 não expõe objetos novos automaticamente.
