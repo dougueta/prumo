@@ -6,7 +6,7 @@
 **Iniciativa**: 1 · Autenticação
 **Onda**: 1
 **Agente**: Claude (revisor: Gemini)
-**Dependências**: 001 (setup-projeto)
+**Dependências**: 001 (setup-projeto); integração após 004 e 003 (ordem de merge da onda 1: 004 → 003 → 006 → 002)
 **Input**: "Login single-user com allowlist, sessão segura, logout — acesso seguro ao Prumo,
 que contém dados financeiros reais de uma pessoa, usado diariamente pelo Doug como app
 instalado no celular."
@@ -62,10 +62,10 @@ neutra que um e-mail autorizado veria antes de concluir, e nunca obter sessão).
    acesso é recusado com a mesma mensagem neutra, nenhuma sessão é criada e o evento é
    registrado.
 5. **Given** a verificação de entrada (código por e-mail) já usada ou expirada, **When** alguém
-   tenta usá-la, **Then** o acesso é recusado com a mensagem "Este acesso expirou ou já foi
+   tenta usá-la, **Then** o acesso é recusado com a mensagem "Este código expirou ou já foi
    usado — peça um novo" e o evento é registrado.
-6. **Given** a tela de entrada, **When** o mesmo e-mail ou a mesma origem acumula 5 tentativas
-   falhas em 15 minutos, **Then** novas tentativas são bloqueadas por 15 minutos com mensagem
+6. **Given** a tela de entrada, **When** o mesmo e-mail ou a mesma origem acumula 5 verificações
+   de código falhas em 15 minutos, **Then** novas tentativas são bloqueadas por 15 minutos com mensagem
    neutra ("Muitas tentativas. Tente novamente mais tarde."), sem revelar se o e-mail existe,
    e o bloqueio é registrado.
 
@@ -90,7 +90,8 @@ em FR-010 a FR-013.
    de inatividade permitido, **Then** ele vai direto para o app, sem nova verificação.
 2. **Given** uma sessão válida e o app sem uso além do período de inatividade, **When** o Doug
    reabre o app, **Then** ele vê a tela de desbloqueio por biometria/PIN do celular (FR-012) antes de qualquer
-   dado ser exibido.
+   dado ser exibido — desde que tenha cadastrado o desbloqueio **neste** dispositivo; senão, a
+   entrada completa.
 3. **Given** uma sessão em uso, **When** o Doug continua usando o app regularmente, **Then** a
    sessão é renovada automaticamente sem interrupção, respeitando o limite máximo absoluto
    definido em FR-010.
@@ -174,7 +175,8 @@ mecanismo é impossível de ativar em produção.
    cabeçalho tenta ativar o modo demonstração ou a entrada automática, **Then** isso é
    impossível — o ambiente de produção nunca oferece entrada automática nem usuário fictício.
 4. **Given** o modo demonstração, **When** eventos de acesso e sessões são exibidos, **Then**
-   são fictícios, ficam só em memória durante a sessão e somem ao recarregar.
+   são fictícios, ficam só na memória do servidor associada à sessão de demonstração (no máximo
+   2 horas) e nunca são gravados em banco.
 
 ### Edge Cases
 
@@ -222,13 +224,17 @@ mecanismo é impossível de ativar em produção.
   e tempo de resposta equivalente aos de um e-mail autorizado, MUST NOT enviar nenhuma
   mensagem a esse e-mail e MUST NOT criar sessão.
 - **FR-003**: O sistema MUST oferecer como método principal o **login com Google** e, como
-  reserva, um **código de 6 dígitos enviado por e-mail** (sem link mágico). Ambos MUST
-  funcionar dentro do app instalado no celular (Android e iOS) sem obrigar o Doug a concluir a
-  entrada em outro aplicativo ou navegador; o código é digitado no próprio app.
+  reserva, um **código de 6 dígitos enviado por e-mail** (sem link mágico). O código por e-mail
+  MUST funcionar inteiramente dentro do app instalado no celular (Android e iOS), digitado no
+  próprio app. O login com Google MUST funcionar no navegador e no app instalado no Android e
+  SHOULD funcionar no app instalado no iOS; se nesse contexto a entrada pelo Google não puder
+  ser concluída dentro do app, a tela MUST oferecer o código por e-mail como caminho garantido
+  (ver Clarifications, remediação pós-analyze).
 - **FR-004**: Códigos de entrada por e-mail MUST valer por no máximo
   10 minutos, ser de uso único, e todo novo pedido MUST invalidar os anteriores.
-- **FR-005**: O sistema MUST limitar tentativas: no máximo 5 falhas em 15 minutos por e-mail e
-  por origem (bloqueio de 15 minutos), e no máximo 1 pedido de código a cada 60 segundos e
+- **FR-005**: O sistema MUST limitar tentativas: no máximo 5 verificações de código falhas em
+  15 minutos por e-mail e por origem (bloqueio de 15 minutos; pedidos de código para e-mails
+  não autorizados não contam como falha, para não diferenciar e-mails), e no máximo 1 pedido de código a cada 60 segundos e
   5 por hora por e-mail. Mensagens de bloqueio MUST ser neutras (não revelam se o e-mail é
   autorizado).
 - **FR-006**: Após entrar, o sistema MUST levar o Doug à página que ele tentava abrir, desde que
@@ -250,9 +256,10 @@ mecanismo é impossível de ativar em produção.
 - **FR-011**: Validade de sessão, códigos e bloqueios MUST ser decidida pelo servidor (não pelo
   relógio do dispositivo).
 - **FR-012**: Ao reabrir (ou voltar para) o app após 15 minutos sem uso, o sistema MUST exigir
-  desbloqueio com a biometria ou o PIN do próprio celular antes de exibir qualquer dado. Após
-  5 falhas seguidas, ou se o dispositivo não oferecer esse recurso, MUST exigir entrada
-  completa (FR-003). O desbloqueio não renova o limite máximo de 90 dias.
+  desbloqueio com a biometria ou o PIN do próprio celular antes de exibir qualquer dado. O
+  desbloqueio só aceita uma credencial cadastrada **neste mesmo dispositivo**. Após 5 falhas
+  seguidas, ou se o dispositivo não oferecer esse recurso ou não tiver credencial cadastrada,
+  MUST exigir entrada completa (FR-003). O desbloqueio não renova o limite máximo de 90 dias.
 - **FR-013**: Se a sessão vencer ou for encerrada durante uma ação, o sistema MUST NOT executar
   a ação parcialmente, MUST avisar que ela não foi salva e, após nova entrada, MUST retornar à
   mesma tela.
@@ -287,8 +294,9 @@ mecanismo é impossível de ativar em produção.
 
 **Modo demonstração (ADR 0006)**
 - **FR-024**: Em `preview`, o sistema MUST entrar automaticamente como o usuário fictício
-  "Usuário Demonstração", exibindo o selo "Demonstração — dados fictícios"; sessões e eventos
-  de acesso são fictícios e existem apenas em memória durante a sessão.
+  "Usuário Demonstração", exibindo o selo "Demonstração — dados fictícios" em todas as telas
+  (inclusive a de entrada); sessões e eventos de acesso são fictícios e existem apenas na
+  memória do servidor associada à sessão de demonstração (no máximo 2 horas), nunca em banco.
 - **FR-025**: Em `preview`, a tela de entrada MUST permitir simular os fluxos (e-mail
   autorizado, recusado, código expirado, bloqueio) sem enviar mensagens reais e sem contatar
   provedores externos.
@@ -309,10 +317,15 @@ mecanismo é impossível de ativar em produção.
 
 - **Lista de autorizados**: conjunto de e-mails com permissão de entrada (inicialmente 1);
   vive na configuração do servidor, não editável pela interface.
-- **Usuário**: a identidade do Doug no app (e o "Usuário Demonstração" em `preview`); dono de
-  todos os dados financeiros das outras features.
+- **Usuário**: a identidade do Doug no app (e o "Usuário Demonstração" em `preview`, com o
+  identificador de dono demo definido pela 004); dono de todos os dados financeiros das outras
+  features.
 - **Sessão**: vínculo entre o usuário e um dispositivo — dispositivo/navegador, início, último
-  uso, vencimento, estado (ativa, encerrada, vencida).
+  uso, vencimento, estado (ativa, bloqueada, encerrada, vencida).
+- **Dispositivo**: identificador aleatório do navegador/app instalado, usado para vincular a
+  credencial de desbloqueio ao aparelho em que foi cadastrada.
+- **Credencial de desbloqueio**: biometria/PIN cadastrados num dispositivo (só a parte pública
+  fica no servidor).
 - **Pedido de código por e-mail**: e-mail, criado em, expira em,
   usado em/invalidado.
 - **Evento de acesso**: tipo, data/hora, método, dispositivo/navegador, origem aproximada,
@@ -353,6 +366,25 @@ mecanismo é impossível de ativar em produção.
   máximo absoluto de 90 dias; ao reabrir após 15 minutos parado, desbloqueio com biometria/PIN
   do celular.
 
+### Remediação pós-analyze 2026-10-05
+
+Ajustes de requisito decorrentes do `/speckit-analyze` (sem renumerar FRs):
+- **FR-005 / US1-6** (achado H1): "falha" passa a significar **verificação de código falha**.
+  Pedidos de código para e-mail fora da lista não contam como falha — contá-los criava um
+  oráculo de enumeração (o contador por origem só crescia para e-mails não autorizados).
+- **FR-012 / US2-2** (achado M3): o desbloqueio só aceita credencial cadastrada **no mesmo
+  dispositivo**; um computador sem credencial própria exige entrada completa, mesmo que o
+  celular tenha credencial (evita desbloquear o computador pelo celular via QR).
+- **FR-003** (achado M14): o código por e-mail é o caminho **garantido** dentro do app
+  instalado; o Google é MUST no navegador e no Android instalado e SHOULD no iOS instalado
+  (limitação de cookies do app de tela inicial do iOS). Se falhar, a tela oferece o código.
+- **FR-024 / US5-4** (decisão transversal da onda 1): a sessão de demonstração é a da 004
+  (`prumo_demo_sid`, até 2 h); sessões e eventos fictícios vivem na memória do servidor ligada
+  a ela, não "somem ao recarregar". O selo aparece também na tela de entrada.
+- **US1-5** (achado L4): texto unificado "Este código expirou ou já foi usado — peça um novo".
+- **Tela de segurança** (decisão D-B da onda 1): fica em `/mais/seguranca`, dentro do shell da
+  003; a tela de desbloqueio fica fora do shell.
+
 ## Assumptions
 
 - O Doug usa um e-mail pessoal do Google como e-mail autorizado; a lista começa com 1 e-mail
@@ -369,7 +401,7 @@ mecanismo é impossível de ativar em produção.
   provedores externos são simulados no CI (Constitution V).
 - As tabelas de sessão, eventos de acesso e controle de tentativas (se próprias do app) são de
   propriedade desta feature (Constitution VII), com RLS e acesso restrito ao usuário/servidor.
-- A tela de segurança (sessões + histórico) usa o shell da 003 quando existir; antes disso, uma
-  tela simples basta.
+- A tela de segurança (sessões + histórico) fica em "Mais → Segurança", dentro do shell da 003,
+  que é integrada antes desta feature (ordem de merge da onda 1).
 - Localização aproximada da origem é a informada pela plataforma de hospedagem, sem serviço
   pago de geolocalização.
