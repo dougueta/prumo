@@ -4,6 +4,9 @@ Pesquisa feita em 2026-10-02/03 com documentação oficial, `gh api` contra o re
 `dougueta/prumo` (somente leitura) e inspeção de um PR público real revisado pelo Gemini Code
 Assist. A pesquisa R5 do Gemini (`docs/research/gemini-code-assist.md`) pode aprofundar R-01/R-02;
 se divergir, prevalece a evidência mais recente e o plano é ajustado antes do Gate 2.
+Em 2026-10-05 a R5 ainda não havia sido entregue (`docs/research/` só tem o README); esta
+pesquisa a substitui para a 002 (T052 marca isso no handoff). Remediação pós-analyze
+(2026-10-05): R-02, R-03, R-04 atualizados e R-08 a R-11 acrescentados.
 
 ## R-01 · O que o Gemini Code Assist (versão consumer, gratuita) faz em PRs
 
@@ -76,6 +79,12 @@ operacionalmente); Gemini Code Assist enterprise (pago, fora do teto).
 - JWT gerado com `node:crypto` (`createSign('RSA-SHA256')`) — sem dependência nova.
 - Chave privada `.pem` fora do repositório (`%USERPROFILE%\.prumo\prumo-revisor.pem`), caminho e
   Client ID em `.env.review.local` (ignorado pelo git; `*.pem` já está no `.gitignore`).
+- **Atualização 2026-10-05**: a chave fica **cifrada (PKCS#8, AES-256) com senha** que só o Doug
+  digita no terminal ao publicar. Motivo: os agentes autores rodam na mesma máquina e com o
+  mesmo usuário do Doug, então permissões de arquivo não impedem a leitura; sem a senha, um
+  agente autor (ex.: Gemini CLI num PR `autor:gemini`) não consegue publicar como
+  `prumo-revisor[bot]` (FR-009). `node:crypto.createPrivateKey({ key, passphrase })` lê o
+  formato sem dependência nova.
   Token pedido com `permissions: {pull_requests: write}` e `repositories: ["prumo"]`.
 
 **Alternatives**: conta de máquina (mais uma conta para gerir); comentário pela conta do Doug com
@@ -109,19 +118,25 @@ distingue agente de Doug.
 **Decision (recomendada, C)** — defesa em camadas:
 1. **Configuração do repositório** (disponível no Free): só "squash" habilitado, apagar branch
    após merge.
-2. **Preventivo nos agentes**: `.claude/settings.json` com `permissions.deny` para
-   `Bash(git push * main*)`, `Bash(git push origin HEAD:main*)`, `Bash(gh pr merge*)`,
-   `Bash(npm run pr:merge*)`; `.gemini/settings.json` com `excludeTools` equivalentes. A doc do
+2. **Preventivo nos agentes**: `.claude/settings.json` com `permissions.deny` e
+   `.gemini/settings.json` com `excludeTools` cobrindo a lista de `contracts/review-cli.md`
+   §Negação (push para `main` em todas as formas, `--no-verify`, `gh pr merge`, `pr:merge`,
+   `review:publish`, `gh api` merge/statuses/labels, rótulo `emergencia`, leitura de `~/.prumo`). A doc do
    Claude Code e do Gemini CLI avisa que regras por padrão de texto são contornáveis
    ([permissions](https://code.claude.com/docs/en/permissions), [Gemini CLI shell](https://geminicli.com/docs/tools/shell/)) — por isso não são a única camada.
 3. **Preventivo local**: hook `pre-push` versionado (`.githooks/pre-push`, ativado por
    `npm install` via script `prepare`) que recusa push para `main`.
-4. **Merge pelo Doug via comando de portão** `npm run pr:merge -- <n>`: só integra (squash) se os
-   4 checks de CI e o status "Revisão independente" estiverem verdes no head e a branch estiver
-   atualizada.
-5. **Detectivo no servidor**: workflow `main-guard.yml` em todo push na `main` confere que o
-   commit veio de PR integrado por squash com CI verde e revisão válida (ou `emergencia`); se não,
-   abre issue `violacao-main` atribuída ao Doug (e-mail) e falha — em ≤ 5 min.
+4. **Merge pelo Doug via comando de portão** `npm run pr:merge -- <n>`: só integra (squash) se as
+   verificações de CI derivadas do `ci.yml` estiverem verdes no head, se `evaluateGate`
+   **recalculado** localmente der success (o status publicado não basta — R-09) e se a branch
+   estiver atualizada (`behind_by == 0` — R-11).
+5. **Detectivo no servidor**: job `main-guard` ("Guarda da main") **dentro do `ci.yml`** em todo
+   push na `main` confere que o commit veio de PR integrado por squash com CI verde e revisão
+   válida **recalculada** (ou `emergencia`); se não, abre issue `violacao-main` atribuída ao
+   Doug (e-mail) e falha — em ≤ 5 min. Como o `deploy-db` da 001 (`ci.yml:96-117`) passa a ter
+   `needs: main-guard`, migrações de produção não são aplicadas para um commit fora do fluxo.
+   O deploy de produção da Vercel não depende do CI — risco residual registrado no ADR 0007.
+   O modo agendado das emergências fica em `main-guard.yml` (só `schedule`).
 
 Se o Doug escolher **A** ou **B**, acrescenta-se o ruleset (task T023) e as camadas 2–5 continuam
 (o servidor ainda não distingue agente de Doug para "só o Doug integra").
@@ -142,8 +157,9 @@ Se o Doug escolher **A** ou **B**, acrescenta-se o ruleset (task T023) e as cama
   `GITHUB_TOKEN` não disparam.
 
 **Decision**
-- Workflow `.github/workflows/review-gate.yml` com os três gatilhos, `permissions:
-  {contents: read, pull-requests: read, issues: read, statuses: write}`, `concurrency` por PR
+- Workflow `.github/workflows/review-gate.yml` com os gatilhos, `permissions: {}` no topo e
+  permissões por job (contrato review-gate: `gate` com `statuses: write` e escrita de
+  comentário para os avisos; `redispatch` só `actions: write`), `concurrency` por PR
   (cancel-in-progress). Faz checkout **explícito de `main`** (`ref: main`) e roda
   `scripts/review/gate.ts`, que lê tudo pela API (nunca executa código do PR).
 - Mitigação do risco de `pull_request_review`: (a) o job de `pull_request_review` só re-dispara a
@@ -197,3 +213,49 @@ menos código).
 - **Decision**: script idempotente `npm run gh:labels` cria/atualiza `autor:doug`, `emergencia`,
   `violacao-main`, `iniciativa:0` … `iniciativa:10` (nomes curtos do roadmap na descrição) e os 11
   marcos "N · Nome da iniciativa". ⚠️ executado pelo Doug (escreve no GitHub).
+
+## R-08 · Rebase neutro (FR-007) — impressão do conteúdo do PR
+
+**Problema**: a constitution exige rebase na `main` antes do merge; como o veredito é ligado ao
+sha do head, todo rebase invalidaria a revisão e, com WIP 3, geraria laço rebase → revisão.
+
+**Decision**: `GET /repos/{o}/{r}/compare/main...<sha>` (três pontos = desde o merge-base) devolve
+os arquivos e patches **do PR** naquele sha. A impressão (data-model §2.1) é o sha256 dos
+patches normalizados (cabeçalhos de hunk sem números). Se a impressão do head atual é igual à
+do head revisado, o veredito continua válido ("rebase neutro"). Limites da API (300 arquivos,
+patch ausente em binário/diff grande) ⇒ impressão `null` ⇒ veredito tratado como desatualizado
+(conservador). Mudança nas linhas de contexto também muda a impressão (conservador).
+
+**Alternatives**: `git patch-id` (exige checkout/fetch do código do PR no portão — evitado);
+invalidar sempre (laço); ignorar rebase (aceitaria conteúdo novo sem revisão).
+
+## R-09 · Status de commit é forjável; check run não
+
+**Evidência / raciocínio**: `POST /statuses/{sha}` aceita qualquer token com escrita no repositório
+— inclusive o do Doug, que os agentes usam — e o job de `pull_request_review` roda o workflow
+**do PR**, que pode declarar `statuses: write`. Check runs só podem ser criados por GitHub Apps
+(PAT/OAuth não criam), e o `app.slug` identifica `github-actions`.
+
+**Decision**: o status "Revisão independente" é informativo; `pr:merge` e `main-guard`
+recalculam `evaluateGate` a partir do snapshot do PR e exigem check runs do app
+`github-actions` para cada verificação obrigatória. O job `redispatch` recebe só
+`actions: write`.
+
+## R-10 · `prepare` e o build da Vercel
+
+**Raciocínio**: `prepare` roda em todo `npm install`/`npm ci`, inclusive nos builds de preview e
+produção da Vercel (001), onde o diretório `.git` pode não existir; `git config` fora de um
+repositório termina com erro e quebraria a instalação (a confirmar no primeiro preview — o teste
+T057 cobre o caso de qualquer forma).
+
+**Decision**: `prepare` chama `node scripts/setup-hooks.mjs`, que não faz nada com `CI`/`VERCEL`
+definidos ou fora de um repositório git e nunca sai com código ≠ 0.
+
+## R-11 · "Branch atualizada" sem branch protection
+
+**Raciocínio**: `mergeable_state = behind` só é calculado quando uma proteção exige branch
+atualizada; com D1 = C não há proteção, então um PR atrás da `main` pode aparecer como `clean`
+(a confirmar no aceite, cenário de branch desatualizada).
+
+**Decision**: `pr:merge` usa `GET /compare/{main}...{head}` e exige `behind_by == 0` (exit 7),
+independentemente de `mergeable_state`.

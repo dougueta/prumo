@@ -6,7 +6,9 @@
 **Iniciativa**: 0 · Plataforma
 **Onda**: 1
 **Agente**: Claude (revisor: Gemini)
-**Dependências**: 001 · setup-projeto (CI com verificações automáticas)
+**Dependências**: 001 · setup-projeto (CI com verificações automáticas) · emenda da
+constitution **v1.2.0** (Princípio VIII: exceção de emergência do FR-024) integrada na versão
+principal antes da implementação
 **Input**: "Revisor de PR independente e sem os vícios do autor (Constitution VIII): PRs do
 Claude revisados pelo Gemini, PRs do Gemini revisados por um Claude em contexto limpo, veredito
 formal no formato do checklist, proteção da versão principal, template de PR e fim da exceção de
@@ -33,8 +35,8 @@ revisor** (o outro). Teto de custo: **R$ 0/mês** (constitution v1.1.0).
   (`autor:claude` → Gemini; `autor:gemini` → Claude em contexto limpo; `autor:doug` → Gemini).
 - **Veredito**: registro publicado no PR, no formato obrigatório de `docs/review-checklist.md`
   (cabeçalho `Veredito`, tabela de achados, tabela de cobertura de requisitos).
-- **Veredito válido**: veredito do revisor designado, no formato obrigatório, publicado
-  **depois** do último commit do PR.
+- **Veredito válido**: veredito do revisor designado, no formato obrigatório, referente ao
+  estado atual do PR (o último commit, ou um commit equivalente por rebase neutro).
 - **Verificação de revisão**: verificação automática obrigatória da versão principal que só
   passa quando existe um veredito válido APROVADO e as demais regras desta spec são atendidas.
 - **Pacote de revisão**: o conjunto fechado de insumos que o revisor pode ler — diff, `spec.md`,
@@ -66,14 +68,18 @@ em modo "squash".
 3. **Given** um PR com verificações verdes e sem veredito, **When** o Doug abre o PR,
    **Then** a verificação de revisão aparece como pendente com a mensagem "aguardando veredito
    de <revisor designado>" e o merge está indisponível.
-4. **Given** um PR com veredito APROVADO e, depois dele, um novo commit, **When** o Doug abre o
-   PR, **Then** a verificação de revisão volta a pendente ("veredito desatualizado — novo
-   commit após a revisão") e o merge está indisponível.
+4. **Given** um PR com veredito APROVADO e, depois dele, um novo commit que altera o conteúdo
+   do PR, **When** o Doug abre o PR, **Then** a verificação de revisão volta a pendente
+   ("veredito desatualizado — novo commit após a revisão") e o merge está indisponível. Um
+   rebase na versão principal que não altera o conteúdo do PR ("rebase neutro") mantém o
+   veredito válido.
 5. **Given** um PR com verificações verdes, veredito válido APROVADO e branch atualizada com a
    versão principal, **When** o Doug escolhe integrar, **Then** a única forma disponível é
    "squash" e o merge é concluído.
-6. **Given** um agente com acesso ao repositório, **When** tenta realizar o merge de qualquer PR,
-   **Then** a operação é recusada (só o Doug integra).
+6. **Given** um agente com acesso ao repositório (pela conta do Doug), **When** tenta realizar o
+   merge de qualquer PR pelos caminhos documentados, **Then** a operação é recusada nas
+   configurações do agente e no comando de merge (só o Doug integra), e qualquer merge fora do
+   fluxo é detectado e alertado ao Doug.
 7. **Given** esta feature integrada, **When** qualquer PR é aberto (inclusive de documentação de
    processo), **Then** ele passa pelas mesmas regras — a exceção de bootstrap deixa de existir.
 
@@ -130,8 +136,10 @@ insumo fora do pacote de revisão foi usado.
    dele) executa o comando documentado de revisão informando o número do PR, **Then** um revisor
    Claude novo, sem histórico, produz o veredito e o publica no PR.
 2. **Given** o revisor em contexto limpo, **When** monta sua revisão, **Then** lê somente o
-   pacote de revisão — não lê conversas do PR, comentários do autor nem histórico de sessões — e
-   o veredito inclui uma seção "Insumos lidos" listando exatamente esses itens.
+   pacote de revisão — não lê conversas do PR, comentários livres do autor nem histórico de
+   sessões — e o veredito inclui uma seção "Insumos lidos" listando exatamente esses itens. Numa
+   re-revisão, o pacote inclui também o veredito anterior do revisor designado e a tabela formal
+   de respostas do autor (FR-019), necessários para cumprir o FR-020.
 3. **Given** o comando de revisão executado para um PR com rótulo `autor:claude`, **When** ele
    inicia, **Then** recusa a revisão com a mensagem "revisor e autor são o mesmo agente".
 4. **Given** a execução da revisão, **When** concluída, **Then** nenhum custo recorrente novo foi
@@ -214,7 +222,13 @@ terceiro e verificar que o fluxo segue.
   desconsiderado: não é o revisor designado".
 - **Veredito fora do formato** (sem cabeçalho ou sem tabelas): ignorado, com aviso "veredito
   fora do formato".
-- **Veredito desatualizado**: novo commit após o último veredito invalida-o (US1, cenário 4).
+- **Veredito desatualizado**: novo commit após o último veredito invalida-o (US1, cenário 4),
+  exceto rebase neutro — o conjunto de arquivos e alterações do PR é idêntico ao revisado.
+  Se não for possível comprovar a equivalência (ex.: diff grande demais para comparar), o
+  veredito é tratado como desatualizado.
+- **Verificação de revisão forjada** (status marcado como verde por outra via que não o
+  portão): não habilita o merge — o comando de merge e a detecção pós-merge recalculam o
+  resultado a partir dos dados do PR.
 - **Veredito incoerente** (APROVADO com achado CRÍTICO/ALTO): tratado como MUDANÇAS NECESSÁRIAS.
 - **Vários vereditos**: vale o mais recente do revisor designado.
 - **Rótulo de autor alterado após o veredito**: a verificação é reavaliada imediatamente; o
@@ -233,20 +247,29 @@ terceiro e verificar que o fluxo segue.
 **Proteção da versão principal**
 - **FR-001**: A versão principal MUST aceitar mudanças somente via PR; envio direto de commits,
   reescrita de histórico e remoção da branch MUST ser recusados para todos, inclusive o Doug.
-- **FR-002**: O merge MUST exigir: (a) todas as verificações automáticas da feature 001 verdes;
+- **FR-002**: O merge MUST exigir: (a) todas as verificações automáticas de PR definidas no CI
+  do repositório verdes (criadas pela 001 e por features posteriores — a lista acompanha o CI,
+  não é fixa);
   (b) a verificação de revisão verde; (c) branch atualizada com a versão principal.
 - **FR-003**: O único modo de merge permitido MUST ser "squash".
-- **FR-004**: Somente o Doug MUST conseguir integrar PRs; os agentes MUST NOT ter permissão de
-  merge. A aprovação do Doug (Gate 3) se materializa no ato do merge.
+- **FR-004**: Somente o Doug MUST integrar PRs. Como os agentes usam a conta do Doug (o GitHub
+  não os distingue dele), isso MUST ser garantido em camadas: (a) o merge é negado nas
+  configurações de cada agente; (b) o comando de merge documentado só integra em terminal
+  interativo do Doug e recalcula todas as condições do FR-002; (c) todo commit que chega à
+  versão principal é auditado e qualquer merge fora dessas condições gera alerta ao Doug. A
+  aprovação do Doug (Gate 3) se materializa no ato do merge.
 - **FR-005**: Nenhuma regra de proteção MUST ser contornável por permissões de administrador,
   salvo o previsto em FR-024.
 
 **Verificação de revisão**
 - **FR-006**: O sistema MUST ter uma verificação automática obrigatória ("revisão
   independente") reavaliada sempre que o PR receber commit, comentário, veredito, resposta ou
-  mudança de rótulo.
+  mudança de rótulo. Um status marcado como verde por qualquer outra via MUST NOT ser
+  suficiente para o merge: o comando de merge e a auditoria pós-merge recalculam o resultado.
 - **FR-007**: A verificação MUST passar somente se: existe exatamente um rótulo de autor; o
-  último veredito válido do revisor designado é APROVADO; ele é posterior ao último commit; não
+  último veredito válido do revisor designado é APROVADO; ele se refere ao estado atual do PR
+  (mesmo commit, ou commit obtido por rebase neutro — conteúdo do PR comprovadamente idêntico ao
+  revisado); não
   contém achado CRÍTICO ou ALTO; e todos os achados do veredito anterior MUDANÇAS NECESSÁRIAS
   têm resposta do autor (FR-019).
 - **FR-008**: Quando não passar, a verificação MUST exibir um único motivo legível em português
@@ -280,9 +303,13 @@ terceiro e verificar que o fluxo segue.
 **Revisor Claude em contexto limpo (PRs `autor:gemini`)**
 - **FR-017**: O repositório MUST conter um comando documentado que, dado o número de um PR,
   monta o pacote de revisão, inicia um revisor Claude sem histórico, gera o veredito no formato
-  obrigatório e o publica no PR — executado localmente, sem serviço pago.
+  obrigatório e o publica no PR — executado localmente, sem serviço pago. A publicação MUST
+  exigir uma credencial que só o Doug conhece (digitada por ele no terminal), de modo que um
+  agente autor que leia os arquivos da máquina não consiga publicar como revisor (FR-009).
 - **FR-018**: O revisor Claude MUST ler somente o pacote de revisão e MUST listar no veredito a
-  seção "Insumos lidos"; o comando MUST recusar PRs cujo rótulo não seja `autor:gemini`.
+  seção "Insumos lidos"; o comando MUST recusar PRs cujo rótulo não seja `autor:gemini`. Em
+  re-revisão, o pacote MUST incluir o último veredito do revisor designado e as tabelas formais
+  de resposta do autor (FR-019) — nunca comentários livres.
 
 **Resposta do autor**
 - **FR-019**: Após um veredito MUDANÇAS NECESSÁRIAS, o autor MUST publicar no PR uma resposta com
@@ -296,7 +323,9 @@ terceiro e verificar que o fluxo segue.
   seções: Feature (`NNN · Nome`), Artefatos (links para spec/plan/tasks), Tipo (feature ·
   processo · emenda), Rótulos, Checklist do autor (testes antes da implementação, verificações
   verdes, sem segredo/dado real, rebase na versão principal, todos os FRs cobertos) e Respostas
-  aos achados.
+  aos achados. A seção "Respostas aos achados" do modelo é apenas instrução (com o exemplo do
+  bloco de resposta): as respostas MUST ser publicadas como comentário no PR (FR-019), pois o
+  corpo do PR não é lido como resposta.
 - **FR-022**: O repositório MUST ter os rótulos `autor:claude`, `autor:gemini`, `autor:doug`,
   `emergencia`, um
   rótulo por iniciativa do roadmap (0 a 10) e um marco (milestone) por iniciativa.
@@ -306,10 +335,15 @@ terceiro e verificar que o fluxo segue.
   na documentação de processo (`docs/workflow.md`, `AGENTS.md`, `GEMINI.md`), com a data de fim,
   e `docs/gemini-handoff.md` MUST passar a listar os PRs aguardando revisão do Gemini.
 - **FR-024**: Indisponibilidade do revisor designado MUST NOT ter bypass: o PR aguarda, com
-  revisão re-solicitável. Única exceção: correção urgente de produção com rótulo `emergencia`,
-  que o Doug pode integrar sem veredito desde que o PR registre o motivo; a revisão independente
-  MUST ser feita após o merge em até 7 dias, e a verificação/documentação MUST sinalizar
-  emergências com revisão pós-merge pendente ou vencida.
+  revisão re-solicitável. Única exceção (prevista na emenda v1.2.0 do Princípio VIII):
+  correção urgente de produção com rótulo `emergencia` **aplicado pelo Doug**, que ele pode
+  integrar sem veredito desde que o PR registre o motivo; a revisão independente pós-merge MUST
+  ser feita em até 7 dias, e um PR de emergência sem essa revisão após o prazo MUST passar ao
+  estado **VENCIDA** e ser sinalizado ao Doug. O PR de emergência MUST continuar cumprindo as
+  demais regras (rótulos, autoria, verificações automáticas verdes) e se vincula a uma spec
+  assim: se altera arquivos de produto, usa a branch `NNN-slug` da feature afetada (recriada a
+  partir da versão principal, cuja `specs/NNN-slug/spec.md` já existe); se só altera áreas de
+  processo, é hotfix de processo, dispensado de spec como qualquer PR de processo.
 - **FR-025**: Esta feature MUST custar R$ 0/mês: nenhuma assinatura, API paga ou serviço novo com
   cobrança recorrente.
 
@@ -331,7 +365,9 @@ terceiro e verificar que o fluxo segue.
 ### Measurable Outcomes
 
 - **SC-001**: 100% dos PRs integrados após esta feature têm veredito APROVADO do revisor
-  designado (≠ autor), publicado depois do último commit — auditável pelo histórico dos PRs.
+  designado (≠ autor), referente ao estado integrado (último commit ou rebase neutro) —
+  auditável pelo histórico dos PRs; PRs de emergência (FR-024) têm esse veredito em até 7 dias
+  após o merge.
 - **SC-002**: 0 commits na versão principal fora de merge "squash" de PR após a ativação da
   proteção.
 - **SC-003**: Num roteiro de aceite com 8 cenários de bloqueio (push direto, verificação
@@ -358,6 +394,23 @@ terceiro e verificar que o fluxo segue.
   PR aguarda. Exceção apenas para correção urgente de produção com rótulo `emergencia`, motivo
   registrado no PR e revisão independente pós-merge em até 7 dias (FR-024).
 
+### Remediação pós-analyze 2026-10-05
+
+- D-A revisada (Doug, 2026-10-05): **manter** a exceção de emergência; ela depende da emenda
+  v1.2.0 do Princípio VIII (rótulo `emergencia` aplicado pelo Doug, revisão pós-merge em até 7
+  dias, estado VENCIDA sinalizado). FR-024 alinhado; vínculo com spec pela branch `NNN-slug` da
+  feature afetada ou hotfix de processo.
+- FR-002(a): a lista de verificações obrigatórias acompanha o CI (não é fixa).
+- FR-004 / US1-6: "só o Doug integra" garantido em camadas (agentes, comando de merge
+  interativo que recalcula, auditoria pós-merge).
+- FR-006: status verde obtido por outra via não basta; merge e auditoria recalculam.
+- FR-007 / US1-4 / glossário: veredito vale para o estado atual do PR, inclusive após rebase
+  neutro (conteúdo idêntico ao revisado).
+- FR-017: publicar o veredito do Claude exige credencial digitada pelo Doug.
+- FR-018 / US3-2: re-revisão inclui o veredito anterior e as tabelas formais de resposta.
+- FR-021: a seção "Respostas aos achados" do template é instrução; a resposta vale como
+  comentário no PR.
+
 ## Assumptions
 
 - O Gemini Code Assist (app do GitHub, gratuito para pessoas físicas) é o revisor dos PRs do
@@ -373,7 +426,7 @@ terceiro e verificar que o fluxo segue.
   feature 001).
 - Os agentes autores abrem PRs e fazem push com a conta do Doug; o revisor Claude publica pelo
   app gratuito "prumo-revisor" (instalado só neste repositório, chave guardada localmente, fora do
-  repo); o Gemini publica pelo bot dele. Só o Doug integra (merge).
+  repo, cifrada com senha que só o Doug conhece); o Gemini publica pelo bot dele. Só o Doug integra (merge).
 - Como o GitHub não permite aprovar o próprio PR, a aprovação do Doug é o ato de merge (FR-004).
 - A marcação de coautoria nos commits (`Co-Authored-By`) já é prática dos agentes e é
   estendida a todos os commits.
