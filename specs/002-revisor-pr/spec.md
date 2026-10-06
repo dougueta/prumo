@@ -7,8 +7,9 @@
 **Onda**: 1
 **Agente**: Claude (revisor: Gemini)
 **Dependências**: 001 · setup-projeto (CI com verificações automáticas) · emenda da
-constitution **v1.2.0** (Princípio VIII: exceção de emergência do FR-024) integrada na versão
-principal antes da implementação
+constitution **v1.2.0** (Princípio VIII: exceção de emergência do FR-024, com a trava para PRs
+que alteram a constitution ou os mecanismos de revisão, e o insumo real de cada revisor)
+integrada na versão principal antes da implementação
 **Input**: "Revisor de PR independente e sem os vícios do autor (Constitution VIII): PRs do
 Claude revisados pelo Gemini, PRs do Gemini revisados por um Claude em contexto limpo, veredito
 formal no formato do checklist, proteção da versão principal, template de PR e fim da exceção de
@@ -78,10 +79,14 @@ em modo "squash".
    "squash" e o merge é concluído.
 6. **Given** um agente com acesso ao repositório (pela conta do Doug), **When** tenta realizar o
    merge de qualquer PR pelos caminhos documentados, **Then** a operação é recusada nas
-   configurações do agente e no comando de merge (só o Doug integra), e qualquer merge fora do
-   fluxo é detectado e alertado ao Doug.
+   configurações do agente e no comando de merge (só o Doug integra); pelo servidor, nenhum
+   merge acontece sem as condições do FR-002, e qualquer merge cujas condições não se confirmem
+   ao recalcular é detectado e alertado ao Doug.
 7. **Given** esta feature integrada, **When** qualquer PR é aberto (inclusive de documentação de
    processo), **Then** ele passa pelas mesmas regras — a exceção de bootstrap deixa de existir.
+8. **Given** um PR aberto por alguém que não é o Doug nem um dos agentes (repositório público,
+   ex.: PR de fork), **When** a verificação de revisão roda, **Then** ela falha com "PR de autor
+   externo — não aceito" e o merge está indisponível.
 
 ---
 
@@ -234,6 +239,9 @@ terceiro e verificar que o fluxo segue.
 - **Rótulo de autor alterado após o veredito**: a verificação é reavaliada imediatamente; o
   veredito do revisor anterior deixa de valer se o revisor designado mudar.
 - **PR escrito pelo Doug** (`autor:doug`): revisor designado = Gemini; regras idênticas.
+- **PR de terceiro** (repositório público: autor externo ou branch vinda de fork): bloqueado
+  pela verificação (FR-026), mesmo que alguém aplique rótulos; nunca recebe segredos nem roda
+  código próprio com permissão de escrita.
 - **PR desta própria feature (002)**: é o último PR sob a exceção de bootstrap — revisado pelo
   Gemini já configurado, mas aprovado e integrado pelo Doug antes de a proteção ser obrigatória.
 - **PR de branch desatualizada**: merge indisponível até rebase na versão principal e
@@ -258,8 +266,9 @@ terceiro e verificar que o fluxo segue.
   interativo do Doug e recalcula todas as condições do FR-002; (c) todo commit que chega à
   versão principal é auditado e qualquer merge fora dessas condições gera alerta ao Doug. A
   aprovação do Doug (Gate 3) se materializa no ato do merge.
-- **FR-005**: Nenhuma regra de proteção MUST ser contornável por permissões de administrador,
-  salvo o previsto em FR-024.
+- **FR-005**: Nenhuma regra de proteção MUST ser contornável por permissões de administrador
+  (a proteção no servidor não tem exceções de bypass). A exceção do FR-024 não é bypass: opera
+  pela própria verificação de revisão.
 
 **Verificação de revisão**
 - **FR-006**: O sistema MUST ter uma verificação automática obrigatória ("revisão
@@ -343,9 +352,16 @@ terceiro e verificar que o fluxo segue.
   demais regras (rótulos, autoria, verificações automáticas verdes) e se vincula a uma spec
   assim: se altera arquivos de produto, usa a branch `NNN-slug` da feature afetada (recriada a
   partir da versão principal, cuja `specs/NNN-slug/spec.md` já existe); se só altera áreas de
-  processo, é hotfix de processo, dispensado de spec como qualquer PR de processo.
+  processo, é hotfix de processo, dispensado de spec como qualquer PR de processo. **Trava**: a
+  exceção MUST NOT valer para PR que altere a constitution ou os mecanismos de revisão (portão,
+  configurações e instruções dos revisores, checklist, workflows); nesse caso a verificação
+  falha com "emergência não vale para PR que altera a constitution ou os mecanismos de revisão".
 - **FR-025**: Esta feature MUST custar R$ 0/mês: nenhuma assinatura, API paga ou serviço novo com
   cobrança recorrente.
+- **FR-026**: Com o repositório público, a verificação MUST falhar para PR cujo autor não seja a
+  conta do Doug (usada por ele e pelos agentes) ou cuja branch venha de fork, com o motivo "PR de
+  autor externo — não aceito"; e nenhuma automação desta feature MUST executar código do PR,
+  usar segredos ou ter permissão de escrita além da mínima ao avaliar PRs.
 
 ### Key Entities
 
@@ -370,9 +386,9 @@ terceiro e verificar que o fluxo segue.
   após o merge.
 - **SC-002**: 0 commits na versão principal fora de merge "squash" de PR após a ativação da
   proteção.
-- **SC-003**: Num roteiro de aceite com 8 cenários de bloqueio (push direto, verificação
+- **SC-003**: Num roteiro de aceite com 9 cenários de bloqueio (push direto, verificação
   vermelha, sem veredito, veredito desatualizado, rótulo ausente, rótulo inconsistente, PR sem
-  spec, revisor igual ao autor), o merge é bloqueado em 8 de 8.
+  spec, revisor igual ao autor, PR de autor externo), o merge é bloqueado em 9 de 9.
 - **SC-004**: Em ≥ 90% dos PRs `autor:claude`, o veredito do Gemini aparece em até 15 minutos
   após o PR ficar pronto ou a revisão ser re-solicitada.
 - **SC-005**: O veredito do revisor Claude é publicado em até 30 minutos após o comando ser
@@ -410,6 +426,21 @@ terceiro e verificar que o fluxo segue.
 - FR-018 / US3-2: re-revisão inclui o veredito anterior e as tabelas formais de resposta.
 - FR-021: a seção "Respostas aos achados" do template é instrução; a resposta vale como
   comentário no PR.
+
+### Decisões do Gate 2 — 2026-10-05 (Doug)
+
+- D1 = **A (repositório público, já aplicado)**: a proteção da versão principal volta a ser no
+  servidor (ruleset sem bypass: PR obrigatório, verificações obrigatórias, branch atualizada,
+  sem push direto, sem reescrita de histórico, sem remoção). FR-001/002/003/005 valem no
+  servidor; FR-004 mantém as camadas (os agentes usam a conta do Doug). Já aplicado no GitHub:
+  environment `production` restrito à `main`, aprovação de workflows para todo colaborador
+  externo, secret scanning e push protection.
+- Novo **FR-026** e US1 cenário 8: PR de autor externo ou de fork é bloqueado; automações nunca
+  executam código do PR nem usam segredos. SC-003 passa a 9 cenários.
+- Emenda v1.2.0 aprovada **com a trava**: a exceção de emergência não vale para PR que altera a
+  constitution ou os mecanismos de revisão (FR-024).
+- C4: resolvido pela v1.2.0 (Princípio VIII descreve o insumo real de cada revisor).
+- C5: espelho dos workflows em `tests/` travado por teste, revisado pelo Gemini (sem emenda).
 
 ## Assumptions
 

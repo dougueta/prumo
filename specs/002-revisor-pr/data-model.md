@@ -22,7 +22,11 @@ e suas regras de validação.
 | `EMERGENCY_LABEL` | `emergencia` |
 | `VIOLATION_LABEL` | `violacao-main` |
 | `PROCESS_PATHS` | `docs/**`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `README.md`, `.specify/**`, `.gemini/**`, `.claude/**`, `.github/pull_request_template.md` |
-| `GATE_SELF_PATHS` | `.github/workflows/**`, `scripts/review/**`, `src/review/**`, `tests/unit/review/**`, `scripts/setup-hooks.mjs`, `.githooks/**`, `.gemini/**`, `.claude/settings.json`, `.claude/agents/revisor-limpo.md`, `.claude/skills/revisar-pr/**`, `docs/review-checklist.md` |
+| `GATE_SELF_PATHS` | `.github/workflows/**`, `scripts/review/**`, `src/review/**`, `tests/unit/review/**` (inclui o espelho `__snapshots__/workflows.md`), `.gemini/**`, `.claude/settings.json`, `.claude/agents/revisor-limpo.md`, `.claude/skills/revisar-pr/**`, `docs/review-checklist.md` — são os "mecanismos de revisão" da trava do FR-024 |
+| `OWNER_LOGIN` | `dougueta` — única conta autora aceita (Doug e agentes); FR-026 |
+| `REPO_FULL_NAME` | `dougueta/prumo` — branch de PR precisa vir deste repositório (não de fork); FR-026 |
+| `ACTIONS_INTEGRATION_ID` | `15368` (app GitHub Actions) — fixado no ruleset para as verificações obrigatórias, para que status/checks de outra origem não satisfaçam a proteção |
+| `MIRROR_PATH` | `tests/unit/review/__snapshots__/workflows.md` — espelho revisável dos workflows (C5) |
 | `CONSTITUTION_PATH` | `.specify/memory/constitution.md` |
 | `EMERGENCY_SLA_DAYS` | `7` |
 | `VERDICT_MARKER` | `<!-- prumo:veredito v1` (Claude: `head=<40 hex>` obrigatório) |
@@ -90,6 +94,8 @@ interface AuthorResponse {     // comentário do autor com RESPONSE_MARKER
 
 interface PrSnapshot {         // tudo que o portão lê, montado por scripts/review/github.ts
   number: number; draft: boolean; merged: boolean; mergedAt?: string;
+  authorLogin: string;         // pull.user.login — ≠ OWNER_LOGIN ⇒ externo (FR-026)
+  headRepoFullName: string;    // pull.head.repo.full_name — ≠ REPO_FULL_NAME ⇒ fork (FR-026)
   headSha: string; headRef: string; baseRef: string; body: string;
   labels: string[]; changedFiles: string[]; constitutionPatch?: string;
   commits: { sha: string; message: string }[];
@@ -184,8 +190,9 @@ no pacote.
      └─draft───────────┘        │ respostas + nova revisão                │ commit que muda o conteúdo ⇒ "aguardando"
                                 │                                         ▼
                        [mudanças necessárias] ◀─veredito MUDANÇAS / incoerente─
+[qualquer] ─autor externo / fork─▶ [bloqueado] (definitivo para esse PR)
 [qualquer] ─regra estrutural violada (rótulo, autoria, spec, emenda)─▶ [bloqueado] ─corrigido─▶ reavaliação
-[qualquer] ─rótulo emergencia (Doug) + motivo─▶ [emergência] ─merge─▶ [revisão pós-merge pendente] ─veredito pós-merge─▶ [regularizado]
+[qualquer] ─rótulo emergencia (Doug) + motivo, sem tocar constitution/mecanismos de revisão─▶ [emergência] ─merge─▶ [revisão pós-merge pendente] ─veredito pós-merge─▶ [regularizado]
                                                                        └─ 7 dias sem veredito ─▶ [VENCIDA] (issue sinalizada)
 ```
 
@@ -196,8 +203,10 @@ API → `pending` com `não foi possível avaliar (erro da API do GitHub) — re
 **Transições proibidas**: `aguardando → aprovado` com veredito cujo `headSha ≠ head atual` sem
 equivalência por impressão; `qualquer → aprovado` com veredito do agente autor; merge aceito
 pelo `pr:merge`/`main-guard` com base apenas no status publicado (ambos recalculam);
-`emergência` sem motivo no corpo do PR; `integrado` sem passar por `aprovado` ou `emergência`
-(detectado pelo `main-guard`).
+`emergência` sem motivo no corpo do PR; `emergência` em PR kind=emenda ou com `touchesGate`
+(trava da v1.2.0); `qualquer → aprovado` para PR de autor externo ou de fork; `integrado` sem
+passar por `aprovado` ou `emergência` (impedido pelo ruleset; status forjado detectado pelo
+`main-guard`).
 
 ## 5. Rótulos e marcos (estado desejado, aplicado por `npm run gh:labels`)
 
@@ -221,3 +230,15 @@ Marcos: `0 · Plataforma`, `1 · Autenticação`, `2 · Contas e conexões`, `3 
 | `PRUMO_REVISOR_CLIENT_ID` | não | Client ID do app `prumo-revisor` |
 | `PRUMO_REVISOR_KEY_PATH` | caminho para segredo | `.pem` **cifrado com senha** (PKCS#8, AES-256) fora do repo (ex.: `~/.prumo/prumo-revisor.pem`); a senha nunca é gravada — o Doug a digita no terminal a cada publicação (FR-017) |
 | `PRUMO_REPO` | não | `dougueta/prumo` |
+
+## 7. Ruleset "main protegida" (estado desejado, aplicado por `npm run gh:ruleset` — D1 = A)
+
+| Campo | Valor |
+|---|---|
+| `target` / `enforcement` | `branch` / `active` |
+| `conditions.ref_name.include` | `["refs/heads/main"]` |
+| `bypass_actors` | `[]` (nem administrador — FR-005) |
+| `rules` | `deletion`; `non_fast_forward` (sem force-push/reescrita); `required_linear_history`; `pull_request` (`required_approving_review_count: 0` — o Doug não pode aprovar o próprio PR; a revisão é a verificação abaixo; `allowed_merge_methods: ["squash"]`); `required_status_checks` (`strict_required_status_checks_policy: true` = branch atualizada; contextos = `requiredChecksFromCi(ci.yml)` + `"Revisão independente"`, todos com `integration_id: ACTIONS_INTEGRATION_ID`) |
+
+`gh:ruleset` é idempotente (atualiza o ruleset de mesmo nome) e roda de novo sempre que o
+`ci.yml` ganhar ou perder jobs de PR (passo do checklist do autor para PRs que alteram o CI).

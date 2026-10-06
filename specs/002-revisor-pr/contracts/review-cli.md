@@ -1,4 +1,4 @@
-# Contrato — Comandos locais (FR-003, FR-004, FR-009, FR-017, FR-018, FR-022, FR-024)
+# Contrato — Comandos locais (FR-001, FR-003, FR-004, FR-005, FR-009, FR-017, FR-018, FR-022, FR-024)
 
 Todos em `scripts/review/*.ts` (executados com `tsx`); autenticação GitHub pelo `gh` do Doug,
 exceto a publicação do veredito (app `prumo-revisor`). Chamadas HTTP:
@@ -14,6 +14,7 @@ Monta `.review/<pr>/` (data-model §3).
 | rótulo `autor:claude` | `revisor e autor são o mesmo agente` | 3 |
 | rótulo `autor:doug` | `este PR é revisado pelo Gemini` | 3 |
 | 0 ou >1 rótulos `autor:*` | `rótulo de autor ausente ou ambíguo` | 3 |
+| autor externo ou fork | `PR de autor externo — não aceito` | 3 |
 | PR inexistente/fechado | `PR #<n> não encontrado ou fechado` | 1 |
 | PR em rascunho | `PR em rascunho — aguarde ficar pronto` | 1 |
 
@@ -48,13 +49,14 @@ Senha, chave e token nunca são impressos nem gravados.
 
 ## `npm run pr:merge -- <pr>` (só o Doug; negado aos agentes)
 
-Recalcula tudo localmente — `evaluateGate` sobre o snapshot, check runs do head
-(`requiredChecksFromCi` do `ci.yml` da `main`, app `github-actions`) e
-`GET /compare/{main}...{head}` → `behind_by`. **Ignora** o status publicado.
+O ruleset já impede merge sem os checks verdes e com branch desatualizada. O `pr:merge`
+acrescenta o que o servidor não verifica: **recalcula** `evaluateGate` sobre o snapshot (o
+status publicado pode ter sido forjado), exige TTY e as confirmações do Doug, e dá mensagens
+claras antes de tentar o merge.
 
 | Caso | Exit |
 |---|---|
-| todos os checks = success, `evaluateGate` = success, `behind_by == 0`, TTY, confirmações dadas → `gh pr merge <pr> --squash --delete-branch` | 0 |
+| todos os checks = success, `evaluateGate` recalculado = success, `behind_by == 0`, TTY, confirmações dadas → `gh pr merge <pr> --squash --delete-branch` | 0 |
 | algum check obrigatório ≠ success ou `evaluateGate` ≠ success → lista o que falta | 6 |
 | `behind_by > 0` → `faça rebase na main e aguarde o CI` | 7 |
 | fora de TTY → recusa (agentes) | 8 |
@@ -67,19 +69,19 @@ Recalcula tudo localmente — `evaluateGate` sobre o snapshot, check runs do hea
 - `gh:repo-settings`: `PATCH /repos/{repo}` com `allow_squash_merge=true`,
   `allow_merge_commit=false`, `allow_rebase_merge=false`, `delete_branch_on_merge=true`,
   `allow_update_branch=true`. `--dry-run` não escreve. Exit 0.
-- `gh:ruleset` (**só existe se D1 = A ou B**): cria o ruleset "main protegida". Exit 0.
-
-## Hook `pre-push` (`.githooks/pre-push`) e `prepare`
-- Recusa (exit 1) push cujo ref remoto seja `refs/heads/main`, com
-  `push direto na main é proibido — abra um PR (Constitution VIII)`.
-- Ativação: `"prepare": "node scripts/setup-hooks.mjs"`. O script **nunca** falha o `npm install`:
-  não faz nada se `CI` ou `VERCEL` estiverem definidos ou se `git rev-parse --is-inside-work-tree`
-  falhar (ex.: build da Vercel sem `.git`); caso contrário roda
-  `git config core.hooksPath .githooks`. Exit sempre 0.
+- `gh:ruleset`: cria ou atualiza (idempotente, pelo nome) o ruleset "main protegida" do
+  data-model §7, com os contextos derivados do `ci.yml` da `main` + "Revisão independente".
+  `--dry-run` mostra o JSON. Exit 0; erro da API → exit 1 com a mensagem.
 
 ## Negação nos agentes (FR-004a, FR-005, FR-009, FR-024)
 `.claude/settings.json` `permissions.deny` e `.gemini/settings.json` (`excludeTools` e, se a
-versão do Gemini CLI oferecer, shell interativo/PTY desativado) cobrem no mínimo:
-`git push` para `main` em todas as formas (`main`, `HEAD:main`, `<x>:main`, `refs/heads/main`,
-`--no-verify`), `gh pr merge`, `npm run pr:merge`, `npm run review:publish`, `gh api` em
-`*/merge*`, `*/statuses/*` e `*/labels*`, `gh pr edit` com `emergencia`, e leitura de `~/.prumo/**`.
+versão do Gemini CLI oferecer, shell interativo/PTY desativado) cobrem no mínimo: `gh pr merge`,
+`npm run pr:merge`, `npm run review:publish`, `npm run gh:ruleset`, `gh api` em `*/merge*`,
+`*/statuses/*`, `*/labels*` e `*/rulesets*`, `gh pr edit` com `emergencia`, `gh repo edit`, e
+leitura de `~/.prumo/**`. Push direto na `main` deixa de precisar de regra local: o servidor
+recusa (ruleset); as regras de push são mantidas apenas como mensagem antecipada.
+
+## Removido com D1 = A (2026-10-05)
+Hook `.githooks/pre-push` e `prepare`/`scripts/setup-hooks.mjs`: o ruleset recusa push direto,
+force-push e deleção da `main` para todos, inclusive o administrador; o hook só duplicava isso
+localmente e trazia o risco de quebrar `npm install` no build da Vercel.

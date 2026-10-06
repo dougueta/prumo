@@ -141,6 +141,12 @@ distingue agente de Doug.
 Se o Doug escolher **A** ou **B**, acrescenta-se o ruleset (task T023) e as camadas 2–5 continuam
 (o servidor ainda não distingue agente de Doug para "só o Doug integra").
 
+**Decisão final (Gate 2, Doug, 2026-10-05): A — repositório público** (já aplicado). O ruleset
+"main protegida" (data-model §7) passa a ser o mecanismo principal. Das camadas acima: 1, 2, 4 e
+5 continuam; a **3 (hook `pre-push`) foi removida** — o servidor recusa push direto, force-push
+e deleção para todos, e o `prepare` trazia o risco de R-10. Análise de ameaça do repositório
+público em R-12 e no plan.
+
 ## R-04 · Implementar a verificação "Revisão independente" com GitHub Actions
 
 **Evidência / raciocínio**
@@ -259,3 +265,30 @@ atualizada; com D1 = C não há proteção, então um PR atrás da `main` pode a
 
 **Decision**: `pr:merge` usa `GET /compare/{main}...{head}` e exige `behind_by == 0` (exit 7),
 independentemente de `mergeable_state`.
+
+> R-10 ficou sem efeito com D1 = A (o `prepare` e o hook foram removidos); mantido como registro.
+
+## R-12 · Repositório público — superfície de ataque dos workflows (D1 = A)
+
+**Raciocínio / evidência** (documentação do GitHub sobre `pull_request_target`, eventos de
+fork e "Keeping your GitHub Actions and workflows secure"):
+- `pull_request_target` e `issue_comment` rodam o workflow **da branch padrão** com
+  `GITHUB_TOKEN` de escrita e acesso a segredos, inclusive quando disparados por fork. O risco é
+  o workflow fazer checkout/execução do código do PR, expor segredos ou interpolar texto do
+  evento (título, corpo, nome da branch, comentário) em `run:` (injeção de script).
+- `pull_request`/`pull_request_review` de fork rodam com token somente leitura e sem segredos; a
+  aprovação de workflows de colaboradores externos (ativada pelo Doug) adiciona um portão humano
+  para `pull_request`.
+- Status de commit criados por um workflow são atribuídos ao app GitHub Actions; o
+  `integration_id` no ruleset impede que um status criado por token pessoal satisfaça a
+  proteção, mas não impede um workflow na versão de um PR da própria conta de publicar um.
+- Secret scanning em repositório público varre o histórico; push protection bloqueia novos
+  segredos.
+
+**Decision**: workflows da 002 só fazem checkout da `main` (`persist-credentials: false`), não
+usam segredos nem `environment`, recebem apenas o número do PR via `env`, têm permissões mínimas
+por job e produzem saídas só com textos do catálogo (T061, T062). PR de autor externo ou de fork
+é bloqueado pela regra 0 do portão (FR-026). `pr:merge` e `main-guard` recalculam o portão
+(R-09). Auditoria única do repositório em T073.
+
+> R-11 com D1 = A: o ruleset estrito já exige branch atualizada no servidor; o `behind_by` do `pr:merge` fica só como mensagem antecipada (exit 7).

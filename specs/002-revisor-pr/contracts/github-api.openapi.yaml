@@ -63,7 +63,17 @@ components:
         merged_at: { type: [string, "null"], format: date-time }
         merge_commit_sha: { type: [string, "null"] }
         body: { type: [string, "null"] }
-        head: { type: object, required: [sha, ref], properties: { sha: { type: string }, ref: { type: string } } }
+        user: { $ref: "#/components/schemas/User" }
+        head:
+          type: object
+          required: [sha, ref, repo]
+          properties:
+            sha: { type: string }
+            ref: { type: string }
+            repo:
+              type: [object, "null"]
+              description: "null quando o fork foi apagado → tratado como fork (FR-026)"
+              properties: { full_name: { type: string } }
         base: { type: object, required: [sha, ref], properties: { sha: { type: string }, ref: { type: string } } }
         labels: { type: array, items: { type: object, required: [name], properties: { name: { type: string } } } }
     Commit:
@@ -138,6 +148,40 @@ components:
         context: { type: string, const: "Revisão independente" }
         description: { type: string, maxLength: 140 }
         target_url: { type: string, format: uri }
+    Ruleset:
+      type: object
+      description: data-model §7 — "main protegida"
+      required: [name, target, enforcement, bypass_actors, conditions, rules]
+      properties:
+        name: { const: "main protegida" }
+        target: { const: branch }
+        enforcement: { const: active }
+        bypass_actors: { type: array, maxItems: 0 }
+        conditions:
+          type: object
+          properties:
+            ref_name: { type: object, properties: { include: { const: ["refs/heads/main"] }, exclude: { const: [] } } }
+        rules:
+          type: array
+          items:
+            type: object
+            required: [type]
+            properties:
+              type: { type: string, enum: [deletion, non_fast_forward, required_linear_history, pull_request, required_status_checks] }
+              parameters:
+                type: object
+                properties:
+                  required_approving_review_count: { const: 0 }
+                  allowed_merge_methods: { const: [squash] }
+                  strict_required_status_checks_policy: { const: true }
+                  required_status_checks:
+                    type: array
+                    items:
+                      type: object
+                      required: [context, integration_id]
+                      properties:
+                        context: { type: string, description: "requiredChecksFromCi(ci.yml) + 'Revisão independente'" }
+                        integration_id: { const: 15368 }
     Error:
       type: object
       properties:
@@ -380,12 +424,32 @@ paths:
       responses: { "201": { description: Criado }, default: { $ref: "#/components/responses/Error" } }
   /repos/{owner}/{repo}/rulesets:
     parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: listRulesets
+      summary: Idempotência do gh:ruleset (procura "main protegida" pelo nome)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { type: object, required: [id, name], properties: { id: { type: integer }, name: { type: string } } } } } } }
+        default: { $ref: "#/components/responses/Error" }
     post:
       operationId: createRuleset
-      summary: Só se D1 = A ou B (no plano Free privado retorna 403)
+      summary: Cria o ruleset "main protegida" (D1 = A, repositório público)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/Ruleset" } } }
       responses:
         "201": { description: Criado }
-        "403": { description: "Plano não suporta → gh:ruleset aborta com a mensagem do D1" }
+        "422": { description: "Payload inválido → gh:ruleset exit 1 com a mensagem" }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/rulesets/{ruleset_id}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { name: ruleset_id, in: path, required: true, schema: { type: integer } }, { $ref: "#/components/parameters/apiVersion" }]
+    put:
+      operationId: updateRuleset
+      summary: Atualiza o ruleset existente (por exemplo, quando os jobs de PR do ci.yml mudam)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/Ruleset" } } }
+      responses:
+        "200": { description: OK }
         default: { $ref: "#/components/responses/Error" }
   /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches:
     parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { name: workflow_id, in: path, required: true, schema: { type: string, const: review-gate.yml } }, { $ref: "#/components/parameters/apiVersion" }]
