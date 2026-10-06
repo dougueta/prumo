@@ -1,12 +1,16 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 → 1.1.0 (MINOR: regras novas em seções existentes)
-- Modified principles: VII. Contratos Compartilhados e Donos de Dados (+ modo demonstração)
-- Modified sections: Restrições Técnicas e Stack (+ ambientes e custo)
+- Version change: 1.1.0 → 1.2.0 (MINOR: regra nova em princípio existente)
+- Modified principles: VIII. Revisão Independente Obrigatória (+ exceção única de emergência,
+  com revisão pós-merge em até 7 dias; insumo real de cada revisor descrito — antes "apenas
+  diff, spec, plan, tasks, constitution e ADRs", que não correspondia ao Gemini Code Assist)
 - Added/Removed sections: nenhuma
-- Origem: spec 001 clarify + ADR 0006, aprovado pelo Doug em 2026-10-02
-- Templates: ✅ plan/spec/tasks templates (sem mudança estrutural) · ✅ docs/review-checklist.md atualizado
+- Origem: spec 002 (FR-024) + /speckit-analyze da onda 1; decisão do Doug em 2026-10-05
+- Templates: ✅ plan/spec/tasks templates (sem mudança estrutural) · ⚠ docs/review-checklist.md
+  e docs/workflow.md: descrever a revisão pós-merge de emergência na implementação da 002
 - Deferred TODOs: nenhum
+- Histórico: 1.0.0 → 1.1.0 (VII + modo demonstração; Restrições: ambientes e custo — ADR 0006,
+  aprovado em 2026-10-02)
 -->
 
 # Prumo Constitution
@@ -115,15 +119,34 @@ objetiva.
 - Todo PR é revisado por um agente que NÃO o escreveu (revisão cruzada):
   - PR do Claude → revisor Gemini (Gemini Code Assist + `.gemini/styleguide.md`).
   - PR do Gemini → revisor Claude em contexto limpo (sem histórico da implementação).
-- O revisor recebe apenas: diff, `spec.md`, `plan.md`, `tasks.md`, constitution e ADRs.
+- Insumo de cada revisor:
+  - **Revisor Claude limpo**: recebe apenas o pacote de revisão — diff, artefatos da spec
+    (`spec.md`, `plan.md`, `tasks.md`, `data-model.md`, `contracts/`), constitution, ADRs e
+    `docs/review-checklist.md` — sem histórico da implementação.
+  - **Gemini Code Assist**: lê o diff, o repositório e o corpo do PR (limitação da ferramenta);
+    é orientado por `.gemini/styleguide.md` a julgar o PR contra spec, plan, tasks, constitution
+    e ADRs. Justificativas do autor valem só como respostas formais aos achados.
 - O revisor aplica o checklist fixo de `docs/review-checklist.md` e emite veredito formal:
   **APROVADO** ou **MUDANÇAS NECESSÁRIAS**, com achados por severidade
   (CRÍTICO / ALTO / MÉDIO / BAIXO).
 - O autor responde a cada achado com correção ou justificativa técnica — nunca concordância
   performática.
 - Merge na `main` exige: CI verde + veredito APROVADO do revisor + aprovação do Doug.
+- **Exceção única — correção urgente de produção**: indisponibilidade do revisor não tem
+  bypass, salvo um PR com rótulo `emergencia`, que o Doug (e somente ele) pode integrar com CI
+  verde e **sem** veredito, desde que:
+  - o PR registre o motivo da urgência;
+  - a revisão independente, pelas mesmas regras acima, seja feita após o merge em até
+    **7 dias**, e cada achado CRÍTICO ou ALTO vire correção imediata;
+  - o processo sinalize de forma visível as emergências com revisão pós-merge pendente e as
+    vencidas (prazo estourado), até que sejam revisadas.
 
-**Rationale**: revisor sem os vícios do autor encontra o que o autor não vê.
+  A exceção não vale para PR que altera esta constitution nem os mecanismos de revisão
+  (portão, workflows de revisão, checklist).
+
+**Rationale**: revisor sem os vícios do autor encontra o que o autor não vê. A exceção existe
+porque um incidente em produção não pode esperar um revisor indisponível; ela adia a revisão,
+nunca a dispensa.
 
 ### IX. Qualidade dos Artefatos (Padrão SDD-Architect)
 
@@ -194,4 +217,4 @@ Cada feature MUST entregar, distribuído nos artefatos do Spec Kit:
 - Todo revisor de PR verifica conformidade com esta constitution.
 - Orientação operacional para agentes: `AGENTS.md` (comum), `CLAUDE.md`, `GEMINI.md`.
 
-**Version**: 1.1.0 | **Ratified**: 2026-10-02 | **Last Amended**: 2026-10-02
+**Version**: 1.2.0 | **Ratified**: 2026-10-02 | **Last Amended**: 2026-10-05
