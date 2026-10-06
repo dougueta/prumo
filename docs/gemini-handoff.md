@@ -24,7 +24,7 @@ Não inclua nenhum dado pessoal ou financeiro real do Doug.
     1 usuário pessoal; sandbox.
   - Suporte e qualidade dos conectores para **Caixa, C6 (conta e cartão), Mercado Pago,
     PicPay**: contas, cartão de crédito, faturas, parcelas, investimentos.
-  - Widget Pluggy Connect em Next.js, ciclo de vida do *item*, consentimento e expiração,
+  - Widget Pluggy Connect em Next.js, ciclo de vida do _item_, consentimento e expiração,
     webhooks (eventos, assinatura/validação), limites de taxa, histórico disponível (dias).
 - [x] **R2 · Formatos de importação** → `docs/research/formatos-importacao.md` (009, 010)
   - Como exportar extrato/fatura em **Caixa, C6, Mercado Pago, PicPay**: formatos
@@ -40,23 +40,23 @@ Não inclua nenhum dado pessoal ou financeiro real do Doug.
 - [x] **R4 · Google Sheets API** → `docs/research/google-sheets.md` (026)
   - Leitura via conta de serviço com acesso somente leitura a uma planilha específica;
     cotas; melhor forma de agendar (Supabase Cron/Edge Function) e detectar mudanças.
-- [x] **R5 · Gemini Code Assist no GitHub** → `docs/research/gemini-code-assist.md` (002)
+- [x] **R5 · Gemini Code Assist no GitHub** → `docs/research/gemini-code-assist.md` (substituída e detalhada em `specs/002-revisor-pr/research.md`)
   - Instalação em repositório privado, `.gemini/config.yaml` e `.gemini/styleguide.md`,
     o que ele consegue (resumo, comentários, severidade), se pode **aprovar/reprovar**
     formalmente ou só comentar, e como transformar o veredito em check obrigatório.
 
 ## Próximas tarefas de desenvolvimento (quando as dependências estiverem `done`)
 
-| Feature | Onda | Pode começar a spec quando |
-|---|---|---|
-| 010 · importacao-pdf-fatura | 3 | 009 com spec aprovada (escrever spec em lote) |
-| 013 · filtros-busca | 4 | 012 com spec aprovada |
-| 026 · import-google-sheets | 3 | 025 com spec aprovada |
-| 005 · export-backup | 6 | 004 `done` |
-| 020 · orcamento-categoria | 6 | 014 e 017 com spec aprovada |
-| 024 · central-notificacoes | 8 | 023 com spec aprovada |
-| 028 · metas | 7 | 017 com spec aprovada |
-| 032 · integracao-gmail-drive | 9 | 010 `done` |
+| Feature                      | Onda | Pode começar a spec quando                    |
+| ---------------------------- | ---- | --------------------------------------------- |
+| 010 · importacao-pdf-fatura  | 3    | 009 com spec aprovada (escrever spec em lote) |
+| 013 · filtros-busca          | 4    | 012 com spec aprovada                         |
+| 026 · import-google-sheets   | 3    | 025 com spec aprovada                         |
+| 005 · export-backup          | 6    | 004 `done`                                    |
+| 020 · orcamento-categoria    | 6    | 014 e 017 com spec aprovada                   |
+| 024 · central-notificacoes   | 8    | 023 com spec aprovada                         |
+| 028 · metas                  | 7    | 017 com spec aprovada                         |
+| 032 · integracao-gmail-drive | 9    | 010 `done`                                    |
 
 ## Revisões pendentes
 

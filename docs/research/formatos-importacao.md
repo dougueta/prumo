@@ -21,27 +21,28 @@ A arquitetura de ingestão deve contar com um parser determinístico tolerante a
 
 ### 2.1 Matriz de Exportação por Instituição do Doug
 
-| Instituição | Produto | Formatos Disponíveis | Onde Exportar | Particularidades / Quirks |
-|---|---|---|---|---|
-| **Caixa Econômica Federal** | Conta Corrente / Poupança | **OFX**, TXT, PDF | Internet Banking (Desktop) $\rightarrow$ *Extrato por Período* $\rightarrow$ *Gerar Arquivo para Gerenciadores*. | OFX 1.02 em **ISO-8859-1**; descrição com códigos bancários (`DEB PIX`, `CRED TEF`). |
-| **Caixa Econômica Federal** | Cartão de Crédito | **PDF** | App Cartões CAIXA / Internet Banking $\rightarrow$ *Faturas Fechadas*. | Geralmente sem senha no app; histórico de até 40 meses; compras e parcelas listadas por cartão. |
-| **C6 Bank** | Conta Corrente | **PDF** (PF) / OFX, CSV (PJ) | App C6 $\rightarrow$ *Extrato* $\rightarrow$ *Exportar Extrato* (enviado para o e-mail). | No app de Pessoa Física, a exportação nativa é exclusivamente em **PDF** protegido por senha. |
-| **C6 Bank** | Cartão de Crédito | **PDF** | App C6 $\rightarrow$ *Cartões* $\rightarrow$ *Fatura* $\rightarrow$ *Baixar Fatura* (ou e-mail). | Arquivo PDF protegido por senha (6 primeiros dígitos do CPF). É a maior concentração de gastos do Doug. |
-| **Mercado Pago** | Carteira / Conta | **CSV**, XLSX, PDF | Portal Web $\rightarrow$ *Relatórios e Faturamento* (ou App $\rightarrow$ *Atividade*). | CSV configurável em **UTF-8**, separador vírgula ou ponto-e-vírgula, fuso Horário de Brasília (GMT-3). |
-| **PicPay** | Carteira / Conta | **CSV**, PDF | App PicPay $\rightarrow$ *Extrato* $\rightarrow$ *Baixar Extrato* $\rightarrow$ *Gerar Extrato*. | Gera arquivo CSV ou PDF enviado por e-mail; histórico detalhado nativo a partir de 2025. |
+| Instituição                 | Produto                   | Formatos Disponíveis         | Onde Exportar                                                                                                    | Particularidades / Quirks                                                                              |
+| --------------------------- | ------------------------- | ---------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| **Caixa Econômica Federal** | Conta Corrente / Poupança | **OFX**, TXT, PDF            | Internet Banking (Desktop) $\rightarrow$ _Extrato por Período_ $\rightarrow$ _Gerar Arquivo para Gerenciadores_. | OFX 1.02 em **ISO-8859-1**; descrição com códigos bancários (`DEB PIX`, `CRED TEF`).                   |
+| **Caixa Econômica Federal** | Cartão de Crédito         | **PDF**                      | App Cartões CAIXA / Internet Banking $\rightarrow$ _Faturas Fechadas_.                                           | Geralmente sem senha no app; histórico de até 40 meses; compras e parcelas listadas por cartão.        |
+| **C6 Bank**                 | Conta Corrente            | **PDF** (PF) / OFX, CSV (PJ) | App C6 $\rightarrow$ _Extrato_ $\rightarrow$ _Exportar Extrato_ (enviado para o e-mail).                         | No app de Pessoa Física, a exportação nativa é exclusivamente em **PDF** protegido por senha.          |
+| **C6 Bank**                 | Cartão de Crédito         | **PDF**                      | App C6 $\rightarrow$ _Cartões_ $\rightarrow$ _Fatura_ $\rightarrow$ _Baixar Fatura_ (ou e-mail).                 | Arquivo PDF protegido por senha (6 primeiros dígitos do CPF).                                          |
+| **Mercado Pago**            | Carteira / Conta          | **CSV**, XLSX, PDF           | Portal Web $\rightarrow$ _Relatórios e Faturamento_ (ou App $\rightarrow$ _Atividade_).                          | CSV configurável em **UTF-8**, separador vírgula ou ponto-e-vírgula, fuso Horário de Brasília (GMT-3). |
+| **PicPay**                  | Carteira / Conta          | **CSV**, PDF                 | App PicPay $\rightarrow$ _Extrato_ $\rightarrow$ _Baixar Extrato_ $\rightarrow$ _Gerar Extrato_.                 | Gera arquivo CSV ou PDF enviado por e-mail; histórico detalhado nativo a partir de 2025.               |
 
 ---
 
 ### 2.2 Estrutura e Parsing de Arquivos de Extrato (Feature 009)
 
 #### A. Padrão OFX (Caixa Econômica Federal)
+
 - **Versão**: OFX 1.02 (formato SGML textual legatário, anterior ao XML).
 - **Encoding**: Quase universalmente `ISO-8859-1` / `Windows-1252` em bancos brasileiros. O parser não pode assumir `UTF-8` sob risco de quebrar acentuação (`TRANSFERÊNCIA`, `DÉBITO`).
 - **Tags Abertas sem Fechamento**: No OFX 1.x, tags não possuem fechamento correspondente:
   ```sgml
   <STMTTRN>
   <TRNTYPE>DEBIT
-  <DTPOSTED>20261005120000[-03:EST]
+  <DTPOSTED>20261005120000[-03:BRT]
   <TRNAMT>-150.00
   <FITID>202610050001827361
   <MEMO>PAGTO ELETRON COBRANCA
@@ -51,6 +52,7 @@ A arquitetura de ingestão deve contar com um parser determinístico tolerante a
 - **Datas**: Formato `YYYYMMDDHHMMSS` ou `YYYYMMDD`. Converter para `DATE` no fuso `America/Sao_Paulo`.
 
 #### B. Padrão CSV (Mercado Pago e PicPay)
+
 - **Separadores**:
   - Delimitador de campos: Pode ser `;` (padrão regional brasileiro) ou `,`. O parser deve detectar o delimitador inspecionando a linha de cabeçalho.
   - Separador decimal: Vírgula (ex.: `1.250,50` ou `1250,50`) ou ponto (`1250.50`). Converter estritamente para inteiro em centavos (`125050` centavos).
@@ -66,7 +68,9 @@ A arquitetura de ingestão deve contar com um parser determinístico tolerante a
 Como o **C6 Bank** (principal cartão de gastos) e a **Caixa** disponibilizam faturas em PDF para clientes pessoa física, a extração via IA (Gemini 3.8 Flash multimodal) é a peça central.
 
 #### A. Cabeçalho e Metadados da Fatura
+
 Toda fatura contém 5 valores mestres fundamentais:
+
 1. **Data de Vencimento** (ex.: `10/11/2026`).
 2. **Data de Fechamento / Corte** (ex.: `03/11/2026`).
 3. **Valor Total da Fatura** (em centavos).
@@ -74,6 +78,7 @@ Toda fatura contém 5 valores mestres fundamentais:
 5. **Melhor Dia de Compra** ou limite total de crédito.
 
 #### B. Seções Típicas de Lançamentos
+
 1. **Resumo / Pagamentos Anteriores**:
    - `PAGAMENTO RECEBIDO` ou `PAGAMENTO FICHA COMPENSACAO` (com sinal negativo ou indicado como crédito).
    - Identifica a liquidação da fatura anterior para alimentar a Feature 016 (Transferências Internas).
@@ -104,37 +109,42 @@ Toda fatura contém 5 valores mestres fundamentais:
 
 ## 3. Limitações e Riscos
 
-1. **Proteção por Senha nos PDFs**:
+1. **Risco de Minimização e Privacidade (Constitution II)**:
+   - Enviar o arquivo PDF da fatura integral para a API do LLM expõe dados cadastrais altamente sensíveis presentes no cabeçalho (nome completo, endereço residencial, CPF parcial e últimos dígitos do cartão).
+   - Embora o Paid Tier garanta que os dados não são usados para treino de modelos, o princípio de minimização de dados da Constitution II exige não enviar dados pessoais além do estritamente necessário.
+   - _Mitigação_: Implementar extração de texto local focada na seção de lançamentos ou redação/mascaramento prévio em memória da área cadastral da primeira página antes do envio ao Gemini; caso se opte pelo envio direto do documento, esta decisão de arquitetura deve ser explicitamente deliberada e aprovada pelo Doug na spec da Feature 010.
+2. **Proteção por Senha nos PDFs e Limitações da `pdf-lib`**:
    - PDFs de faturas de C6 e Caixa são frequentemente criptografados com senha padrão (primeiros 6 dígitos do CPF do titular).
-   - Se o usuário fizer upload do arquivo protegido diretamente, a API do Gemini ou bibliotecas de parsing falharão ao ler o documento sem a senha.
-   - *Mitigação*: Na tela de upload da Feature 010, se o arquivo estiver bloqueado, solicitar a senha ao usuário na sessão para descriptografar em memória (usando `pdf-lib` no Node.js) antes de enviar para extração. Nunca persistir essa senha no banco de dados.
-2. **Ambiguidade de Nomes de Estabelecimentos**:
+   - A biblioteca `pdf-lib` **não suporta nativamente a descriptografia de PDFs protegidos por senha**.
+   - _Mitigação_: Utilizar `pdfjs-dist` (via `pdfjsLib.getDocument({ data, password })`) ou invocar binário/biblioteca especializada (`qpdf`) no servidor para remover a criptografia em memória com a senha fornecida pelo Doug na sessão antes de qualquer processamento. Essa senha nunca deve ser persistida.
+3. **Ambiguidade de Nomes de Estabelecimentos**:
    - Estabelecimentos físicos muitas vezes aparecem truncados ou com prefixos de maquininha (`PAG*`, `MP*`, `STONE*`, `IFOOD*IFOOD`). O modelo de IA deve extrair a descrição fiel do extrato para preservar a rastreabilidade da fonte original.
-3. **Encoding Corrompido em CSV**:
+4. **Encoding Corrompido em CSV**:
    - Abrir um arquivo ISO-8859-1 com leitor UTF-8 resulta em caracteres corrompidos (`PARC CRDITO`).
-   - *Mitigação*: Detectar charset automaticamente ou usar fallback com biblioteca robusta (`iconv-lite` ou `chardet`).
-4. **Conflito de Deduplicação (Open Finance vs. Arquivo)**:
+   - _Mitigação_: Detectar charset automaticamente ou usar fallback com biblioteca robusta (`iconv-lite` ou `chardet`).
+5. **Conflito de Deduplicação (Open Finance vs. Arquivo)**:
    - Se a transação do C6 Bank foi sincronizada via Pluggy (Open Finance) e depois o Doug fizer o upload do PDF da fatura do mesmo mês, os registros duplicarão se não houver correlação.
-   - *Mitigação*: A Feature 011 (Deduplicação) precisará correlacionar data idêntica, valor em centavos e semelhança textual de descrição, mantendo a fatura como detalhamento auditável.
+   - _Mitigação_: A Feature 011 (Deduplicação) precisará correlacionar data idêntica, valor em centavos e semelhança textual de descrição, mantendo a fatura como detalhamento auditável.
 
 ---
 
 ## 4. Recomendações Técnicas para as Specs 009 e 010
 
 1. **Estratégia da Feature 009 (CSV/OFX)**:
-   - **Parser OFX**: Utilizar biblioteca padrão de parsing OFX SGML/XML (como `node-ofx-parser` ou parser leve em TypeScript) com decodificação forçada para `ISO-8859-1` quando ausente flag UTF-8.
+   - **Parser OFX**: Utilizar biblioteca de parsing OFX SGML/XML com decodificação forçada para `ISO-8859-1` quando ausente flag UTF-8.
    - **Parser CSV**: Implementar mapeamento assistido de colunas: o usuário vê uma pré-visualização das 3 primeiras linhas e confirma as colunas de Data, Descrição e Valor.
-   - **Sanitização Monetária**: Criar função utilitária `parseMonetaryToCents(valueString: string): bigint` que lida transparentemente com formatos `R$ 1.234,56`, `-1234.56` e `1234,56 D`.
+   - **Sanitização Monetária**: Criar a função utilitária `parseMonetaryToCents(valueString: string): bigint` (que será introduzida na Feature 009, pois não faz parte do escopo da 001) para lidar transparentemente com formatos `R$ 1.234,56`, `-1234.56` e `1234,56 D`.
 2. **Estratégia da Feature 010 (PDF de Fatura)**:
-   - **Remoção de Senha Pré-Envio**: Utilizar biblioteca `pdf-lib` no servidor para checar se o PDF está criptografado. Se sim, desbloquear em memória usando a senha fornecida pelo Doug no fluxo.
-   - **Prompt Multimodal no Gemini 3.8 Flash**: Passar o PDF diretamente com `response_schema` tipado (Zod/JSON Schema) exigindo a decomposição de:
+   - **Remoção de Senha Pré-Envio**: Empregar `pdfjs-dist` ou `qpdf` no servidor Node.js para descriptografar em memória com a senha fornecida na sessão.
+   - **Minimização de Dados**: Realizar sanitização ou recorte da primeira página para remover cabeçalhos cadastrais antes do envio multimodal ao Gemini 3.8 Flash, em estrita conformidade com a Constitution II.
+   - **Prompt Multimodal no Gemini 3.8 Flash**: Passar as páginas de despesas com `response_schema` tipado exigindo:
      - Instituição e datas (vencimento, fechamento).
      - Itens com valor em centavos (`amountCents`).
      - Metadados de parcelas (`installmentCurrent`, `installmentTotal`).
      - Sinal booleano `isCredit` (para pagamentos e estornos).
 3. **Auditoria de Importação (Constitution IV)**:
    - Cada importação gera um registro na tabela `import_batches` (arquivo original, hash SHA-256 do arquivo, data, contagem de linhas).
-   - Toda transação gravada referencia seu `import_batch_id` para possibilitar desfazimento (*rollback*) de lote completo em caso de engano.
+   - Toda transação gravada referencia seu `import_batch_id` para possibilitar desfazimento (_rollback_) de lote completo em caso de engano.
 
 ---
 
@@ -152,4 +162,3 @@ Toda fatura contém 5 valores mestres fundamentais:
    [https://financialdataexchange.org/ofx](https://financialdataexchange.org/ofx) — Acessado em 05/10/2026.
 6. **Receita Federal / Banco Central do Brasil — Alíquotas e Regras de IOF em Operações de Câmbio**:  
    [https://www.gov.br/receitafederal](https://www.gov.br/receitafederal) — Acessado em 05/10/2026.
-
