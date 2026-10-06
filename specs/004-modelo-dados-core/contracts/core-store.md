@@ -261,6 +261,6 @@ que o chamador deve tentar de novo. Qualquer erro não mapeado vira `unavailable
 2. Campos travados nunca mudam por ator ≠ `user` (FR-024); `unlockField` remove a trava (FR-025).
 3. Toda gravação gera `AuditEntry` com ator, ação e `changes` antes/depois (FR-039).
 4. `softDelete`/`restore`/`undo` nunca removem dados; `includeDeleted` os enxerga (FR-037/038).
-5. Reimportar linhas de lote desfeito as restaura (`restored`) — D-C (FR-035).
+5. Reimportar linhas de lote desfeito as restaura (`restored`), por linha, inclusive em arquivo sobreposto — D-C (FR-035).
 6. Nenhuma operação lê ou altera dados de outro dono (FR-002/003).
 7. Somas em centavos inteiros; nenhum valor fracionário aceito (FR-018).

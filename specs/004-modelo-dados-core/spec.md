@@ -208,8 +208,9 @@ registro de auditoria com autor, ação, campos alterados (antes/depois) e data/
    transações criadas por ele são excluídas logicamente com motivo "lote desfeito",
    permanecem restauráveis e o lote passa a "desfeito".
 4. **Given** um lote desfeito cujas transações foram excluídas com motivo "lote desfeito",
-   **When** o Doug reimporta o mesmo arquivo, **Then** essas transações são **restauradas**
-   (não duplicadas), a restauração é auditada e o novo lote informa quantas foram restauradas.
+   **When** o Doug reimporta o mesmo arquivo (ou um arquivo que se sobrepõe a ele),
+   **Then** cada transação reconhecida, linha a linha, é **restaurada** (não duplicada),
+   a restauração é auditada e o novo lote informa quantas foram restauradas.
 5. **Given** um lote que falhou no meio com parte das transações gravadas, **When** o Doug o
    desfaz, **Then** as transações gravadas por ele são excluídas logicamente com motivo
    "lote desfeito" e o lote passa a "desfeito".
@@ -271,7 +272,9 @@ transação, efetivada, com o novo valor e auditoria da mudança.
 - **Mesmo arquivo reimportado** → lote detectado como repetido pela impressão digital, sem
   novas transações.
 - **Arquivo de lote desfeito reimportado** → não é sinalizado como repetido; as transações
-  excluídas pelo desfazer são restauradas (Remediação 2026-10-05, decisão D-C).
+  excluídas pelo desfazer são restauradas **por linha**, inclusive quando o arquivo importado
+  apenas se sobrepõe ao original (decisão D-C, confirmada por linha em 2026-10-05). Linhas
+  excluídas por outro motivo (usuário, mesclada, cancelada na fonte) continuam excluídas.
 - **Mesmo lote enviado em várias partes** (arquivo grande) → a ordem de ocorrência entre
   lançamentos idênticos vale para o lote inteiro, não para cada parte.
 - **Lote em revisão** (PDF, 010) → enquanto em revisão, nenhuma transação é gravada; as linhas
@@ -419,9 +422,10 @@ transação, efetivada, com o novo valor e auditoria da mudança.
   MUST ser sinalizado como repetido antes de processar.
 - **FR-035**: O dono MUST poder desfazer um lote concluído ou que falhou; isso exclui
   logicamente todas as transações criadas pelo lote (restauráveis), informando quantas tinham
-  edições manuais. Reimportar o arquivo de um lote desfeito MUST restaurar as transações
-  excluídas pelo desfazer (motivo "lote desfeito"), com auditoria, e o novo lote MUST contar
-  as restauradas (decisão D-C, 2026-10-05).
+  edições manuais. A restauração é **por linha**: toda linha importada que corresponda a uma
+  transação excluída pelo desfazer (motivo "lote desfeito") MUST restaurá-la, com auditoria,
+  seja no mesmo arquivo, seja em arquivo que se sobreponha ao original; o novo lote MUST
+  contar as restauradas (decisão D-C, confirmada por linha em 2026-10-05).
 - **FR-036**: Lotes MUST NOT ser excluídos fisicamente.
 
 **Exclusão lógica e auditoria**
@@ -528,6 +532,12 @@ Ajustes após `/speckit-analyze` e decisões transversais da onda 1 (FRs não re
 - Categoria de sistema não muda de pai; categoria que contém subcategoria de sistema não pode
   ser excluída; categoria com subcategorias não pode virar subcategoria (FR-027/FR-030).
 - Restaurar uma categoria a reativa, mas não desfaz a reatribuição das transações (FR-030).
+
+### Confirmação do Doug — Gate 2, 2026-10-05
+
+- Q: A restauração da D-C vale só para o mesmo arquivo ou por linha? → A: **Por linha** —
+  qualquer linha importada que corresponda a uma transação excluída por "lote desfeito" a
+  restaura, inclusive quando o arquivo se sobrepõe ao original (FR-035, US5 cenário 4).
 
 ## Assumptions
 

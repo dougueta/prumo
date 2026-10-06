@@ -162,7 +162,8 @@ No upsert, conflito de identidade com transação excluída por `batch_undone` �
 (`deleted_at/deleted_reason := null`, auditoria `restore` com `reason='reimport'` e
 `batchId` do lote novo), sem mudar fatos nem travas → `outcome = "restored"`,
 `count_restored += 1`. Excluídas por outro motivo continuam excluídas (`duplicate`). A regra é
-por linha: cobre o mesmo arquivo (decisão do Doug) e também arquivos que se sobrepõem a ele.
+**por linha, inclusive arquivo sobreposto** (confirmado pelo Doug no Gate 2, 2026-10-05):
+cobre o mesmo arquivo e qualquer arquivo cujas linhas coincidam com as do lote desfeito.
 
 ### Algoritmo — `undoBatch(id)` (FR-035)
 1. Lote do dono em `completed` ou `failed` (senão `forbidden_operation:batch_state`).
@@ -232,6 +233,13 @@ Funcionalidade: Idempotência de importação
     Então SELECT count(*) FROM transactions WHERE deleted_at IS NULL AND batch_id = <lote antigo> retorna 30
     E o novo lote tem count_restored = 30 e count_created = 0
     E audit_log tem 30 entradas action "restore" com reason "reimport" e batch_id = <lote novo>
+
+  Cenário: Arquivo sobreposto restaura por linha (D-C)
+    Dado um lote csv de 30 transações de 01 a 30/09, das quais 1 o usuário excluiu (deleted_reason "user")
+    E o lote foi desfeito (as outras 29 com deleted_reason "batch_undone")
+    Quando importo em um lote novo um arquivo de 15/09 a 15/10 que contém 16 daquelas linhas (uma é a excluída pelo usuário) e 10 linhas novas
+    Então o novo lote tem count_restored = 15, count_created = 10 e count_duplicate = 1
+    E SELECT deleted_reason FROM transactions da linha excluída pelo usuário continua "user"
 
   Cenário: Lote em revisão não recebe transações
     Dado um lote pdf em in_review
