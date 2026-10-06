@@ -65,7 +65,7 @@ A arquitetura de ingestão deve contar com um parser determinístico tolerante a
 
 ### 2.3 Estrutura Detalhada dos PDFs de Fatura de Cartão (Feature 010)
 
-Como o **C6 Bank** (principal cartão de gastos) e a **Caixa** disponibilizam faturas em PDF para clientes pessoa física, a extração via IA (Gemini 3.8 Flash multimodal) é a peça central.
+Como o **C6 Bank** e a **Caixa** disponibilizam faturas em PDF para clientes pessoa física, a extração via IA (Gemini 3.8 Flash multimodal) é a peça central.
 
 #### A. Cabeçalho e Metadados da Fatura
 
@@ -116,7 +116,7 @@ Toda fatura contém 5 valores mestres fundamentais:
 2. **Proteção por Senha nos PDFs e Limitações da `pdf-lib`**:
    - PDFs de faturas de C6 e Caixa são frequentemente criptografados com senha padrão (primeiros 6 dígitos do CPF do titular).
    - A biblioteca `pdf-lib` **não suporta nativamente a descriptografia de PDFs protegidos por senha**.
-   - _Mitigação_: Utilizar `pdfjs-dist` (via `pdfjsLib.getDocument({ data, password })`) ou invocar binário/biblioteca especializada (`qpdf`) no servidor para remover a criptografia em memória com a senha fornecida pelo Doug na sessão antes de qualquer processamento. Essa senha nunca deve ser persistida.
+   - _Mitigação_: O `pdfjs-dist` (via `pdfjsLib.getDocument({ data, password })`) permite abrir o PDF protegido com senha para renderizar páginas ou extrair texto diretamente em memória (o que favorece a minimização de dados da Constitution II, permitindo extrair somente o texto das tabelas de despesas sem enviar o documento binário com cabeçalhos cadastrais ao LLM). Caso seja necessário gerar um novo arquivo PDF binário totalmente descriptografado para reenvio multimodal, deve-se utilizar um utilitário especializado como `qpdf` no servidor. A senha nunca deve ser persistida.
 3. **Ambiguidade de Nomes de Estabelecimentos**:
    - Estabelecimentos físicos muitas vezes aparecem truncados ou com prefixos de maquininha (`PAG*`, `MP*`, `STONE*`, `IFOOD*IFOOD`). O modelo de IA deve extrair a descrição fiel do extrato para preservar a rastreabilidade da fonte original.
 4. **Encoding Corrompido em CSV**:
@@ -135,7 +135,7 @@ Toda fatura contém 5 valores mestres fundamentais:
    - **Parser CSV**: Implementar mapeamento assistido de colunas: o usuário vê uma pré-visualização das 3 primeiras linhas e confirma as colunas de Data, Descrição e Valor.
    - **Sanitização Monetária**: Criar a função utilitária `parseMonetaryToCents(valueString: string): bigint` (que será introduzida na Feature 009, pois não faz parte do escopo da 001) para lidar transparentemente com formatos `R$ 1.234,56`, `-1234.56` e `1234,56 D`.
 2. **Estratégia da Feature 010 (PDF de Fatura)**:
-   - **Remoção de Senha Pré-Envio**: Empregar `pdfjs-dist` ou `qpdf` no servidor Node.js para descriptografar em memória com a senha fornecida na sessão.
+   - **Tratamento de Senha Pré-Envio**: Empregar `pdfjs-dist` no servidor Node.js para abrir com a senha da sessão e extrair texto em memória, ou `qpdf` se for estritamente necessário gerar PDF binário descriptografado.
    - **Minimização de Dados**: Realizar sanitização ou recorte da primeira página para remover cabeçalhos cadastrais antes do envio multimodal ao Gemini 3.8 Flash, em estrita conformidade com a Constitution II.
    - **Prompt Multimodal no Gemini 3.8 Flash**: Passar as páginas de despesas com `response_schema` tipado exigindo:
      - Instituição e datas (vencimento, fechamento).

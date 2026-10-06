@@ -58,11 +58,12 @@ code_review:
     summary: true
     code_review: true
     include_drafts: false
-  ignore_patterns:
-    # Specs NUNCA devem ser ignoradas (devem ser revisadas pelo checklist)
-    - "tests/fixtures/**" # Ignora saídas estáticas geradas
-    - "package-lock.json"
-    - "public/icons/**"
+
+ignore_patterns:
+  # Specs NUNCA devem ser ignoradas (devem ser revisadas pelo checklist)
+  - "tests/fixtures/**" # Ignora saídas estáticas geradas
+  - "package-lock.json"
+  - "public/icons/**"
 ```
 
 #### B. Especificação de `.gemini/styleguide.md`
@@ -80,7 +81,7 @@ O arquivo já foi pré-criado no repositório e codifica as prioridades da Const
 | --------------------------------------- | ---------------- | ---------------------------------------------------------------------------------------------------------------- |
 | **Resumo do PR**                        | Sim              | Gera resumo em linguagem natural destacando as principais mudanças.                                              |
 | **Comentários Inline**                  | Sim              | Anota diretamente a linha de código com o problema e sugestão de correção (_diff replacement_).                  |
-| **Classificação de Severidade**         | Sim              | Marca comentários como `LOW`, `MEDIUM` ou `HIGH`.                                                                |
+| **Classificação de Severidade**         | Sim              | Marca comentários como `LOW`, `MEDIUM`, `HIGH` ou `CRITICAL`.                                                    |
 | **Aprovação Formal de PR (`APPROVE`)**  | **Não (Nativo)** | O bot posta comentários (`COMMENT`), mas não submete o evento de revisão nativo do GitHub como aprovação humana. |
 | **Rejeição Formal (`REQUEST_CHANGES`)** | **Não (Nativo)** | Aponta problemas como threads de conversa, sem mudar o status da branch protection nativa de aprovações.         |
 
@@ -113,7 +114,7 @@ No repositório (Settings $\rightarrow$ Branches $\rightarrow$ Branch protection
 ## 3. Limitações e Riscos
 
 1. **Arquivos Ignorados Nativamente**:
-   - O Gemini Code Assist **não analisa nem comenta arquivos localizados em `.github/workflows/`** por políticas de segurança do GitHub. Mudanças de CI/CD dependem exclusivamente da revisão de checklist manual/contexto limpo do Claude.
+   - O Gemini Code Assist **não analisa nem comenta arquivos localizados em `.github/workflows/`** (conforme documentado oficialmente em `https://cloud.google.com/gemini/docs/code-review/review-repo-code`). Mudanças de CI/CD dependem exclusivamente da revisão de checklist manual/contexto limpo do Claude.
 2. **Falso Positivo / Alucinação em Código Complexo**:
    - Modelos de IA podem sugerir mudanças desnecessárias. A Constitution VIII garante que o autor pode justificar tecnicamente suas decisões caso o apontamento não proceda.
 3. **Latência de Revisão**:
@@ -132,9 +133,9 @@ No repositório (Settings $\rightarrow$ Branches $\rightarrow$ Branch protection
 
 ## 5. Fontes Consultadas
 
-1. **Google Cloud — Gemini Code Assist for GitHub Overview**:  
-   [https://cloud.google.com/gemini/docs/codeassist/overview](https://cloud.google.com/gemini/docs/codeassist/overview) — Acessado em 05/10/2026.
+1. **Google Cloud — Gemini Code Assist for GitHub Overview & Review Details**:  
+   [https://cloud.google.com/gemini/docs/code-review/review-repo-code](https://cloud.google.com/gemini/docs/code-review/review-repo-code) — Acessado em 05/10/2026.
 2. **GitHub Documentation — About Protected Branches & Status Checks**:  
-   [https://docs.github.com/en/repositories/configuring-branches-and-merges-in-a-repository/defining-the-mergeability-of-pull-requests/about-protected-branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-a-repository/defining-the-mergeability-of-pull-requests/about-protected-branches) — Acessado em 05/10/2026.
+   [https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) — Acessado em 05/10/2026.
 3. **GitHub Documentation — Actions: github-script for Pull Request Workflows**:  
    [https://github.com/actions/github-script](https://github.com/actions/github-script) — Acessado em 05/10/2026.

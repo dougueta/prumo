@@ -12,7 +12,7 @@
 A Gemini API oferece suporte nativo multimodal a PDFs (processados visualmente a ~258 tokens por página) e _Structured Outputs_ com validação estrita de JSON Schema via `response_schema`.
 No **Free Tier**, os termos do Google estabelecem explicitamente que dados de entrada (prompts e arquivos) e saída podem ser usados para **treinamento de modelos e avaliados por revisores humanos**.
 No **Paid Tier** (Pay-as-you-go com Cloud Billing), os dados **não são usados para treino** nem lidos por humanos, sendo regidos pelo Data Processing Addendum (DPA) do Google Cloud.
-Para o volume estimado do Prumo (~500 transações categorizadas + ~3 PDFs de fatura por mês), o consumo é de ~0,15M tokens de entrada e ~0,035M de saída.
+Para o volume estimado do Prumo (~500 transações categorizadas + ~3 PDFs de fatura por mês), o consumo é de ~0,16M tokens de entrada e ~0,035M de saída.
 O custo financeiro no Paid Tier com modelos Flash/Flash-Lite é residual: entre **$0,14 e $0,25 USD/mês** (aprox. **R$ 0,80 a R$ 1,50/mês**).
 
 ---
@@ -48,7 +48,7 @@ _(Nota: versões legadas como Gemini 2.0 Flash foram descontinuadas em junho de 
 - Configurado via parâmetros nativos do SDK:
   - `response_mime_type: "application/json"`
   - `response_schema`: Aceita esquema JSON nativo ou modelos de validação (como Pydantic ou schemas Zod compilados).
-- **Garantia de Tipagem**: O modelo restringe o sampling para obedecer 100% ao schema fornecido. Elimina regex frágeis e falhas de parser JSON.
+- **Garantia de Tipagem**: O modelo restringe a amostragem para garantir conformidade sintática estrita com o JSON Schema fornecido, eliminando regex frágeis e falhas de formatação de JSON. A validação semântica das regras de negócio permanece responsabilidade da aplicação (via Zod).
 - **Exemplo de Contrato para Fatura (Feature 010)**:
   ```json
   {
@@ -145,7 +145,7 @@ _(Nota: versões legadas como Gemini 2.0 Flash foram descontinuadas em junho de 
 2. **Minimização de Dados em PDFs**: Enviar a fatura integral expõe dados cadastrais. A conformidade com a Constitution II exige que cabeçalhos sejam redigidos ou omitidos antes do envio.
 3. **Dependência de Formato de Fatura**: Faturas com layouts muito complexos (ex.: compras parceladas internacionais com conversão de câmbio na mesma linha) podem gerar ambiguidades se o prompt/schema não tiver exemplos de _few-shot_.
 4. **Depreciação de Modelos**: O Google frequentemente descontinua versões legadas (como ocorreu com o Gemini 2.0 Flash em meados de 2026). A arquitetura do Prumo deve encapsular o modelo atrás do contrato `AiProvider` (Constitution VI e Restrições Técnicas), permitindo atualizar a string do modelo em um único arquivo de configuração.
-5. **Gastos Acidentais no Paid Tier e Limitações do Budget**: O recurso de _Budget & Alerts_ do Google Cloud **apenas envia notificações por e-mail e não interrompe as chamadas à API**. Para garantir um teto rígido de gastos, é necessário configurar limites de cota de requisições (RPM/RPD) diretamente no Cloud Console ou implementar automação via Cloud Function que desative o faturamento caso o teto seja atingido.
+5. **Prevenção de Gastos Acidentais (Spend Cap Budgets)**: Diferente dos alertas tradicionais de orçamento que apenas notificam por e-mail, o Google Cloud disponibiliza o recurso nativo de **Spend Cap Budgets** (ver `https://cloud.google.com/billing/docs/how-to/budgets-spend-caps`), que **pausa automaticamente o consumo do serviço** ao atingir o teto financeiro definido, e a Gemini API (`generativelanguage.googleapis.com`) está expressamente inclusa na lista de serviços suportados. Esta é a recomendação primária para estabelecer um teto rígido e seguro caso o Paid Tier seja aprovado pelo Doug. Alternativamente, limites rígidos de cota (RPM/RPD) no Cloud Console e desligamento de billing via automação Pub/Sub podem ser mantidos como proteções secundárias.
 
 ---
 

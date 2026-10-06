@@ -12,7 +12,7 @@
 O modelo pessoal "Meu Pluggy" permite a usuários conectar contas em `meu.pluggy.ai` e integrá-las via conector de desenvolvedor, mas o limite exato de conexões e a viabilidade do widget direto `react-pluggy-connect` sem plano comercial **não são confirmados na documentação pública oficial**.
 As 4 instituições do Doug (**Caixa, C6 Bank, Mercado Pago e PicPay**) possuem conectores ativos na plataforma, abrangendo contas, cartões e investimentos básicos.
 Webhooks da Pluggy **não possuem assinatura HMAC nativa**, exigindo validação via cabeçalho customizado e allowlist do IP oficial `52.67.145.81`, notificando eventos como `transactions/created`, `updated` e `deleted`.
-A API impõe limites de taxa estritos de **360 req/min por IP** e **20 req/min em `PATCH /items`**, sendo este último o endpoint correto para re-sincronização.
+A API impõe limites de taxa estritos de **360 req/min por IP e por endpoint** (`POST /auth`, `GET /accounts`, `GET /transactions`, `GET /investments`) e **20 req/min em `PATCH /items`**, sendo este último o endpoint correto para re-sincronização.
 A premissa de custo R$ 0 das features 007/008 depende de teste prático da conta dev pelo Doug antes de aprovar a spec 007.
 
 ---
@@ -32,12 +32,12 @@ A premissa de custo R$ 0 das features 007/008 depende de teste prático da conta
 
 ### 2.2 Ambiente de Sandbox
 
-- **Conector de Teste**: A Pluggy fornece um conector de Sandbox (ID `0` ou `2`) que simula instituições financeiras sem tocar em bancos reais.
-- **Credenciais Mapeadas**:
+- **Conector de Teste**: A Pluggy fornece um conector de Sandbox que simula instituições financeiras sem tocar em bancos reais.
+- **Credenciais Mapeadas no Sandbox**:
   - `user-ok` / `password-ok` (MFA `123456`) $\rightarrow$ simula conexão bem-sucedida (`UPDATED`).
-  - `user-error` $\rightarrow$ simula erro de credenciais (`LOGIN_ERROR`).
-  - `user-locked` $\rightarrow$ simula conta bloqueada.
-  - `user-needs-action` $\rightarrow$ simula desafio de autenticação (`WAITING_USER_INPUT`).
+  - `user-error` $\rightarrow$ simula erro inesperado da instituição (`UNEXPECTED_ERROR`).
+  - `user-account-need-actions` $\rightarrow$ simula necessidade de ação do usuário no banco (`ACCOUNT_NEEDS_ACTION`).
+  - Qualquer outro usuário / credencial não mapeada $\rightarrow$ simula erro de credenciais/login inválido (`LOGIN_ERROR`).
 - **Dinâmica dos Dados**: Dados de transações em Sandbox sofrem refresh semanal. Itens inativos há mais de 30 dias são excluídos automaticamente pela Pluggy.
 - **Uso em CI**: Conforme Constitution V, o CI não deve chamar a API externa da Pluggy. Testes de integração utilizam fixtures baseadas nos contratos OpenAPI da Pluggy.
 
@@ -121,6 +121,7 @@ stateDiagram-v2
   - `item/error`: Falha durante atualização.
   - `item/deleted`: Conexão removida.
   - `item/waiting_user_input`: Exige ação do usuário (MFA).
+  - `item/waiting_user_action`: Exige autorização ou ação do usuário no aplicativo do banco.
   - `item/login_succeeded`: Credenciais revalidadas com sucesso.
   - `connector/status_updated`: Mudança de disponibilidade na instituição financeira.
   - `transactions/created`: Novos lançamentos capturados.
@@ -130,10 +131,10 @@ stateDiagram-v2
   - A Pluggy **não envia assinatura criptográfica HMAC por padrão**. A segurança do endpoint no Next.js (`/api/webhooks/pluggy`) depende de:
     1. Cadastro de cabeçalho secreto customizado (ex.: `x-webhook-secret: <token>`) validado em tempo constante (`crypto.timingSafeEqual`).
     2. **Allowlist de IP**: Restringir requisições estritamente ao endereço IP oficial de saída da Pluggy: **`52.67.145.81`**.
-  - A Pluggy realiza retentativas automáticas progressivas em caso de falhas temporárias (HTTP 5xx ou timeouts).
+  - **Política de Retentativa de Webhook**: A Pluggy realiza até 3 retentativas automáticas com intervalos progressivos (backoff) caso o endpoint de destino responda com status diferente de 2xx ou sofra timeout.
 - **Limites de Taxa (Rate Limits)**:
-  - **360 requisições por minuto por IP** para chamadas gerais na API.
-  - **20 requisições por minuto no endpoint `PATCH /items`**.
+  - **360 requisições por minuto por IP e por endpoint** (especificamente nos endpoints `POST /auth`, `GET /accounts`, `GET /transactions` e `GET /investments`).
+  - **20 requisições por minuto no endpoint `PATCH /items`** (utilizado para re-sincronização e atualização de credenciais).
 - **Janela de Transações**:
   - Em implementações de Open Finance, a sincronização inicial busca tipicamente até 12 meses e sincronizações diárias buscam os últimos 7 dias. Porém, **esses intervalos não são garantidos de forma homogênea por contrato em todas as instituições**, variando conforme a estabilidade de cada banco.
 
@@ -176,12 +177,14 @@ stateDiagram-v2
 ## 5. Fontes Consultadas
 
 1. **Pluggy Documentation — Overview & Connectors**:  
-   [https://docs.pluggy.ai](https://docs.pluggy.ai) — Acessado em 05/10/2026.
-2. **Pluggy Documentation — Webhooks, Headers & IP Allowlist**:  
-   [https://docs.pluggy.ai](https://docs.pluggy.ai) — Acessado em 05/10/2026.
+   [https://docs.pluggy.ai/docs/connectors](https://docs.pluggy.ai/docs/connectors) — Acessado em 05/10/2026.
+2. **Pluggy Documentation — Webhooks Reference, Headers & IP Allowlist**:  
+   [https://docs.pluggy.ai/docs/developer-tools/webhooks-ref](https://docs.pluggy.ai/docs/developer-tools/webhooks-ref) — Acessado em 05/10/2026.
 3. **Pluggy Documentation — Rate Limits & Item Updates**:  
-   [https://docs.pluggy.ai](https://docs.pluggy.ai) — Acessado em 05/10/2026.
-4. **Actual Budget Community Documentation — Pluggy Integration Experience**:  
-   [https://actualbudget.org/docs/advanced/bank-sync/](https://actualbudget.org/docs/advanced/bank-sync/) — Acessado em 05/10/2026.
-5. **Meu Pluggy — Portal Pessoal Open Finance**:  
+   [https://docs.pluggy.ai/docs/developer-tools/rate-limits](https://docs.pluggy.ai/docs/developer-tools/rate-limits) — Acessado em 05/10/2026.
+4. **Pluggy Documentation — Sandbox Testing & Credentials**:  
+   [https://docs.pluggy.ai/docs/guides/sandbox](https://docs.pluggy.ai/docs/guides/sandbox) — Acessado em 05/10/2026.
+5. **Actual Budget Community Documentation — Pluggy Integration Experience**:  
+   [https://actualbudget.org/docs/advanced/bank-sync/pluggyai/](https://actualbudget.org/docs/advanced/bank-sync/pluggyai/) — Acessado em 05/10/2026.
+6. **Meu Pluggy — Portal Pessoal Open Finance**:  
    [https://meu.pluggy.ai/](https://meu.pluggy.ai/) — Acessado em 05/10/2026.
