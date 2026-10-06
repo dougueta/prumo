@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+/* Base provisória; tokens de marca e temas são da feature 003. */
+:root {
+  color-scheme: light dark;
+  --background: #ffffff;
+  --foreground: #0b1214;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0b1214;
+    --foreground: #eef2f2;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}

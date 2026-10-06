@@ -20,6 +20,6 @@ Leia e siga **`AGENTS.md`** (regras comuns) antes de qualquer ação. A constitu
 - Antes de afirmar que algo funciona: rodar os testes e mostrar a saída.
 
 <!-- SPECKIT START -->
-For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+Plano atual: `specs/001-setup-projeto/plan.md` (stack, estrutura de pastas, comandos).
+Ao trabalhar em outra feature, leia o `plan.md` da pasta `specs/NNN-slug/` correspondente.
 <!-- SPECKIT END -->

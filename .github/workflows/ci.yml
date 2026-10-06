@@ -1,0 +1,117 @@
+# Feature 001 · FR-006/FR-007/FR-008 — verificações obrigatórias de todo PR e da main.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "24"
+  SUPABASE_CLI_VERSION: "2.119.0"
+  # Serviços do Supabase que a 001 não usa — sobem mais rápido sem eles.
+  SUPABASE_EXCLUDE: studio,imgproxy,mailpit,realtime,storage-api,edge-runtime,logflare,vector,supavisor,postgres-meta
+
+jobs:
+  quality:
+    name: Qualidade (lint, formato, tipos)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: "${{ env.NODE_VERSION }}", cache: npm }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run typecheck
+
+  unit:
+    name: Testes unitários
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: "${{ env.NODE_VERSION }}", cache: npm }
+      - run: npm ci
+      - run: npm run test:unit
+
+  integration:
+    name: Testes de integração (Supabase efêmero)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: "${{ env.NODE_VERSION }}", cache: npm }
+      - uses: supabase/setup-cli@v3
+        with: { version: "${{ env.SUPABASE_CLI_VERSION }}" }
+      - run: npm ci
+      - name: Supabase local (aplica migrações)
+        run: supabase start -x "$SUPABASE_EXCLUDE"
+      - name: Exporta credenciais locais do Supabase
+        run: node scripts/ci-supabase-env.mjs
+      - run: npm run test:integration
+        env: { APP_ENV: local }
+
+  e2e:
+    name: Testes ponta a ponta (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: "${{ env.NODE_VERSION }}", cache: npm }
+      - uses: supabase/setup-cli@v3
+        with: { version: "${{ env.SUPABASE_CLI_VERSION }}" }
+      - run: npm ci
+      - name: Cache dos navegadores do Playwright
+        uses: actions/cache@v6
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - run: npx playwright install --with-deps chromium
+      - name: Supabase local (aplica migrações)
+        run: supabase start -x "$SUPABASE_EXCLUDE"
+      - name: Exporta credenciais locais do Supabase
+        run: node scripts/ci-supabase-env.mjs
+      - run: npm run test:e2e
+        env: { APP_ENV: local }
+      - name: Relatório do Playwright
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+  deploy-db:
+    name: Migrações de produção
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [quality, unit, integration, e2e]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    steps:
+      - uses: actions/checkout@v7
+      - uses: supabase/setup-cli@v3
+        with: { version: "${{ env.SUPABASE_CLI_VERSION }}" }
+      - name: Aplica migrações no Supabase de produção
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+        run: |
+          for name in SUPABASE_ACCESS_TOKEN SUPABASE_DB_PASSWORD SUPABASE_PROJECT_REF; do
+            if [ -z "${!name}" ]; then echo "::error::Segredo $name não configurado (ver README#custos)"; exit 1; fi
+          done
+          supabase link --project-ref "$SUPABASE_PROJECT_REF"
+          supabase db push

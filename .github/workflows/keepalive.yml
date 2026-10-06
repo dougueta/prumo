@@ -1,0 +1,24 @@
+# Feature 001 · FR-023 — evita a pausa do Supabase gratuito e avisa (e-mail do GitHub) se a
+# produção estiver fora. Roda todo dia às 09:00 de Brasília (12:00 UTC).
+name: Keepalive da produção
+
+on:
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: "24" }
+      - name: Verifica a saúde da produção
+        run: node scripts/keepalive-check.mjs
+        env:
+          PRODUCTION_URL: ${{ secrets.PRODUCTION_URL }}

@@ -1,0 +1,455 @@
+﻿data;descricao;valor
+01/10/2025;Loja de Roupas Fictícia;-165,42
+01/10/2025;Posto Combustível Fictício;-144,18
+02/10/2025;Delivery Comida Fictícia;-62,54
+03/10/2025;Café Grão Fictício;-33,43
+05/10/2025;Café Grão Fictício;-10,10
+06/10/2025;Livraria Página Fictícia;-76,83
+06/10/2025;Café Grão Fictício;-26,87
+07/10/2025;Posto Combustível Fictício;-225,78
+08/10/2025;Streaming Filmes Fictício;-39,90
+10/10/2025;Restaurante Sabor Fictício;-142,10
+10/10/2025;Livraria Página Fictícia;-100,74
+10/10/2025;Farmácia Saúde Fictícia;-68,28
+10/10/2025;Delivery Comida Fictícia;-68,51
+11/10/2025;Pet Shop Fictício;-114,19
+12/10/2025;Música Fictícia Premium;-21,90
+12/10/2025;Pet Shop Fictício;-31,61
+12/10/2025;Transporte por App Fictício;-49,74
+13/10/2025;Restaurante Sabor Fictício;-58,70
+15/10/2025;Nuvem Fictícia 100 GB;-9,90
+15/10/2025;Mercado Vila Fictícia;-383,31
+15/10/2025;Posto Combustível Fictício;-222,39
+16/10/2025;Restaurante Sabor Fictício;-134,56
+16/10/2025;Loja de Roupas Fictícia;-138,88
+17/10/2025;Posto Combustível Fictício;-296,90
+19/10/2025;Farmácia Saúde Fictícia;-48,10
+19/10/2025;Farmácia Saúde Fictícia;-46,78
+20/10/2025;Jornal Fictício Digital;-29,90
+20/10/2025;Delivery Comida Fictícia;-81,26
+20/10/2025;Padaria Pão Imaginário;-37,88
+21/10/2025;Pet Shop Fictício;-59,72
+21/10/2025;Mercado Vila Fictícia;-319,12
+22/10/2025;Pet Shop Fictício;-198,99
+22/10/2025;Livraria Página Fictícia;-56,23
+22/10/2025;Transporte por App Fictício;-33,12
+22/10/2025;Restaurante Sabor Fictício;-80,56
+23/10/2025;Delivery Comida Fictícia;-44,19
+25/10/2025;Restaurante Sabor Fictício;-111,90
+27/10/2025;Restaurante Sabor Fictício;-105,72
+27/10/2025;Pet Shop Fictício;-156,42
+28/10/2025;Restaurante Sabor Fictício;-143,13
+01/11/2025;Posto Combustível Fictício;-117,10
+02/11/2025;Cinema Tela Fictícia;-45,38
+02/11/2025;Padaria Pão Imaginário;-17,72
+05/11/2025;Livraria Página Fictícia;-54,58
+05/11/2025;Mercado Vila Fictícia;-426,73
+08/11/2025;Streaming Filmes Fictício;-39,90
+09/11/2025;Mercado Vila Fictícia;-220,80
+10/11/2025;Pagamento de fatura Cartão Órbita (simulado);4179,78
+11/11/2025;Posto Combustível Fictício;-156,82
+12/11/2025;Música Fictícia Premium;-21,90
+12/11/2025;Pet Shop Fictício;-179,25
+13/11/2025;Transporte por App Fictício;-29,59
+13/11/2025;Pet Shop Fictício;-115,42
+13/11/2025;Pet Shop Fictício;-87,74
+14/11/2025;Loja de Eletro Fictícia 1/6;-250,00
+15/11/2025;Nuvem Fictícia 100 GB;-9,90
+16/11/2025;Restaurante Sabor Fictício;-133,12
+16/11/2025;Loja de Roupas Fictícia;-221,93
+16/11/2025;Padaria Pão Imaginário;-17,89
+16/11/2025;Cinema Tela Fictícia;-34,72
+17/11/2025;Livraria Página Fictícia;-38,51
+17/11/2025;Livraria Página Fictícia;-117,90
+17/11/2025;Farmácia Saúde Fictícia;-145,55
+20/11/2025;Jornal Fictício Digital;-29,90
+20/11/2025;Farmácia Saúde Fictícia;-74,02
+21/11/2025;Pet Shop Fictício;-89,37
+23/11/2025;Transporte por App Fictício;-41,14
+24/11/2025;Livraria Página Fictícia;-100,63
+29/11/2025;Livraria Página Fictícia;-109,16
+02/12/2025;Padaria Pão Imaginário;-18,00
+02/12/2025;Livraria Página Fictícia;-116,18
+02/12/2025;Delivery Comida Fictícia;-46,21
+02/12/2025;Transporte por App Fictício;-57,67
+03/12/2025;Pet Shop Fictício;-53,18
+03/12/2025;Loja de Roupas Fictícia;-368,37
+06/12/2025;Mercado Vila Fictícia;-80,00
+07/12/2025;Farmácia Saúde Fictícia;-139,48
+08/12/2025;Streaming Filmes Fictício;-39,90
+08/12/2025;Restaurante Sabor Fictício;-178,61
+08/12/2025;Transporte por App Fictício;-38,71
+10/12/2025;Pagamento de fatura Cartão Órbita (simulado);2926,67
+11/12/2025;Pet Shop Fictício;-140,36
+12/12/2025;Música Fictícia Premium;-21,90
+14/12/2025;Cinema Tela Fictícia;-72,87
+14/12/2025;Cinema Tela Fictícia;-51,68
+14/12/2025;Transporte por App Fictício;-36,82
+14/12/2025;Loja de Eletro Fictícia 2/6;-250,00
+15/12/2025;Nuvem Fictícia 100 GB;-9,90
+15/12/2025;Restaurante Sabor Fictício;-75,41
+15/12/2025;Farmácia Saúde Fictícia;-84,18
+15/12/2025;Pet Shop Fictício;-37,75
+16/12/2025;Cinema Tela Fictícia;-32,59
+17/12/2025;Livraria Página Fictícia;-73,93
+18/12/2025;Transporte por App Fictício;-12,86
+19/12/2025;Farmácia Saúde Fictícia;-130,01
+20/12/2025;Jornal Fictício Digital;-29,90
+20/12/2025;Transporte por App Fictício;-50,02
+20/12/2025;Restaurante Sabor Fictício;-108,59
+21/12/2025;Farmácia Saúde Fictícia;-42,88
+21/12/2025;Transporte por App Fictício;-20,39
+25/12/2025;Padaria Pão Imaginário;-33,50
+25/12/2025;Livraria Página Fictícia;-63,83
+26/12/2025;Posto Combustível Fictício;-267,57
+28/12/2025;Transporte por App Fictício;-47,79
+29/12/2025;Livraria Página Fictícia;-55,11
+31/12/2025;Café Grão Fictício;-34,08
+02/01/2026;Farmácia Saúde Fictícia;-115,59
+05/01/2026;Restaurante Sabor Fictício;-137,56
+08/01/2026;Streaming Filmes Fictício;-39,90
+10/01/2026;Pagamento de fatura Cartão Órbita (simulado);2920,23
+11/01/2026;Cinema Tela Fictícia;-71,24
+11/01/2026;Loja de Roupas Fictícia;-293,18
+12/01/2026;Música Fictícia Premium;-21,90
+12/01/2026;Farmácia Saúde Fictícia;-75,20
+13/01/2026;Café Grão Fictício;-29,19
+13/01/2026;Mercado Vila Fictícia;-378,66
+14/01/2026;Loja de Eletro Fictícia 3/6;-250,00
+15/01/2026;Nuvem Fictícia 100 GB;-9,90
+18/01/2026;Livraria Página Fictícia;-79,19
+19/01/2026;Loja de Roupas Fictícia;-352,33
+19/01/2026;Posto Combustível Fictício;-182,24
+20/01/2026;Jornal Fictício Digital;-29,90
+20/01/2026;Restaurante Sabor Fictício;-89,27
+20/01/2026;Pet Shop Fictício;-83,57
+20/01/2026;Mercado Vila Fictícia;-366,14
+21/01/2026;Café Grão Fictício;-14,01
+23/01/2026;Posto Combustível Fictício;-110,07
+24/01/2026;Pet Shop Fictício;-30,02
+24/01/2026;Restaurante Sabor Fictício;-129,64
+26/01/2026;Loja de Roupas Fictícia;-205,41
+28/01/2026;Loja de Roupas Fictícia;-229,41
+29/01/2026;Padaria Pão Imaginário;-8,00
+30/01/2026;Delivery Comida Fictícia;-65,76
+31/01/2026;Farmácia Saúde Fictícia;-38,31
+31/01/2026;Restaurante Sabor Fictício;-61,28
+31/01/2026;Delivery Comida Fictícia;-57,87
+01/02/2026;Restaurante Sabor Fictício;-159,33
+04/02/2026;Livraria Página Fictícia;-93,76
+04/02/2026;Delivery Comida Fictícia;-79,89
+05/02/2026;Posto Combustível Fictício;-101,08
+05/02/2026;Posto Combustível Fictício;-280,36
+05/02/2026;Mercado Vila Fictícia;-59,83
+06/02/2026;Padaria Pão Imaginário;-33,50
+08/02/2026;Streaming Filmes Fictício;-39,90
+08/02/2026;Loja de Roupas Fictícia;-93,76
+10/02/2026;Restaurante Sabor Fictício;-163,28
+10/02/2026;Pagamento de fatura Cartão Órbita (simulado);3554,74
+11/02/2026;Delivery Comida Fictícia;-46,84
+11/02/2026;Mercado Vila Fictícia;-237,59
+12/02/2026;Música Fictícia Premium;-21,90
+14/02/2026;Loja de Roupas Fictícia;-341,10
+14/02/2026;Loja de Eletro Fictícia 4/6;-250,00
+15/02/2026;Nuvem Fictícia 100 GB;-9,90
+15/02/2026;Farmácia Saúde Fictícia;-95,74
+15/02/2026;Transporte por App Fictício;-50,63
+16/02/2026;Estorno Loja de Roupas Fictícia;89,90
+17/02/2026;Transporte por App Fictício;-47,00
+18/02/2026;Delivery Comida Fictícia;-47,11
+19/02/2026;Pet Shop Fictício;-121,89
+20/02/2026;Jornal Fictício Digital;-29,90
+21/02/2026;Posto Combustível Fictício;-158,30
+22/02/2026;Loja de Roupas Fictícia;-380,91
+22/02/2026;Posto Combustível Fictício;-205,40
+25/02/2026;Pet Shop Fictício;-70,51
+27/02/2026;Padaria Pão Imaginário;-9,61
+27/02/2026;Mercado Vila Fictícia;-353,91
+28/02/2026;Posto Combustível Fictício;-144,34
+28/02/2026;Posto Combustível Fictício;-245,19
+03/03/2026;Delivery Comida Fictícia;-66,47
+06/03/2026;Livraria Página Fictícia;-51,43
+07/03/2026;Cinema Tela Fictícia;-48,39
+07/03/2026;Café Grão Fictício;-13,46
+08/03/2026;Streaming Filmes Fictício;-39,90
+08/03/2026;Pet Shop Fictício;-119,34
+09/03/2026;Mercado Vila Fictícia;-409,07
+10/03/2026;Loja de Roupas Fictícia;-330,19
+10/03/2026;Posto Combustível Fictício;-235,91
+10/03/2026;Pagamento de fatura Cartão Órbita (simulado);3882,56
+11/03/2026;Software Fictício Inc. (USD);-111,80
+12/03/2026;Música Fictícia Premium;-21,90
+12/03/2026;Livraria Página Fictícia;-116,16
+12/03/2026;Delivery Comida Fictícia;-42,53
+13/03/2026;Farmácia Saúde Fictícia;-130,44
+13/03/2026;Pet Shop Fictício;-192,90
+14/03/2026;Posto Combustível Fictício;-244,87
+14/03/2026;Loja de Eletro Fictícia 5/6;-250,00
+15/03/2026;Nuvem Fictícia 100 GB;-9,90
+18/03/2026;Loja de Roupas Fictícia;-216,51
+19/03/2026;Mercado Vila Fictícia;-47,70
+20/03/2026;Jornal Fictício Digital;-29,90
+20/03/2026;Restaurante Sabor Fictício;-149,66
+20/03/2026;Loja de Roupas Fictícia;-167,98
+21/03/2026;Café Grão Fictício;-24,72
+21/03/2026;Loja de Roupas Fictícia;-269,00
+21/03/2026;Loja de Roupas Fictícia;-287,52
+21/03/2026;Transporte por App Fictício;-33,22
+22/03/2026;Loja de Roupas Fictícia;-333,97
+22/03/2026;Pet Shop Fictício;-136,07
+22/03/2026;Mercado Vila Fictícia;-103,72
+23/03/2026;Café Grão Fictício;-19,88
+25/03/2026;Mercado Vila Fictícia;-76,70
+27/03/2026;Café Grão Fictício;-32,37
+29/03/2026;Café Grão Fictício;-19,11
+31/03/2026;Loja de Roupas Fictícia;-175,59
+31/03/2026;Posto Combustível Fictício;-196,27
+02/04/2026;Restaurante Sabor Fictício;-108,44
+02/04/2026;Mercado Vila Fictícia;-119,57
+03/04/2026;Transporte por App Fictício;-53,98
+03/04/2026;Transporte por App Fictício;-38,25
+04/04/2026;Loja de Roupas Fictícia;-126,61
+06/04/2026;Delivery Comida Fictícia;-81,79
+06/04/2026;Padaria Pão Imaginário;-42,91
+07/04/2026;Posto Combustível Fictício;-291,96
+08/04/2026;Streaming Filmes Fictício;-44,90
+08/04/2026;Delivery Comida Fictícia;-77,43
+09/04/2026;Mercado Vila Fictícia;-436,23
+09/04/2026;Pet Shop Fictício;-78,90
+09/04/2026;Padaria Pão Imaginário;-31,06
+10/04/2026;Café Grão Fictício;-13,52
+10/04/2026;Pagamento de fatura Cartão Órbita (simulado);4754,55
+11/04/2026;Loja de Roupas Fictícia;-290,12
+12/04/2026;Música Fictícia Premium;-21,90
+13/04/2026;Pet Shop Fictício;-92,36
+13/04/2026;Transporte por App Fictício;-30,01
+14/04/2026;Loja de Eletro Fictícia 6/6;-250,00
+15/04/2026;Nuvem Fictícia 100 GB;-9,90
+15/04/2026;Transporte por App Fictício;-46,98
+15/04/2026;Livraria Página Fictícia;-73,27
+16/04/2026;Delivery Comida Fictícia;-66,27
+16/04/2026;Delivery Comida Fictícia;-39,87
+18/04/2026;Transporte por App Fictício;-30,74
+19/04/2026;Restaurante Sabor Fictício;-116,24
+19/04/2026;Padaria Pão Imaginário;-40,33
+20/04/2026;Jornal Fictício Digital;-29,90
+20/04/2026;Posto Combustível Fictício;-143,80
+22/04/2026;Pet Shop Fictício;-166,38
+23/04/2026;Posto Combustível Fictício;-135,03
+23/04/2026;Farmácia Saúde Fictícia;-52,59
+23/04/2026;Restaurante Sabor Fictício;-65,43
+24/04/2026;Cinema Tela Fictícia;-53,79
+24/04/2026;Restaurante Sabor Fictício;-78,14
+25/04/2026;Livraria Página Fictícia;-85,63
+25/04/2026;Farmácia Saúde Fictícia;-60,50
+26/04/2026;Padaria Pão Imaginário;-22,51
+27/04/2026;Restaurante Sabor Fictício;-178,30
+27/04/2026;Farmácia Saúde Fictícia;-69,03
+27/04/2026;Café Grão Fictício;-18,10
+28/04/2026;Transporte por App Fictício;-58,53
+30/04/2026;Pet Shop Fictício;-59,01
+30/04/2026;Delivery Comida Fictícia;-87,97
+02/05/2026;Cinema Tela Fictícia;-27,43
+03/05/2026;Transporte por App Fictício;-41,83
+03/05/2026;Posto Combustível Fictício;-297,79
+04/05/2026;Mercado Vila Fictícia;-436,46
+05/05/2026;Padaria Pão Imaginário;-10,94
+07/05/2026;Transporte por App Fictício;-53,12
+08/05/2026;Streaming Filmes Fictício;-44,90
+08/05/2026;Transporte por App Fictício;-31,68
+09/05/2026;Farmácia Saúde Fictícia;-96,71
+09/05/2026;Café Grão Fictício;-11,87
+10/05/2026;Posto Combustível Fictício;-148,57
+10/05/2026;Pagamento de fatura Cartão Órbita (simulado);4018,18
+12/05/2026;Música Fictícia Premium;-21,90
+12/05/2026;Posto Combustível Fictício;-202,07
+13/05/2026;Restaurante Sabor Fictício;-144,43
+14/05/2026;Padaria Pão Imaginário;-43,00
+14/05/2026;Cinema Tela Fictícia;-53,15
+15/05/2026;Nuvem Fictícia 100 GB;-9,90
+15/05/2026;Delivery Comida Fictícia;-76,70
+15/05/2026;Café Grão Fictício;-18,78
+16/05/2026;Padaria Pão Imaginário;-20,48
+16/05/2026;Delivery Comida Fictícia;-54,33
+18/05/2026;Agência de Viagem Fictícia 1/3;-450,00
+20/05/2026;Jornal Fictício Digital;-29,90
+20/05/2026;Cinema Tela Fictícia;-46,40
+22/05/2026;Delivery Comida Fictícia;-38,83
+23/05/2026;Restaurante Sabor Fictício;-138,92
+23/05/2026;Loja de Roupas Fictícia;-361,94
+24/05/2026;Posto Combustível Fictício;-214,34
+24/05/2026;Cinema Tela Fictícia;-65,65
+25/05/2026;Padaria Pão Imaginário;-32,79
+25/05/2026;Padaria Pão Imaginário;-27,01
+26/05/2026;Restaurante Sabor Fictício;-67,39
+26/05/2026;Delivery Comida Fictícia;-80,66
+28/05/2026;Padaria Pão Imaginário;-43,39
+29/05/2026;Livraria Página Fictícia;-114,05
+29/05/2026;Padaria Pão Imaginário;-34,43
+29/05/2026;Mercado Vila Fictícia;-178,13
+29/05/2026;Loja de Roupas Fictícia;-282,74
+29/05/2026;Loja de Roupas Fictícia;-201,60
+30/05/2026;Livraria Página Fictícia;-73,17
+30/05/2026;Pet Shop Fictício;-133,30
+01/06/2026;Restaurante Sabor Fictício;-152,56
+02/06/2026;Delivery Comida Fictícia;-64,14
+03/06/2026;Padaria Pão Imaginário;-44,79
+03/06/2026;Loja de Roupas Fictícia;-168,97
+04/06/2026;Posto Combustível Fictício;-137,51
+04/06/2026;Livraria Página Fictícia;-110,24
+04/06/2026;Cinema Tela Fictícia;-60,12
+04/06/2026;Padaria Pão Imaginário;-15,03
+05/06/2026;Café Grão Fictício;-20,18
+06/06/2026;Livraria Página Fictícia;-114,90
+06/06/2026;Posto Combustível Fictício;-283,57
+07/06/2026;Livraria Página Fictícia;-110,34
+08/06/2026;Streaming Filmes Fictício;-44,90
+08/06/2026;Cinema Tela Fictícia;-62,39
+09/06/2026;Delivery Comida Fictícia;-44,20
+09/06/2026;Restaurante Sabor Fictício;-179,11
+09/06/2026;Farmácia Saúde Fictícia;-27,87
+09/06/2026;Pet Shop Fictício;-124,70
+10/06/2026;Pagamento de fatura Cartão Órbita (simulado);4460,68
+12/06/2026;Música Fictícia Premium;-21,90
+14/06/2026;Livraria Página Fictícia;-61,19
+14/06/2026;Padaria Pão Imaginário;-13,29
+15/06/2026;Nuvem Fictícia 100 GB;-9,90
+18/06/2026;Agência de Viagem Fictícia 2/3;-450,00
+19/06/2026;Loja de Roupas Fictícia;-307,57
+19/06/2026;Posto Combustível Fictício;-193,82
+20/06/2026;Jornal Fictício Digital;-29,90
+20/06/2026;Posto Combustível Fictício;-133,95
+21/06/2026;Farmácia Saúde Fictícia;-33,82
+21/06/2026;Farmácia Saúde Fictícia;-80,70
+22/06/2026;Mercado Vila Fictícia;-86,34
+23/06/2026;Posto Combustível Fictício;-133,92
+23/06/2026;Cinema Tela Fictícia;-38,39
+24/06/2026;Padaria Pão Imaginário;-32,17
+25/06/2026;Café Grão Fictício;-13,51
+26/06/2026;Padaria Pão Imaginário;-19,90
+27/06/2026;Padaria Pão Imaginário;-30,36
+28/06/2026;Restaurante Sabor Fictício;-97,12
+28/06/2026;Padaria Pão Imaginário;-36,82
+28/06/2026;Padaria Pão Imaginário;-9,62
+29/06/2026;Loja de Roupas Fictícia;-209,88
+29/06/2026;Cinema Tela Fictícia;-52,59
+29/06/2026;Loja de Roupas Fictícia;-135,06
+30/06/2026;Restaurante Sabor Fictício;-72,60
+30/06/2026;Farmácia Saúde Fictícia;-105,50
+30/06/2026;Café Grão Fictício;-26,10
+01/07/2026;Pet Shop Fictício;-139,64
+02/07/2026;Cinema Tela Fictícia;-48,00
+03/07/2026;Cinema Tela Fictícia;-55,55
+03/07/2026;Farmácia Saúde Fictícia;-42,96
+04/07/2026;Pet Shop Fictício;-96,65
+04/07/2026;Transporte por App Fictício;-33,12
+04/07/2026;Transporte por App Fictício;-63,63
+04/07/2026;Padaria Pão Imaginário;-18,80
+05/07/2026;Transporte por App Fictício;-15,06
+05/07/2026;Padaria Pão Imaginário;-17,36
+05/07/2026;Transporte por App Fictício;-55,60
+06/07/2026;Delivery Comida Fictícia;-40,23
+06/07/2026;Restaurante Sabor Fictício;-64,59
+07/07/2026;Restaurante Sabor Fictício;-175,09
+08/07/2026;Streaming Filmes Fictício;-44,90
+09/07/2026;Farmácia Saúde Fictícia;-105,22
+09/07/2026;Posto Combustível Fictício;-282,09
+10/07/2026;Loja de Roupas Fictícia;-100,82
+10/07/2026;Pagamento de fatura Cartão Órbita (simulado);4201,44
+11/07/2026;Transporte por App Fictício;-38,05
+12/07/2026;Música Fictícia Premium;-21,90
+13/07/2026;Pet Shop Fictício;-143,16
+15/07/2026;Nuvem Fictícia 100 GB;-9,90
+15/07/2026;Farmácia Saúde Fictícia;-52,25
+15/07/2026;Livraria Página Fictícia;-64,96
+17/07/2026;Cinema Tela Fictícia;-35,32
+17/07/2026;Delivery Comida Fictícia;-42,05
+17/07/2026;Livraria Página Fictícia;-86,28
+18/07/2026;Restaurante Sabor Fictício;-42,19
+18/07/2026;Agência de Viagem Fictícia 3/3;-450,00
+20/07/2026;Jornal Fictício Digital;-29,90
+22/07/2026;Pet Shop Fictício;-137,45
+23/07/2026;Posto Combustível Fictício;-194,52
+23/07/2026;Restaurante Sabor Fictício;-154,41
+23/07/2026;Farmácia Saúde Fictícia;-45,22
+25/07/2026;Livraria Página Fictícia;-74,26
+27/07/2026;Transporte por App Fictício;-58,17
+28/07/2026;Posto Combustível Fictício;-155,08
+30/07/2026;Mercado Vila Fictícia;-112,52
+30/07/2026;Pet Shop Fictício;-144,04
+30/07/2026;Café Grão Fictício;-30,70
+31/07/2026;Café Grão Fictício;-14,34
+01/08/2026;Farmácia Saúde Fictícia;-107,19
+02/08/2026;Café Grão Fictício;-16,29
+02/08/2026;Loja de Roupas Fictícia;-362,92
+03/08/2026;Posto Combustível Fictício;-196,81
+05/08/2026;Mercado Vila Fictícia;-399,18
+05/08/2026;Delivery Comida Fictícia;-77,83
+05/08/2026;Cinema Tela Fictícia;-76,17
+06/08/2026;Transporte por App Fictício;-63,90
+08/08/2026;Streaming Filmes Fictício;-44,90
+08/08/2026;Mercado Vila Fictícia;-204,99
+08/08/2026;Farmácia Saúde Fictícia;-20,42
+09/08/2026;Padaria Pão Imaginário;-36,64
+10/08/2026;Pagamento de fatura Cartão Órbita (simulado);3535,98
+11/08/2026;Café Grão Fictício;-14,81
+11/08/2026;Farmácia Saúde Fictícia;-102,19
+12/08/2026;Música Fictícia Premium;-21,90
+12/08/2026;Pet Shop Fictício;-68,77
+14/08/2026;Livraria Página Fictícia;-48,29
+15/08/2026;Nuvem Fictícia 100 GB;-9,90
+15/08/2026;Padaria Pão Imaginário;-11,15
+15/08/2026;Restaurante Sabor Fictício;-80,66
+17/08/2026;Cinema Tela Fictícia;-59,78
+18/08/2026;Livraria Página Fictícia;-58,62
+20/08/2026;Jornal Fictício Digital;-29,90
+20/08/2026;Restaurante Sabor Fictício;-69,34
+21/08/2026;Padaria Pão Imaginário;-11,79
+21/08/2026;Delivery Comida Fictícia;-59,87
+22/08/2026;Mercado Vila Fictícia;-229,18
+22/08/2026;Pet Shop Fictício;-137,82
+22/08/2026;Loja de Roupas Fictícia;-299,56
+23/08/2026;Farmácia Saúde Fictícia;-15,72
+23/08/2026;Pet Shop Fictício;-173,73
+27/08/2026;Transporte por App Fictício;-35,97
+28/08/2026;Restaurante Sabor Fictício;-151,23
+28/08/2026;Delivery Comida Fictícia;-85,48
+29/08/2026;Café Grão Fictício;-32,32
+29/08/2026;Padaria Pão Imaginário;-13,06
+29/08/2026;Loja de Roupas Fictícia;-384,94
+30/08/2026;Livraria Página Fictícia;-30,19
+31/08/2026;Mercado Vila Fictícia;-235,62
+31/08/2026;Café Grão Fictício;-28,21
+31/08/2026;Transporte por App Fictício;-64,05
+31/08/2026;Livraria Página Fictícia;-61,73
+01/09/2026;Café Grão Fictício;-26,37
+01/09/2026;Posto Combustível Fictício;-260,45
+02/09/2026;Padaria Pão Imaginário;-12,03
+03/09/2026;Pet Shop Fictício;-81,64
+04/09/2026;Padaria Pão Imaginário;-31,38
+04/09/2026;Padaria Pão Imaginário;-33,80
+05/09/2026;Transporte por App Fictício;-64,09
+06/09/2026;Posto Combustível Fictício;-176,43
+06/09/2026;Delivery Comida Fictícia;-79,33
+07/09/2026;Loja de Roupas Fictícia;-178,84
+07/09/2026;Loja de Roupas Fictícia;-287,58
+08/09/2026;Streaming Filmes Fictício;-44,90
+10/09/2026;Pagamento de fatura Cartão Órbita (simulado);4233,02
+11/09/2026;Cinema Tela Fictícia;-58,62
+12/09/2026;Música Fictícia Premium;-21,90
+12/09/2026;Loja de Roupas Fictícia;-303,26
+13/09/2026;Farmácia Saúde Fictícia;-139,64
+13/09/2026;Cinema Tela Fictícia;-30,91
+15/09/2026;Nuvem Fictícia 100 GB;-9,90
+17/09/2026;Farmácia Saúde Fictícia;-41,97
+18/09/2026;Delivery Comida Fictícia;-59,84
+18/09/2026;Cinema Tela Fictícia;-28,21
+18/09/2026;Restaurante Sabor Fictício;-66,62
+20/09/2026;Jornal Fictício Digital;-29,90
+21/09/2026;Café Grão Fictício;-7,19
+21/09/2026;Livraria Página Fictícia;-107,75
+22/09/2026;Padaria Pão Imaginário;-9,29
+24/09/2026;Cinema Tela Fictícia;-40,93
+26/09/2026;Delivery Comida Fictícia;-54,49
+27/09/2026;Pet Shop Fictício;-69,03
+30/09/2026;Padaria Pão Imaginário;-23,85

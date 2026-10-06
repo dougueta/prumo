@@ -1,0 +1,47 @@
+openapi: 3.1.0
+info:
+  title: Prumo — Health
+  version: 1.0.0
+paths:
+  /api/health:
+    get:
+      summary: Verificação de saúde (FR-002, FR-023)
+      description: >
+        Público (isento da trava provisória de produção). Em local/production executa
+        public.health_ping() no banco. Em preview não acessa banco e retorna data.status=demo.
+        Nunca expõe URLs, chaves, hosts ou mensagens de erro internas.
+      responses:
+        "200":
+          description: App saudável (status ok) ou em modo demonstração
+          headers:
+            Cache-Control: { schema: { type: string, const: "no-store" } }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HealthStatus" }
+              examples:
+                production: { value: { status: ok, version: "0.1.0+abc1234", environment: production, data: { status: ok, latencyMs: 42 }, checkedAt: "2026-10-02T12:00:00.000Z" } }
+                preview: { value: { status: ok, version: "0.1.0+abc1234", environment: preview, data: { status: demo, latencyMs: null }, checkedAt: "2026-10-02T12:00:00.000Z" } }
+        "503":
+          description: Banco inacessível (status degraded) — usado pelo keepalive para alertar
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/HealthStatus" }
+              example: { status: degraded, version: "0.1.0+abc1234", environment: production, data: { status: unreachable, latencyMs: null }, checkedAt: "2026-10-02T12:00:00.000Z" }
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      required: [status, version, environment, data, checkedAt]
+      additionalProperties: false
+      properties:
+        status: { enum: [ok, degraded] }
+        version: { type: string }
+        environment: { enum: [local, preview, production] }
+        data:
+          type: object
+          required: [status, latencyMs]
+          additionalProperties: false
+          properties:
+            status: { enum: [ok, unreachable, demo] }
+            latencyMs: { type: [integer, "null"], minimum: 0 }
+        checkedAt: { type: string, format: date-time }
