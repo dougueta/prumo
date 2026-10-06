@@ -2,7 +2,8 @@
 Sync Impact Report
 - Version change: 1.1.0 → 1.2.0 (MINOR: regra nova em princípio existente)
 - Modified principles: VIII. Revisão Independente Obrigatória (+ exceção única de emergência,
-  com revisão pós-merge em até 7 dias)
+  com revisão pós-merge em até 7 dias; insumo real de cada revisor descrito — antes "apenas
+  diff, spec, plan, tasks, constitution e ADRs", que não correspondia ao Gemini Code Assist)
 - Added/Removed sections: nenhuma
 - Origem: spec 002 (FR-024) + /speckit-analyze da onda 1; decisão do Doug em 2026-10-05
 - Templates: ✅ plan/spec/tasks templates (sem mudança estrutural) · ⚠ docs/review-checklist.md
@@ -118,7 +119,13 @@ objetiva.
 - Todo PR é revisado por um agente que NÃO o escreveu (revisão cruzada):
   - PR do Claude → revisor Gemini (Gemini Code Assist + `.gemini/styleguide.md`).
   - PR do Gemini → revisor Claude em contexto limpo (sem histórico da implementação).
-- O revisor recebe apenas: diff, `spec.md`, `plan.md`, `tasks.md`, constitution e ADRs.
+- Insumo de cada revisor:
+  - **Revisor Claude limpo**: recebe apenas o pacote de revisão — diff, artefatos da spec
+    (`spec.md`, `plan.md`, `tasks.md`, `data-model.md`, `contracts/`), constitution, ADRs e
+    `docs/review-checklist.md` — sem histórico da implementação.
+  - **Gemini Code Assist**: lê o diff, o repositório e o corpo do PR (limitação da ferramenta);
+    é orientado por `.gemini/styleguide.md` a julgar o PR contra spec, plan, tasks, constitution
+    e ADRs. Justificativas do autor valem só como respostas formais aos achados.
 - O revisor aplica o checklist fixo de `docs/review-checklist.md` e emite veredito formal:
   **APROVADO** ou **MUDANÇAS NECESSÁRIAS**, com achados por severidade
   (CRÍTICO / ALTO / MÉDIO / BAIXO).
