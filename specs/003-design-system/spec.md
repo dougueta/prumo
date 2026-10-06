@@ -376,11 +376,15 @@ componente tem regras de uso documentadas.
   carregando/erro/vazio próprios.
 - **FR-034**: A lista agrupada MUST agrupar itens por data com cabeçalho de grupo (data
   relativa) e, opcionalmente, total do dia.
-- **FR-035**: O selo de origem/confiança MUST distinguir as origens IA, regra e manual; para IA,
+- **FR-035**: O selo de origem/confiança MUST distinguir as origens IA, regra, manual e fonte
+  (categoria informada pela instituição ou pelo arquivo importado); para IA,
   MUST exibir o nível de confiança (alta/média/baixa), destacar "revisar" na confiança baixa,
   explicar o significado ao ser tocado e oferecer ação de corrigir (Constitution VI).
 - **FR-036**: O sistema MUST oferecer um conjunto de ícones de categoria e de instituição
-  genérica, com regra para instituições sem ícone (iniciais em círculo).
+  genérica, com regra para instituições sem ícone (iniciais em círculo); o ícone e a cor de cada
+  categoria de 1º nível vêm de um mapa fixo do design system (subcategorias herdam do pai;
+  categorias sem mapeamento recebem ícone e cor neutros), e nenhuma feature escolhe cor de
+  categoria por conta própria.
 
 **Estados**
 - **FR-037**: O sistema MUST oferecer componentes padronizados para os estados: vazio (com
@@ -405,7 +409,7 @@ componente tem regras de uso documentadas.
 - **FR-043**: O sistema MUST oferecer aviso temporário (sucesso/erro/informação) anunciado ao
   leitor de tela, que não cubra a navegação e dure tempo suficiente para leitura (≥ 5 s, ou
   até ser dispensado quando contém ação).
-- **FR-044**: Em telas estreitas, diálogos e seleções longas MUST abrir como painel inferior
+- **FR-044**: Em telas estreitas, diálogos e seleções longas (mais de 7 opções) MUST abrir como painel inferior
   (bottom sheet); em telas largas, como diálogo central.
 
 **Catálogo e regras de uso**
@@ -493,10 +497,11 @@ Ajustes de requisito vindos do `/speckit-analyze` e das decisões transversais d
   de segurança da conta fica em `/mais/seguranca` (decisão do Doug, D-B).
 - FR-032: o item de transação mostra a natureza (entre contas, pagamento de fatura, estorno) e
   o valor na moeda original — alinhado ao modelo da 004 sem alterá-la.
-- Detalhamentos de contrato (texto dos FRs inalterado): o selo de origem (FR-035) também
-  representa a origem "fonte" do modelo da 004; ícone e cor de categoria (FR-036) vêm de um
-  mapa fixo da 003 por categoria de 1º nível; "seleção longa" (FR-044) = mais de 7 opções.
-  Ver contracts/components.md.
+- FR-035, FR-036 e FR-044 tiveram o texto alterado por decisão do Doug (2026-10-05) para
+  coincidir com os contratos: nova origem "fonte" no selo (existe no modelo da 004); ícone e
+  cor de categoria por mapa fixo da 003 por categoria de 1º nível (subcategorias herdam;
+  sem mapeamento → neutro); "seleção longa" = mais de 7 opções. Ver contracts/components.md
+  e data-model §1.4 e §5.
 - Edge cases novos: endereço inexistente (404 em português com o visual do app) e telas fora do shell.
 
 ## Assumptions
