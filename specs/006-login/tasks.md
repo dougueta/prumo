@@ -6,7 +6,7 @@ que o faz passar; toda task de implementação cita o teste vermelho que a prece
 passar"). Verificações manuais (⚠️, checklist pós-merge) **não** contam como teste de requisito.
 **Pré-requisito**: branch rebaseada sobre a `main` com 001, emenda da constitution v1.1.0, **004**
 e **003** integradas (ordem de merge da onda 1: 004 → 003 → 006 → 002).
-**Remediação pós-analyze (2026-10-05)**: IDs T001–T055 preservados; tasks novas a partir de T056 (T074 e T076 não usados; T036 e T053 movidas para o checklist pós-merge).
+**Remediação pós-analyze (2026-10-05)**: IDs T001–T055 preservados; tasks novas a partir de T056 (T074 e T076 não usados; T036 e T053 movidas para o checklist pós-merge; T078 acrescentada no Gate 2 — FR-003 somente web).
 
 ## Format: `[ID] [P?] [Story] Description`
 - **[P]**: paralelizável (arquivos diferentes, sem dependência pendente)
@@ -21,8 +21,8 @@ e **003** integradas (ordem de merge da onda 1: 004 → 003 → 006 → 002).
 - [ ] T001 Adicionar dependências fixadas `@supabase/ssr@0.12.7`, `@simplewebauthn/server@14.0.3`, `@simplewebauthn/browser@14.0.0` e dev `msw@3.0.2`; registrar justificativa no PR (research R-15). `@axe-core/playwright` já vem da 003 — não reinstalar — `package.json`, `package-lock.json`
 - [ ] T002 [P] Criar projeto Vitest `contract` (MSW, sem rede) e pasta `tests/contract/auth/`; script `test:contract`, incluído em `check` — `vitest.config.ts`, `package.json`
 - [ ] T003 [P] Configurar `[auth]` do Supabase local conforme data-model §8 (cadastro desligado, OTP 6 dígitos/600 s, `max_frequency 60s`, `site_url` `http://localhost:3000`, redirects para portas 3000 e 3100, `rate_limit.sign_in_sign_ups`/`token_verifications` = 1000 só em local, senha **não** desligada, Google via `env(...)` opcional) e template `supabase/templates/codigo.html` só com `{{ .Token }}` — `supabase/config.toml` (FR-001, FR-003, FR-004)
-- [ ] T004 [P] Playwright: webServer local com `APP_ORIGIN=http://localhost:3100` (nunca IP); projeto `mobile-chrome` passa a incluir `auth/login.spec.ts`; helper que lê o último código do Mailpit (`:57324`), helper de autenticador WebAuthn virtual via CDP (`WebAuthn.addVirtualAuthenticator`, `isUserVerified: true`) e helper `auth-session.ts` (login por OTP → `storageState`) — `playwright.config.ts`, `tests/e2e/helpers/{mailpit,webauthn,auth-session}.ts`
-- [ ] T057 [P] Teste do CI: `ci.yml` sem `mailpit` em `SUPABASE_EXCLUDE`; job "Testes de contrato" rodando `npm run test:contract`; nomes dos jobs da 001 preservados; jobs `integration`/`e2e` exportam `SUPABASE_PUBLISHABLE_KEY`, `AUTH_ALLOWED_EMAILS` sintético (`@example.test`), `AUTH_HASH_SECRET` aleatório e rodam `auth:provision` antes dos testes; `preview-protection.yml` existe — `tests/unit/ci-config.test.ts` (FR-027, FR-022; Constitution V)
+- [ ] T004 [P] Playwright: webServer local com `APP_ORIGIN=http://localhost:3100` (nunca IP); projeto `mobile-chrome` passa a incluir `auth/login.spec.ts`; novos projetos `webkit` (Desktop Safari) e `mobile-safari` (iPhone) para `auth/google.spec.ts` e `auth/login.spec.ts`; helper que lê o último código do Mailpit (`:57324`), helper de autenticador WebAuthn virtual via CDP (`WebAuthn.addVirtualAuthenticator`, `isUserVerified: true`) e helper `auth-session.ts` (login por OTP → `storageState`) — `playwright.config.ts`, `tests/e2e/helpers/{mailpit,webauthn,auth-session}.ts`
+- [ ] T057 [P] Teste do CI: `ci.yml` sem `mailpit` em `SUPABASE_EXCLUDE`; job "Testes de contrato" rodando `npm run test:contract`; nomes dos jobs da 001 preservados; job `e2e` instala `chromium` e `webkit`; jobs `integration`/`e2e` exportam `SUPABASE_PUBLISHABLE_KEY`, `AUTH_ALLOWED_EMAILS` sintético (`@example.test`), `AUTH_HASH_SECRET` aleatório e rodam `auth:provision` antes dos testes; `preview-protection.yml` existe — `tests/unit/ci-config.test.ts` (FR-027, FR-022; Constitution V)
 - [ ] T056 Atualizar `.github/workflows/ci.yml` e `scripts/ci-supabase-env.mjs` (mesmo nome `SUPABASE_PUBLISHABLE_KEY` usado pela 004; valores mascarados; e-mails sintéticos; segredo aleatório por execução; `npm run auth:provision`) até T057 passar
 - [ ] T058 [P] Unit: `buildDemoEnv(source)` remove/zera **todas** as `SUPABASE_*`, `AUTH_*` e `APP_ORIGIN` (inclusive as que o Next leria de `.env.local`) e define `APP_ENV=preview`; `parseEnv(buildDemoEnv(envLocalCompleto))` não falha — `tests/unit/start-demo.test.ts` (FR-024, FR-026)
 - [ ] T059 Refatorar `scripts/start-demo.mjs` para usar `buildDemoEnv` (exportado de `scripts/demo-env.mjs`) até T058 passar
@@ -68,6 +68,7 @@ e **003** integradas (ordem de merge da onda 1: 004 → 003 → 006 → 002).
 - [ ] T064 [P] [US1] Contrato do `OwnerContextProvider` (contracts da 004): sessão real ⇒ `{ kind: "user", ownerId = sub, client com JWT }`; preview ⇒ `{ kind: "demo", sessionId = prumo_demo_sid }` com `DEMO_OWNER_ID` importado de `@/data/core`; sem sessão ⇒ redirect/401 antes de `owner_required`; provider registrado em `register()` de `src/instrumentation.ts` — `tests/contract/auth/owner-context.test.ts` (FR-007, FR-024)
 - [ ] T067 [P] [US1] Contrato de cookies: todo `Set-Cookie` emitido por `requestCode`, `verifyCode`, `/auth/callback`, `/auth/sair`, rotas WebAuthn e pelo adaptador do proxy (refresh) tem `HttpOnly`, `SameSite=Lax`, `Path=/` e `Secure` com `APP_ENV=production` — `tests/contract/auth/cookies.test.ts` (FR-023)
 - [ ] T022 [P] [US1] E2E (projetos `chromium` e `mobile-chrome`): login por código via Mailpit até a tela inicial em ≤ 60 s e volta ao `next`; cookies do contexto com `httpOnly: true`; código antigo recusado após novo pedido; e-mail não autorizado ⇒ mensagem neutra e Mailpit vazio; 5 códigos errados ⇒ bloqueio; código expirado (envelhecido via SQL) ⇒ mensagem; varredura de rotas internas e `/api/auth/status` sem cookie ⇒ `/entrar`/401; rotas públicas da 001 (`/api/health`, manifesto, `/sw.js`, `/~offline`, ícones) respondem sem sessão e sem Basic Auth; sessão encerrada com JWT válido termina em `/entrar` sem laço — `tests/e2e/auth/login.spec.ts` (FR-001–FR-008, FR-023, FR-028, SC-001, SC-003, SC-007)
+- [ ] T078 [P] [US1] E2E do login com Google no navegador (projetos `chromium`, `mobile-chrome`, `webkit`, `mobile-safari`): "Entrar com Google" redireciona para `<SUPABASE_URL>/auth/v1/authorize?provider=google` com `code_challenge` e `redirect_to=APP_ORIGIN/auth/callback`, com verifier PKCE e `prumo_next` em cookies HttpOnly; interceptando a ida ao provedor, o retorno a `/auth/callback` com erro ou sem `code` leva a `/entrar?erro=indisponivel` com a oferta "Entrar com código por e-mail"; a conclusão (troca do `code` + `establishSession`) é coberta por T020 — `tests/e2e/auth/google.spec.ts` (FR-003)
 - [ ] T023 [P] [US1] Integração de tempo: 50 pedidos para 50 e-mails autorizados sintéticos distintos (allowlist de teste) × 50 não autorizados distintos, cada um com `x-forwarded-for` distinto, chamando `requestCode` contra o Supabase local (rate limit da 006 e do Supabase não disparam); diferença média < 100 ms e textos idênticos — `tests/integration/auth/neutral-timing.int.test.ts` (FR-002, SC-002)
 
 ### Implementação
@@ -75,8 +76,8 @@ e **003** integradas (ordem de merge da onda 1: 004 → 003 → 006 → 002).
 - [ ] T073 [US1] Route Handler `src/app/auth/sair/route.ts` até T063 passar (FR-007, FR-009)
 - [ ] T065 [US1] `src/lib/auth/owner-context.ts` + registro em `src/instrumentation.ts` até T064 passar (FR-007)
 - [ ] T025 [US1] `src/lib/auth/supabase-service.ts`: `requestCode`, `verifyCode`, `startGoogle`, `completeGoogle` conforme auth-flows §4 até T018–T020 passarem (FR-002–FR-005)
-- [ ] T026 [US1] Server Actions `src/app/(public)/entrar/actions.ts` + páginas `entrar/page.tsx` (ACTIVE ⇒ `redirect(next)`; destaque do código por e-mail no app instalado) e `entrar/codigo/page.tsx` (pt-BR, mobile, claro/escuro com tokens da 003, `inputmode="numeric"`, `autocomplete="one-time-code"`), fora do shell, até T018/T019/T022 passarem (FR-003, FR-029)
-- [ ] T027 [US1] Route Handler `src/app/auth/callback/route.ts` até T020 passar (FR-003)
+- [ ] T026 [US1] Server Actions `src/app/(public)/entrar/actions.ts` + páginas `entrar/page.tsx` (ACTIVE ⇒ `redirect(next)`; oferta do código por e-mail sempre visível, destacada no modo PWA instalado do iOS) e `entrar/codigo/page.tsx` (pt-BR, mobile, claro/escuro com tokens da 003, `inputmode="numeric"`, `autocomplete="one-time-code"`), fora do shell, até T018/T019/T022/T078 passarem (FR-003, FR-029)
+- [ ] T027 [US1] Route Handler `src/app/auth/callback/route.ts` até T020/T078 passarem (FR-003)
 - [ ] T075 [US1] Renomear `createServerClient` (001) para `createServiceClient` em `src/lib/supabase/server.ts` e atualizar `src/app/api/health/route.ts`; acrescentar `requireSession()` em `src/app/(app)/page.tsx` e demais `page.tsx` do `(app)` criados pela 003 (sem recriar layout/página) até T021 passar (FR-007)
 - [ ] T028 [US1] Reescrever `src/proxy.ts` sobre `decideProxy` (preservando o tratamento de `prumo_demo_sid` da 004) e **remover** `src/lib/production-gate.ts` + `tests/unit/production-gate.test.ts`; `Cache-Control: private, no-store` em rotas protegidas até T060/T067/T022 passarem (FR-007, FR-008, FR-009, FR-023, FR-028)
 - [ ] T068 [US1] Ajustar E2E da 001 para o login: `tests/e2e/home.spec.ts` e `tests/e2e/pwa.spec.ts` usam `storageState` do helper `auth-session` para rotas protegidas e continuam verdes em `chromium`/`mobile-chrome` (FR-007, FR-008)
@@ -151,7 +152,7 @@ e **003** integradas (ordem de merge da onda 1: 004 → 003 → 006 → 002).
 ## Phase 8: Polish, ações externas pré-merge e PR
 
 - [ ] T048 [P] E2E de acessibilidade das telas de auth com `@axe-core/playwright` (da 003): `/entrar`, `/entrar/codigo`, `/desbloquear`, `/mais/seguranca` × claro/escuro × 360/1280 px ⇒ 0 violações; rótulos e foco — `tests/e2e/auth/a11y.spec.ts` (FR-029)
-- [ ] T049 ⚠️ Google Cloud (confirmar com Doug): projeto `prumo`, consentimento externo publicado com escopos básicos, cliente OAuth Web com redirect do Supabase de produção; credenciais no painel do Supabase (FR-003)
+- [ ] T049 ⚠️ Google Cloud (confirmar com Doug): projeto `prumo`, consentimento externo publicado com escopos básicos, cliente OAuth do tipo **Web** (o Prumo é somente web; nenhum cliente iOS/Android) com redirect do Supabase de produção; credenciais no painel do Supabase (FR-003)
 - [ ] T050 ⚠️ SMTP (confirmar com Doug a opção da research R-07): conta Resend gratuita com o e-mail autorizado + SMTP no Supabase, **ou** manter SMTP padrão (2/h) e registrar o limite no README (FR-004, FR-005)
 - [ ] T051 ⚠️ Supabase produção (confirmar com Doug): cadastro desligado, Site URL/redirects, OTP 6 dígitos/600 s, template do código, `pg_cron` habilitado; `npm run auth:provision` contra produção (FR-001, FR-004, FR-020)
 - [ ] T052 ⚠️ Vercel produção (confirmar com Doug): adicionar `SUPABASE_PUBLISHABLE_KEY`, `AUTH_ALLOWED_EMAILS`, `AUTH_HASH_SECRET`, `APP_ORIGIN` **antes** do merge (valem a partir do deploy do merge); `PRODUCTION_GATE_*` removidas logo após o deploy verde (o código novo não as lê) (FR-022, FR-028)
@@ -164,7 +165,7 @@ e **003** integradas (ordem de merge da onda 1: 004 → 003 → 006 → 002).
 
 Executado após o merge na `main` e o deploy de produção verde (sequência em plan §Ações externas).
 - [ ] T053 Verificação em produção: sem sessão ⇒ `/entrar` (não mais Basic Auth); login Google e código; `/api/health` continua público; keepalive da 001 segue verde; `PRODUCTION_GATE_*` removidas da Vercel (FR-008, FR-028)
-- [ ] T036 ⚠️ Verificação manual em aparelho real (confirmar com Doug): iPhone com Prumo instalado na tela inicial e Android Chrome — login por código, login Google (no iOS instalado: registrar se conclui dentro do app; se não, confirmar a oferta do código — item Aberto do plan), cadastro de Face ID/digital, desbloqueio após 15 min, reabrir em ≤ 2 s; evidência sem dados num comentário do PR mergeado/issue (FR-003, FR-012)
+- [ ] T036 ⚠️ Observação manual em aparelho real (confirmar com Doug; sem efeito de aceite): iPhone no Safari e com o PWA instalado na tela inicial, e Android no Chrome — login por código, login Google no navegador e, no PWA instalado do iOS, registrar se o Google conclui ou se a oferta do código aparece (risco aceito do plan), cadastro de Face ID/digital, desbloqueio após 15 min, reabrir em ≤ 2 s; evidência sem dados num comentário do PR mergeado/issue (FR-003, FR-012)
 
 ---
 
@@ -184,7 +185,7 @@ Executado após o merge na `main` e o deploy de produção verde (sequência em 
 
 - Phase 1: T002, T003, T004, T057, T058 juntos.
 - Phase 2 testes: T005–T009, T060–T062, T066, T071 juntos; implementações T011, T012, T013 juntas.
-- US1 testes T018–T023, T063, T064, T067 juntos.
+- US1 testes T018–T023, T063, T064, T067, T078 juntos.
 - Após US1: US2, US3 e US4 em paralelo (arquivos disjuntos, exceto `sessions.ts` — US3 só
   acrescenta funções).
 - Ações externas T049–T051 podem ser feitas pelo Doug em paralelo ao desenvolvimento.
@@ -202,7 +203,7 @@ Executado após o merge na `main` e o deploy de produção verde (sequência em 
 |---|---|---|
 | FR-001 | T003, T011, T017, T025, T051 | T006, T020, T022, T066 |
 | FR-002 | T013, T025 | T008, T018, T019, T020, T022, T023 |
-| FR-003 | T003, T025, T026, T027, T049 | T019, T020, T022 |
+| FR-003 | T003, T025, T026, T027, T049 | T019, T020, T022, T078 |
 | FR-004 | T003, T013, T025, T050 | T008, T019, T022 |
 | FR-005 | T013, T025 | T008, T018, T019, T022 |
 | FR-006 | T011, T026, T027 | T006, T019, T020, T022 |

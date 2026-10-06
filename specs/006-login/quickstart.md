@@ -19,6 +19,9 @@ Entrar localmente (código por e-mail):
    histórico e "Ativar desbloqueio por biometria" neste dispositivo (no desktop: Windows Hello /
    Touch ID, se houver; até 10 min após entrar).
 
+O Prumo é somente web: o Google funciona em qualquer navegador (desktop e celular). No PWA
+instalado na tela inicial do iOS, se o Google não concluir, use o código por e-mail.
+
 Google local (opcional): defina `SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID` e
 `SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET` no ambiente antes de `supabase start` e adicione
 `http://127.0.0.1:57321/auth/v1/callback` como redirect no cliente OAuth de desenvolvimento.

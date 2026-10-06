@@ -19,7 +19,8 @@ feature entrega a autenticação de verdade: só o Doug entra, a sessão é segu
 suficiente para o uso diário no celular, e nenhum dado fica acessível sem sessão válida.
 
 Há um único usuário (o **Doug**), mas existem três contextos de uso:
-- **Celular** (uso diário, app instalado na tela inicial) — precisa ser rápido de abrir.
+- **Celular** (uso diário, no navegador ou no PWA instalado na tela inicial) — precisa ser
+  rápido de abrir. O Prumo é **somente web**: não existe nem existirá app nativo.
 - **Computador** (uso eventual, navegador).
 - **Pré-visualizações de PR** (modo demonstração, ADR 0006) — sem banco e sem dados reais; o
   Doug revisa mudanças ali.
@@ -198,7 +199,7 @@ mecanismo é impossível de ativar em produção.
 - **Sessão encerrada remotamente** ("sair de todos") enquanto o app está aberto em outro
   dispositivo → a próxima requisição de dados falha e o app vai para a tela de entrada,
   escondendo os dados já exibidos.
-- **Offline** → sem rede não há entrada nova; o app instalado mostra a página "sem conexão" da
+- **Offline** → sem rede não há entrada nova; o PWA instalado mostra a página "sem conexão" da
   001. Nenhum dado financeiro fica salvo no dispositivo para uso offline (fora de escopo, 001).
 - **Troca de dispositivo** → entrar normalmente no novo; a sessão do antigo continua até
   vencer ou ser encerrada na tela de segurança.
@@ -209,7 +210,7 @@ mecanismo é impossível de ativar em produção.
 - **Provedor de e-mail/identidade fora do ar** → mensagem "Não foi possível concluir a entrada
   agora. Tente novamente em alguns minutos." e evento registrado; nunca libera acesso.
 - **Relógio do dispositivo errado** → validade de sessão e códigos é decidida pelo servidor.
-- **Cache do navegador/app instalado** → após sair ou sessão vencida, páginas com dados não
+- **Cache do navegador/PWA instalado** → após sair ou sessão vencida, páginas com dados não
   podem ser reexibidas a partir de cache (botão "voltar", reabrir o app).
 
 ## Requirements *(mandatory)*
@@ -224,12 +225,12 @@ mecanismo é impossível de ativar em produção.
   e tempo de resposta equivalente aos de um e-mail autorizado, MUST NOT enviar nenhuma
   mensagem a esse e-mail e MUST NOT criar sessão.
 - **FR-003**: O sistema MUST oferecer como método principal o **login com Google** e, como
-  reserva, um **código de 6 dígitos enviado por e-mail** (sem link mágico). O código por e-mail
-  MUST funcionar inteiramente dentro do app instalado no celular (Android e iOS), digitado no
-  próprio app. O login com Google MUST funcionar no navegador e no app instalado no Android e
-  SHOULD funcionar no app instalado no iOS; se nesse contexto a entrada pelo Google não puder
-  ser concluída dentro do app, a tela MUST oferecer o código por e-mail como caminho garantido
-  (ver Clarifications, remediação pós-analyze).
+  reserva, um **código de 6 dígitos enviado por e-mail** (sem link mágico). O Prumo é somente
+  web (navegador + PWA instalável da 001; sem app nativo). O login com Google MUST funcionar no
+  navegador, em desktop e em celular (Safari, Chrome e equivalentes). No modo PWA instalado na
+  tela inicial do iOS, o login com Google SHOULD funcionar; ali o código por e-mail é o caminho
+  garantido e MUST funcionar inteiramente dentro do PWA, digitado nele. Se a entrada pelo Google
+  não puder ser concluída, a tela MUST oferecer o código por e-mail (ver Clarifications).
 - **FR-004**: Códigos de entrada por e-mail MUST valer por no máximo
   10 minutos, ser de uso único, e todo novo pedido MUST invalidar os anteriores.
 - **FR-005**: O sistema MUST limitar tentativas: no máximo 5 verificações de código falhas em
@@ -322,7 +323,7 @@ mecanismo é impossível de ativar em produção.
   features.
 - **Sessão**: vínculo entre o usuário e um dispositivo — dispositivo/navegador, início, último
   uso, vencimento, estado (ativa, bloqueada, encerrada, vencida).
-- **Dispositivo**: identificador aleatório do navegador/app instalado, usado para vincular a
+- **Dispositivo**: identificador aleatório do navegador/PWA instalado, usado para vincular a
   credencial de desbloqueio ao aparelho em que foi cadastrada.
 - **Credencial de desbloqueio**: biometria/PIN cadastrados num dispositivo (só a parte pública
   fica no servidor).
@@ -384,6 +385,16 @@ Ajustes de requisito decorrentes do `/speckit-analyze` (sem renumerar FRs):
 - **US1-5** (achado L4): texto unificado "Este código expirou ou já foi usado — peça um novo".
 - **Tela de segurança** (decisão D-B da onda 1): fica em `/mais/seguranca`, dentro do shell da
   003; a tela de desbloqueio fica fora do shell.
+
+### Decisão do Doug 2026-10-05 (Gate 2) — FR-003 somente web
+
+- Q: O Prumo terá app nativo ou só web? → A: **Somente web.** O PWA instalável já entregue pela
+  001 é a forma "instalada"; não existe nem existirá app nativo (iOS ou Android).
+- Consequência para FR-003 (prevalece sobre a redação da remediação pós-analyze acima): login
+  com Google é **MUST no navegador**, desktop e mobile (Safari, Chrome etc.), com teste
+  automatizado; é **SHOULD apenas no modo PWA instalado na tela inicial do iOS**, onde o código
+  por e-mail é o caminho garantido. A limitação do PWA instalado no iOS vira risco aceito no
+  plan.
 
 ## Assumptions
 

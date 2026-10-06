@@ -31,7 +31,8 @@ introduzido e justificado pela 003 (não reintroduzido aqui)
 **Testing**: Vitest 5 — projetos `unit`, `contract` (novo; MSW, sem rede) e `integration`
 (Supabase local/CI); Playwright 1.63 (E2E com Mailpit do Supabase CLI e autenticador WebAuthn
 virtual do Chromium via CDP), sempre em `http://localhost:<porta>`
-**Target Platform**: PWA — Safari iOS 16+ (tela inicial), Chrome Android, desktop
+**Target Platform**: somente web — navegadores desktop e mobile (Safari, Chrome, Edge,
+Firefox) e o PWA instalável da 001 (Safari iOS 16+ na tela inicial, Chrome Android); sem app nativo
 **Project Type**: web app Next.js único (estrutura da 001)
 **Performance Goals**: reabrir com sessão ativa ≤ 2 s até a tela inicial (SC-004); verificação
 de sessão por requisição ≤ 1 consulta ao banco (memoizada); resposta de pedido de código com
@@ -301,7 +302,7 @@ qualquer e-mail válido em formato. Falha do provedor nunca muda a resposta de `
 |---|---|---|
 | `code` OAuth aparece no log de acesso da Vercel (`/auth/callback?code=`) — M13 | Risco aceito | Fora do controle do app (log da plataforma). O `code` é de uso único, expira em minutos e é inútil sem o `code_verifier` PKCE, que fica em cookie HttpOnly. Logs **do app** nunca o recebem (T041). |
 | Janela entre deploy da Vercel e job `deploy-db` no merge — M12 | Risco aceito | O DAL falha fechado (`UNAVAILABLE`, nenhum dado) até a migração aplicar (minutos). Sequência documentada em §Ações externas; envs novas configuradas **antes** do merge. |
-| Google no app instalado do iOS — M14 | Aberto (verificação pós-merge T036) | Limitação de cookies do app de tela inicial do iOS. FR-003 foi ajustado: código por e-mail é o caminho garantido e testado; o Google no iOS instalado é SHOULD. |
+| Google no **modo PWA instalado** na tela inicial do iOS — M14 | Risco aceito (Gate 2, 2026-10-05) | Restrito a esse modo: o PWA de tela inicial do iOS tem armazenamento de cookies separado do Safari, e a ida ao Google pode não voltar ao PWA com o verifier PKCE. FR-003 é SHOULD ali; o código por e-mail é o caminho garantido e testado (T022), e a tela oferece o código quando o Google falha (T020, T078). No navegador (desktop e mobile, inclusive Safari no iPhone) o Google é MUST e tem teste automatizado (T078 + T020). Observação em aparelho real no pós-merge (T036), sem efeito de aceite. |
 | `getClaims()` em local usa chave JWT simétrica (chamada de rede ao Auth) — L7 | Risco aceito | Projeto de produção novo usa chaves assimétricas (verificação local por JWKS). A meta "≤ 1 consulta" é medida em produção; em local só afeta latência de dev. |
 | GUC `prumo.retention` ligável por quem tem a chave secreta | Risco aceito | A proteção do gatilho é contra bugs do app e papéis de usuário; a chave secreta já é confiança total (só servidor). |
 | Bfcache de páginas `no-store` em navegadores recentes | Risco aceito | `SessionGuard` revalida em `pageshow.persisted` e cobre a tela; coberto por E2E (T037). |
