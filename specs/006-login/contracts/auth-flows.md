@@ -80,7 +80,7 @@ chamada ao provedor) e e-mail autorizado tenham o mesmo tempo.
 Guarda `safeNext(next)` no cookie HttpOnly `prumo_next` (10 min) e redireciona para a URL do
 provedor (PKCE). Provedor indisponível ⇒ `/entrar?erro=indisponivel` + `provider_error`.
 A tela `/entrar?erro=indisponivel` sempre oferece "Entrar com código por e-mail" — o caminho
-garantido no app instalado do iOS (FR-003, remediação M14).
+garantido no modo PWA instalado do iOS (FR-003; Gate 2: somente web, sem app nativo).
 
 ### `signOut()` → redirect `/entrar`
 `requireSession({ allowLocked: true })`; encerra `app_sessions` (`end_reason = 'logout'`),

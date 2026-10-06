@@ -67,8 +67,8 @@ R-06, R-09, R-10, R-11, R-12, R-15 e novos R-16 a R-19.
 - **Rationale**: o Supabase lançou passkeys em **beta** (maio/2026), voltadas a login de
   primeiro fator e com helpers de navegador — exigiria cliente Supabase no browser (R-02) e
   dependência beta para um dado financeiro. SimpleWebAuthn é maduro, MIT, sem custo.
-- **Suporte real**: WebAuthn com Face ID/Touch ID funciona em apps de tela inicial no iOS 16+
-  e no Chrome Android (Android 9+ com bloqueio de tela). **Riscos**: chamada precisa partir de
+- **Suporte real**: WebAuthn com Face ID/Touch ID funciona no Safari e no PWA de tela inicial
+  do iOS 16+ e no Chrome Android (Android 9+ com bloqueio de tela). **Riscos**: chamada precisa partir de
   gesto do usuário (botão "Desbloquear", nunca automático no load); iOS sincroniza a credencial
   via iCloud Keychain (aceito: qualquer credencial do Doug desbloqueia). Sem suporte ou sem
   credencial ⇒ FR-012 exige entrada completa. Verificação manual em aparelho real é task.
@@ -82,8 +82,8 @@ R-06, R-09, R-10, R-11, R-12, R-15 e novos R-16 a R-19.
   classifica pelo histórico (`access_events`): último `otp_requested` > 10 min ⇒ `expired`;
   `login_succeeded` (com o mesmo `email_hash`, gravado obrigatoriamente) posterior ao pedido
   ⇒ `used`; senão `wrong_code`.
-- **Rationale**: o código é digitado dentro do app instalado — link mágico abriria no Safari
-  fora da PWA no iOS (FR-003).
+- **Rationale**: o código é digitado dentro da própria página/PWA — link mágico abriria no
+  Safari fora do PWA instalado no iOS (FR-003).
 
 ## R-07 · Envio de e-mail e custo (⚠️ decisão do Doug na implementação)
 - **Fato**: o SMTP padrão do Supabase hospedado envia **2 e-mails/hora** e só para membros da
@@ -107,11 +107,19 @@ R-06, R-09, R-10, R-11, R-12, R-15 e novos R-16 a R-19.
 - **Fluxo**: PKCE server-side — Server Action chama `signInWithOAuth({ provider: "google",
   options: { redirectTo: APP_ORIGIN + "/auth/callback" } })` e redireciona; o Route Handler
   `/auth/callback` faz `exchangeCodeForSession(code)` (verifier no cookie HttpOnly).
-- **Risco iOS PWA**: a navegação para `accounts.google.com` sai do escopo da PWA (abre em folha
-  do navegador dentro do app) e volta ao escopo no callback; funciona na maioria das versões,
-  mas é o ponto mais frágil — mitigação: OTP por e-mail funciona 100% dentro do app. Task de
-  verificação manual em iPhone real.
-- **CI/local**: sem credenciais Google; a lógica do callback é testada com cliente Supabase
+- **Escopo (Gate 2, 2026-10-05)**: o Prumo é somente web — sem app nativo. Google é MUST em
+  qualquer navegador (desktop e mobile, inclusive Safari no iPhone): fluxo PKCE comum de
+  navegador, coberto por E2E em Chromium e WebKit, desktop e emulação mobile (T078), mais
+  contrato do callback (T020).
+- **Risco aceito — só no modo PWA instalado do iOS**: a navegação para `accounts.google.com` sai
+  do escopo do PWA (abre numa folha do navegador) e o PWA de tela inicial tem cookies separados
+  do Safari, então o retorno pode não encontrar o verifier PKCE. Ali o Google é SHOULD e o
+  código por e-mail é o caminho garantido (funciona 100% dentro do PWA); a tela oferece o código
+  quando o Google falha. Observação em iPhone real no pós-merge (T036), sem efeito de aceite.
+- **CI/local**: sem credenciais Google; o E2E T078 verifica no navegador o início do fluxo
+  (redirect PKCE para `<SUPABASE_URL>/auth/v1/authorize?provider=google`, `redirect_to` =
+  `APP_ORIGIN/auth/callback`, verifier em cookie HttpOnly) e o retorno ao `/auth/callback`
+  (erro ⇒ oferta do código), interceptando a ida ao provedor; a lógica do callback é testada com cliente Supabase
   simulado (unit/contrato). E2E usa o fluxo OTP com o **Mailpit** do Supabase CLI (porta
   57324) para ler o código.
 
