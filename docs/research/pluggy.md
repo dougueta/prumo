@@ -24,8 +24,8 @@ A premissa de custo R$ 0 das features 007/008 depende de teste prático da conta
 | Critério                        | "Meu Pluggy" (Uso Pessoal / Desenvolvedor)                                                                                                                                                                                                                                                          | Planos Comerciais Pluggy                                                                             |
 | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
 | **Público-alvo**                | Uso próprio via portal `meu.pluggy.ai` / teste de desenvolvedor.                                                                                                                                                                                                                                    | Fintechs e apps corporativos com múltiplos usuários.                                                 |
-| **Custo**                       | **R$ 0 / mês** (em modo de teste / desenvolvedor).                                                                                                                                                                                                                                                  | Relatos comunitários apontam a partir de **R$ 2.500 / mês** (preço sob consulta comercial; TabNews). |
-| **Limite de Conexões**          | **Não confirmado oficialmente** (relatos de 5 conexões na comunidade; documentação do Actual Budget relata lista de conectores congelada após trial).                                                                                                                                               | Escalável conforme contrato comercial.                                                               |
+| **Custo**                       | **R$ 0 / mês** (em modo de teste / desenvolvedor).                                                                                                                                                                                                                                                  | **Sob consulta comercial** (sem preço público; valores que circulam em fóruns não têm fonte verificável). |
+| **Limite de Conexões**          | **Não confirmado** (sem fonte verificável; a documentação do Actual Budget relata lista de conectores congelada após o trial).                                                                                                                                               | Escalável conforme contrato comercial.                                                               |
 | **Acesso à API**                | Consumo via conector "MeuPluggy" e credenciais de dashboard em sandbox/trial.                                                                                                                                                                                                                       | Acesso irrestrito a conectores diretos de todas as instituições e widget whitelabel.                 |
 | **SLA & Suporte**               | Comunitário / sem garantia de disponibilidade.                                                                                                                                                                                                                                                      | Suporte técnico dedicado e SLA garantido.                                                            |
 | **Impacto no Prumo (ADR 0003)** | **Atenção**: O widget direto `react-pluggy-connect` chamando endpoints de produção pode exigir plano comercial. Se o modo gratuito só funcionar via portal `meu.pluggy.ai`, o Doug precisará decidir na spec 007 entre validar esse conector, pagar plano ou priorizar importação manual (009/010). | Custo incompatível com o teto de R$ 0 do Prumo.                                                      |
@@ -108,9 +108,10 @@ stateDiagram-v2
 
 ### 2.6 Consentimento e Expiração no Open Finance
 
-- **Validade do Consentimento**: Não confirmado formalmente pela documentação oficial da Pluggy (relatos comunitários indicam que consentimentos podem ser solicitados sem data limite com `expiresAt: null`). Em contrapartida, certas instituições impõem teto regulatório de até 12 meses. O Doug deve validar empiricamente no teste do conector da Feature 007.
-- **Exceções**: Certas instituições impõem teto regulatório de 12 meses.
-- **Revogação**: O usuário pode revogar o acesso a qualquer momento pelo aplicativo do seu próprio banco. Nesse caso, a Pluggy passa a reportar erro de autorização.
+- **Validade do Consentimento**: por padrão, consentimentos Open Finance **não expiram** — `expiresAt` é `null` quando o consentimento não tem validade (fonte 7).
+- **Exceções**: alguns conectores impõem validade (a documentação cita um conector com validade de um ano). Por isso `consent_expires_at` é nullable (§4).
+- **Revogação**: O usuário pode revogar o acesso a qualquer momento pelo aplicativo do seu próprio banco. Com o consentimento revogado ou expirado, **os endpoints de dados (contas, transações etc.) passam a retornar vazio** — não um erro (fonte 7).
+  - _Impacto Arquitetural (Features 008/011 e Constitution IV)_: resposta vazia de um item com consentimento revogado ou expirado **nunca** pode ser interpretada como "transações removidas". Nenhum arquivamento ou estorno é gerado a partir dela; o item vai para estado de reconexão e o usuário é avisado.
 - **Renovação**: É realizada chamando `PATCH /items/:id` e abrindo o widget com o mesmo `itemId`, preservando as chaves estrangeiras já associadas no banco do Prumo.
 
 ### 2.7 Webhooks, Limites de Taxa e Sincronização Automática
@@ -136,7 +137,8 @@ stateDiagram-v2
     - A Pluggy realiza até **3 tentativas no total** (1 tentativa imediata + até 2 retentativas em intervalos progressivos de ~15 min e ~2 horas).
     - Eventos sensíveis ao tempo (`item/waiting_user_input` e `item/login_succeeded`) seguem regime especial com **3 tentativas a intervalos de ~6 minutos**.
     - **Não há retentativa para erros de cliente (HTTP 400, 401, 403, 404 ou 405)**: se o endpoint responder com um desses códigos, o evento é descartado permanentemente sem nova tentativa.
-    - _Impacto Arquitetural (Features 008/011 e Constitution IV)_: Um 404 transitório (ex.: rota temporariamente fora do ar durante deploy) ou um 400/401 retornado pelo handler faz com que a notificação seja descartada sem nova tentativa. O endpoint de webhook deve responder 2xx imediatamente desacoplando o processamento, e o sistema deve manter sincronização periódica ativa via `PATCH /items/:id` como mecanismo de conciliação.
+    - _Impacto Arquitetural (Features 008/011 e Constitution IV)_: Um 404 transitório (ex.: rota temporariamente fora do ar durante deploy) ou um 400/401 retornado pelo handler faz com que a notificação seja descartada sem nova tentativa. O endpoint de webhook deve responder 2xx imediatamente desacoplando o processamento, e o sistema deve manter uma conciliação periódica lendo `GET /transactions` com janela por data e comparando por `external_id`. O `PATCH /items/:id` só dispara nova coleta (resultado volta por webhook) e não recupera um evento descartado. A Pluggy sincroniza automaticamente uma vez por dia apenas itens sem MFA (fonte 8).
+- **Limites de Taxa (Rate Limits)**:
   - **360 requisições por minuto por IP e por endpoint** (especificamente nos endpoints `POST /auth`, `GET /accounts`, `GET /transactions` e `GET /investments`).
   - **20 requisições por minuto no endpoint `PATCH /items`** (utilizado para re-sincronização e atualização de credenciais).
 - **Janela de Transações**:
@@ -172,9 +174,11 @@ stateDiagram-v2
 4. **Idempotência de Transações (Constitution IV)**:
    - Gravar cada transação oriunda da Pluggy com `source = 'pluggy'` e `external_id = item.transaction.id`.
    - Tratar eventos `transactions/deleted` para arquivamento/estorno auditável, sem exclusão física silenciosa.
+   - Nunca arquivar/estornar a partir de resposta vazia de item com consentimento revogado ou expirado (§2.6).
 5. **Estratégia de Sincronização**:
    - **Webhooks**: Para ingestão reativa com validação do IP `52.67.145.81` e do cabeçalho customizado.
-   - **Sync Manual / Fallback**: Disparo via **`PATCH /items/:id`** (respeitando o limite de 20 chamadas/min).
+   - **Sync Manual**: Disparo sob demanda via **`PATCH /items/:id`** (respeitando o limite de 20 chamadas/min).
+   - **Conciliação**: leitura periódica de `GET /transactions` por janela de data, comparando por `external_id` (cobre webhooks descartados e itens com MFA, que não têm sync diária automática).
 
 ---
 
@@ -192,7 +196,7 @@ stateDiagram-v2
    [https://actualbudget.org/docs/advanced/bank-sync/pluggyai/](https://actualbudget.org/docs/advanced/bank-sync/pluggyai/) — Acessado em 05/10/2026.
 6. **Meu Pluggy — Portal Pessoal Open Finance**:  
    [https://meu.pluggy.ai/](https://meu.pluggy.ai/) — Acessado em 05/10/2026.
-7. **TabNews — Discussões da Comunidade sobre Planos Corporativos Pluggy**:  
-   [https://www.tabnews.com.br/](https://www.tabnews.com.br/) — Relatos sobre custos comerciais mínimos (~R$ 2.500/mês). Acessado em 05/10/2026.
-8. **Comunidade de Usuários Pluggy / Actual Budget — Relatos sobre Limite de Conexões**:  
-   Fóruns e issues comunitárias apontando relatos de 5 conexões ativas no perfil não comercial (não confirmado em documentação oficial da Pluggy). Acessado em 05/10/2026.
+7. **Pluggy Documentation — Consents**:  
+   [https://docs.pluggy.ai/en/docs/connections/consents](https://docs.pluggy.ai/en/docs/connections/consents) — Acessado em 06/10/2026.
+8. **Pluggy Documentation — Item Lifecycle**:  
+   [https://docs.pluggy.ai/en/docs/connections/item-lifecycle](https://docs.pluggy.ai/en/docs/connections/item-lifecycle) — Acessado em 06/10/2026.
