@@ -10,7 +10,7 @@
 
 ## 1. Resumo (5 linhas)
 
-O Gemini Code Assist no GitHub opera via GitHub App conectado a um projeto no Google Cloud (versão enterprise) ou aplicativo consumer gratuito (~33 reviews/dia), configurado via `.gemini/config.yaml` e `.gemini/styleguide.md`.
+O Gemini Code Assist no GitHub opera via GitHub App conectado a um projeto no Google Cloud (versão enterprise) ou aplicativo consumer gratuito (~33 reviews/dia, cota não confirmada oficialmente na documentação pública), configurado via `.gemini/config.yaml` e `.gemini/styleguide.md`.
 O assistente produz resumos de PRs, comentários inline e sugestões de código filtradas por severidade (`LOW`, `MEDIUM`, `HIGH`, `CRITICAL`), mas não revisa arquivos em `.github/workflows/`.
 Nativamente, o bot posta comentários e threads de revisão, **não emitindo aprovação formal (`APPROVE`)** que satisfaça regras de aprovação humana no GitHub Branch Protection.
 Para transformar o veredito em bloqueio obrigatório (Gate da Constitution VIII), a Feature 002 projeta uma automação segura no GitHub Actions para verificar o veredito do bot ou invocar o revisor diretamente.
@@ -24,7 +24,7 @@ As regras de branch protection devem exigir a resolução obrigatória de conver
 
 1. **Modalidade Consumer (Gratuita)**:
    - Instalada via GitHub App diretamente na conta/organização do usuário.
-   - Fornece cota diária de revisões gratuitas (~33 revisões de PR por dia).
+   - Fornece cota diária de revisões gratuitas (~33 revisões de PR por dia, conforme relatos comunitários; a documentação pública Enterprise cita 100+ PRs/dia).
    - _Atenção ao Fallback_: Caso se utilize a Gemini API direta como fallback quando a cota acabar, se estiver em Free Tier os dados de diff estarão sujeitos a treinamento (ver R3).
 2. **Modalidade Enterprise (Google Cloud)**:
    - Vinculada a um projeto GCP com Cloud AI Companion API habilitada, faturamento empresarial e SLA dedicado.
@@ -52,7 +52,7 @@ memory_config:
 code_review:
   disable: false
   comment_severity_threshold: LOW # Opções: LOW, MEDIUM, HIGH, CRITICAL
-  max_review_comments: 50
+  max_review_comments: -1 # Padrão oficial ilimitado (-1), alinhado a specs/002-revisor-pr/research.md (R-01)
   pull_request_opened:
     help: false
     summary: true
@@ -127,7 +127,7 @@ No repositório (Settings $\rightarrow$ Branches $\rightarrow$ Branch protection
 1. **Priorizar a Pesquisa Canônica da Feature 002**:
    - Utilizar diretamente `specs/002-revisor-pr/research.md` como guia de implementação para as tarefas de automação, webhook e proteção de branch.
 2. **Configuração de `.gemini/config.yaml`**:
-   - Utilizar o schema canônico identificado nesta pesquisa, assegurando que specs e arquivos de regras não sejam excluídos da análise.
+   - Remeter à Feature 002 R-01 (`specs/002-revisor-pr/research.md`), adotando o padrão oficial `max_review_comments: -1` e assegurando que specs e arquivos de regras não sejam excluídos da análise.
 
 ---
 
@@ -135,7 +135,9 @@ No repositório (Settings $\rightarrow$ Branches $\rightarrow$ Branch protection
 
 1. **Google Cloud — Gemini Code Assist for GitHub Overview & Review Details**:  
    [https://cloud.google.com/gemini/docs/code-review/review-repo-code](https://cloud.google.com/gemini/docs/code-review/review-repo-code) — Acessado em 05/10/2026.
-2. **GitHub Documentation — About Protected Branches & Status Checks**:  
+2. **Google Cloud — Customize Code Review for GitHub (Severity Thresholds & Ignore Patterns)**:  
+   [https://docs.cloud.google.com/gemini/docs/code-review/customize-repo-review](https://docs.cloud.google.com/gemini/docs/code-review/customize-repo-review) — Acessado em 05/10/2026.
+3. **GitHub Documentation — About Protected Branches & Status Checks**:  
    [https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches) — Acessado em 05/10/2026.
-3. **GitHub Documentation — Actions: github-script for Pull Request Workflows**:  
+4. **GitHub Documentation — Actions: github-script for Pull Request Workflows**:  
    [https://github.com/actions/github-script](https://github.com/actions/github-script) — Acessado em 05/10/2026.

@@ -33,11 +33,11 @@ A premissa de custo R$ 0 das features 007/008 depende de teste prático da conta
 ### 2.2 Ambiente de Sandbox
 
 - **Conector de Teste**: A Pluggy fornece um conector de Sandbox que simula instituições financeiras sem tocar em bancos reais.
-- **Credenciais Mapeadas no Sandbox**:
-  - `user-ok` / `password-ok` (MFA `123456`) $\rightarrow$ simula conexão bem-sucedida (`UPDATED`).
-  - `user-error` $\rightarrow$ simula erro inesperado da instituição (`UNEXPECTED_ERROR`).
-  - `user-account-need-actions` $\rightarrow$ simula necessidade de ação do usuário no banco (`ACCOUNT_NEEDS_ACTION`).
-  - Qualquer outro usuário / credencial não mapeada $\rightarrow$ simula erro de credenciais/login inválido (`LOGIN_ERROR`).
+- **Credenciais e Comportamento no Sandbox**:
+  - `user-ok` / `password-ok` (MFA `123456`) $\rightarrow$ `executionStatus: SUCCESS` (Item transita para status `UPDATED`).
+  - `user-error` $\rightarrow$ `executionStatus: UNEXPECTED_ERROR` (simula erro inesperado da instituição).
+  - `user-account-need-actions` $\rightarrow$ `executionStatus: ACCOUNT_NEEDS_ACTION` (simula necessidade de ação do usuário no banco).
+  - Qualquer outro usuário / credencial não mapeada $\rightarrow$ `executionStatus: INVALID_CREDENTIALS` (Item transita para status `LOGIN_ERROR`).
 - **Dinâmica dos Dados**: Dados de transações em Sandbox sofrem refresh semanal. Itens inativos há mais de 30 dias são excluídos automaticamente pela Pluggy.
 - **Uso em CI**: Conforme Constitution V, o CI não deve chamar a API externa da Pluggy. Testes de integração utilizam fixtures baseadas nos contratos OpenAPI da Pluggy.
 
@@ -88,7 +88,7 @@ Um `Item` representa a conexão com uma instituição financeira:
 stateDiagram-v2
     [*] --> UPDATING: Criação do Item via Widget
     UPDATING --> UPDATED: Sincronização concluída com sucesso
-    UPDATING --> WAITING_USER_INPUT: Exige MFA / autorização no app bancário
+    UPDATING --> WAITING_USER_INPUT: Exige MFA / entrada de dados
     UPDATING --> LOGIN_ERROR: Senha incorreta / token expirado
     UPDATING --> OUTDATED: Falha temporária no Open Finance do banco
 
@@ -102,13 +102,13 @@ stateDiagram-v2
 
 - **`UPDATING`**: Coleta de contas, faturas e transações em progresso.
 - **`UPDATED`**: Conexão saudável; dados prontos para ingestão.
-- **`WAITING_USER_INPUT`**: Exige intervenção do usuário (ex.: autenticação biométrica ou token SMS).
+- **`WAITING_USER_INPUT`**: Exige intervenção do usuário para entrada de dados ou MFA (código SMS/token).
 - **`LOGIN_ERROR`**: Conexão quebrada por alteração de senha ou expiração de chave. Requer abertura do widget em modo de reconexão.
 - **`OUTDATED`**: Instabilidade temporária de rede ou indisponibilidade da instituição. Não requer nova senha de imediato; resolve-se com retentativa (backoff exponencial).
 
 ### 2.6 Consentimento e Expiração no Open Finance
 
-- **Validade do Consentimento**: Por padrão na Pluggy, os consentimentos de Open Finance são solicitados sem data limite de expiração (`expiresAt: null`).
+- **Validade do Consentimento**: Não confirmado formalmente pela documentação oficial da Pluggy (relatos comunitários indicam que consentimentos podem ser solicitados sem data limite com `expiresAt: null`). Em contrapartida, certas instituições impõem teto regulatório de até 12 meses. O Doug deve validar empiricamente no teste do conector da Feature 007.
 - **Exceções**: Certas instituições impõem teto regulatório de 12 meses.
 - **Revogação**: O usuário pode revogar o acesso a qualquer momento pelo aplicativo do seu próprio banco. Nesse caso, a Pluggy passa a reportar erro de autorização.
 - **Renovação**: É realizada chamando `PATCH /items/:id` e abrindo o widget com o mesmo `itemId`, preservando as chaves estrangeiras já associadas no banco do Prumo.
@@ -131,8 +131,12 @@ stateDiagram-v2
   - A Pluggy **não envia assinatura criptográfica HMAC por padrão**. A segurança do endpoint no Next.js (`/api/webhooks/pluggy`) depende de:
     1. Cadastro de cabeçalho secreto customizado (ex.: `x-webhook-secret: <token>`) validado em tempo constante (`crypto.timingSafeEqual`).
     2. **Allowlist de IP**: Restringir requisições estritamente ao endereço IP oficial de saída da Pluggy: **`52.67.145.81`**.
-  - **Política de Retentativa de Webhook**: A Pluggy realiza até 3 retentativas automáticas com intervalos progressivos (backoff) caso o endpoint de destino responda com status diferente de 2xx ou sofra timeout.
-- **Limites de Taxa (Rate Limits)**:
+  - **Política de Retentativa de Webhook**:
+    - Sucesso é considerado quando o endpoint responde com status HTTP 2xx em até 10 segundos.
+    - A Pluggy realiza até **3 tentativas no total** (1 tentativa imediata + até 2 retentativas em intervalos progressivos de ~15 min e ~2 horas).
+    - Eventos sensíveis ao tempo (`item/waiting_user_input` e `item/login_succeeded`) seguem regime especial com **3 tentativas a intervalos de ~6 minutos**.
+    - **Não há retentativa para erros de cliente (HTTP 400, 401, 403, 404 ou 405)**: se o endpoint responder com um desses códigos, o evento é descartado permanentemente sem nova tentativa.
+    - _Impacto Arquitetural (Features 008/011 e Constitution IV)_: Um 404 transitório (ex.: rota temporariamente fora do ar durante deploy) ou um 400/401 retornado pelo handler faz com que a notificação seja descartada sem nova tentativa. O endpoint de webhook deve responder 2xx imediatamente desacoplando o processamento, e o sistema deve manter sincronização periódica ativa via `PATCH /items/:id` como mecanismo de conciliação.
   - **360 requisições por minuto por IP e por endpoint** (especificamente nos endpoints `POST /auth`, `GET /accounts`, `GET /transactions` e `GET /investments`).
   - **20 requisições por minuto no endpoint `PATCH /items`** (utilizado para re-sincronização e atualização de credenciais).
 - **Janela de Transações**:
@@ -146,7 +150,7 @@ stateDiagram-v2
    - A documentação oficial não garante de forma perene o uso gratuito de conectores de produção via API/widget para pessoas físicas.
    - O Doug precisará realizar um teste empírico conectando suas credenciais de desenvolvedor para confirmar se o conector "MeuPluggy" permite sincronização contínua ou se expira após o período de testes.
 2. **Volatilidade de APIs Bancárias**: Instituições bancárias (principalmente estatais como a Caixa) passam por janelas frequentes de manutenção de Open Finance aos finais de semana, exigindo que o sistema tolere o estado `OUTDATED` com retentativas agendadas.
-3. **MFA e Intervenções Periódicas**: Algumas instituições exigem reconfirmação de token pelo aplicativo a cada poucas semanas. A Feature 008 (Sync Automática) deve detectar `item/waiting_user_input` e alertar o usuário sem travar os jobs em segundo plano.
+3. **MFA e Intervenções Periódicas**: Algumas instituições exigem reconfirmação de token ou autorização pelo aplicativo a cada poucas semanas. A Feature 008 (Sync Automática) deve detectar tanto `item/waiting_user_input` (MFA/entrada de dados) quanto `item/waiting_user_action` (autorização externa no app bancário) e alertar o usuário sem travar os jobs em segundo plano.
 4. **Duplicação com Importação Manual**: Como o Doug também fará importação de arquivos (PDF de fatura do C6 e extratos OFX), a Feature 011 (Deduplicação) precisará correlacionar o `external_id` da Pluggy com data, valor exato e descrição das importações manuais para evitar duplicar entradas.
 
 ---
@@ -176,8 +180,8 @@ stateDiagram-v2
 
 ## 5. Fontes Consultadas
 
-1. **Pluggy Documentation — Overview & Connectors**:  
-   [https://docs.pluggy.ai/docs/connectors](https://docs.pluggy.ai/docs/connectors) — Acessado em 05/10/2026.
+1. **Pluggy Documentation — Connectors Coverage**:  
+   [https://docs.pluggy.ai/docs/connectors-coverage](https://docs.pluggy.ai/docs/connectors-coverage) — Acessado em 05/10/2026.
 2. **Pluggy Documentation — Webhooks Reference, Headers & IP Allowlist**:  
    [https://docs.pluggy.ai/docs/developer-tools/webhooks-ref](https://docs.pluggy.ai/docs/developer-tools/webhooks-ref) — Acessado em 05/10/2026.
 3. **Pluggy Documentation — Rate Limits & Item Updates**:  
@@ -188,3 +192,7 @@ stateDiagram-v2
    [https://actualbudget.org/docs/advanced/bank-sync/pluggyai/](https://actualbudget.org/docs/advanced/bank-sync/pluggyai/) — Acessado em 05/10/2026.
 6. **Meu Pluggy — Portal Pessoal Open Finance**:  
    [https://meu.pluggy.ai/](https://meu.pluggy.ai/) — Acessado em 05/10/2026.
+7. **TabNews — Discussões da Comunidade sobre Planos Corporativos Pluggy**:  
+   [https://www.tabnews.com.br/](https://www.tabnews.com.br/) — Relatos sobre custos comerciais mínimos (~R$ 2.500/mês). Acessado em 05/10/2026.
+8. **Comunidade de Usuários Pluggy / Actual Budget — Relatos sobre Limite de Conexões**:  
+   Fóruns e issues comunitárias apontando relatos de 5 conexões ativas no perfil não comercial (não confirmado em documentação oficial da Pluggy). Acessado em 05/10/2026.
