@@ -117,7 +117,7 @@ nenhum teste usa rede.
 - [x] T070 [P] [US4] Teste do template: `.github/pull_request_template.md` contém as seções do FR-021 (Feature `NNN · Nome`, Artefatos com links spec/plan/tasks, Tipo feature·processo·emenda, Rótulos `autor:*` + `iniciativa:N`, Checklist do autor com os 5 itens + "espelho dos workflows atualizado" + "`gh:ruleset` reexecutado se mudou job do CI", "Motivo da emergência:", "Respostas aos achados" explicando que a resposta vai em comentário e com um exemplo de bloco `prumo:respostas` que `parseResponses` aceita) — `tests/unit/review/pr-template.test.ts` (FR-021, FR-024)
 - [x] T041 [P] [US4] Teste de `planLabels(existing, desired)` (cria faltantes, atualiza cor/descrição, nunca apaga; marcos idem) e de `scripts/review/labels.ts` com `fetch` falso (`--dry-run` sem escrita; 422 "já existe" tratado como atualização) — `tests/unit/review/labels.test.ts` (FR-022)
 - [x] T042 [US4] `.github/pull_request_template.md` até T070 passar (FR-021)
-- [ ] T043 [US4] `src/review/labels.ts` + `scripts/review/labels.ts` (`--dry-run`) até T041 passar (FR-022)
+- [x] T043 [US4] `src/review/labels.ts` + `scripts/review/labels.ts` (`--dry-run`) até T041 passar (FR-022)
 - [ ] T044 [US4] ⚠️ Doug executa `npm run gh:labels` (rótulos e 11 marcos do data-model §5)
 - [ ] T045 [US4] Aceite: PR novo exibe o template; quickstart §2 cenário 6 (FR-021)
 
