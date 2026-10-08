@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { cookies } from "next/headers";
-import { DemoBadge } from "@/components/demo-badge";
+import { DemoBadge } from "@/components/shell/demo-badge";
+import { EnvIndicator } from "@/components/shell/env-indicator";
 import { TodayProvider } from "@/components/shell/today-provider";
 import { ServiceWorkerRegister } from "@/components/sw-register";
 import { todayInSaoPaulo } from "@/lib/format";
@@ -58,6 +59,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col">
         <DemoBadge />
+        <EnvIndicator />
         <TodayProvider today={todayInSaoPaulo()}>{children}</TodayProvider>
         <ServiceWorkerRegister />
       </body>
