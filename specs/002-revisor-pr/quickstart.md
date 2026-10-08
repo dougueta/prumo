@@ -28,6 +28,9 @@ workflows para colaboradores externos e secret scanning + push protection (feito
      PRUMO_REVISOR_KEY_PATH=C:/Users/Doug/.prumo/prumo-revisor.pem
      PRUMO_REPO=dougueta/prumo
      ```
+   - Verificação rápida sem escrever nada: `npm run gh:repo-settings -- --dry-run`,
+     `npm run gh:labels -- --dry-run` e `npm run gh:ruleset -- --dry-run` (só leituras na API;
+     validados em 2026-10-08 contra o repositório real).
 3. **Configurações do repositório**: `npm run gh:repo-settings` (só squash, apagar branch após
    merge) e `npm run gh:labels` (rótulos e marcos). Use `--dry-run` antes.
 4. **Proteção da `main`**: depois que o `review-gate` publicar o status em ao menos um PR,
@@ -73,8 +76,8 @@ SC-006: cronometrar, em cada PR de teste, o tempo até o Doug saber se pode inte
   comentar `/gemini review` → status verde → Doug: `npm run pr:merge -- <n>`.
 - **PR do Gemini**: Doug (ou sessão do Claude a pedido) roda `/revisar-pr <n>` no Claude Code;
   o Doug publica com `npm run review:publish -- <n>` no terminal dele.
-- **Mudou um workflow?** Atualize o espelho `tests/unit/review/__snapshots__/workflows.md` (o
-  teste falha até isso) — é por ele que o Gemini revisa. Mudou job de PR do `ci.yml`? Depois do
+- **Mudou um workflow?** Rode `npm run review:mirror` para atualizar o espelho
+  `tests/unit/review/__snapshots__/workflows.md` (o teste falha até isso) — é por ele que o Gemini revisa. Mudou job de PR do `ci.yml`? Depois do
   merge, `npm run gh:ruleset`.
 - **Rebase antes do merge**: se o rebase não muda o conteúdo do PR, o veredito continua válido;
   se muda, peça nova revisão.
