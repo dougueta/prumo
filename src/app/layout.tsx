@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { cookies } from "next/headers";
 import { DemoBadge } from "@/components/shell/demo-badge";
 import { EnvIndicator } from "@/components/shell/env-indicator";
+import { PreferencesProvider } from "@/components/shell/preferences-provider";
 import { TodayProvider } from "@/components/shell/today-provider";
 import { ServiceWorkerRegister } from "@/components/sw-register";
 import { todayInSaoPaulo } from "@/lib/format";
@@ -60,7 +61,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       <body className="flex min-h-full flex-col">
         <DemoBadge />
         <EnvIndicator />
-        <TodayProvider today={todayInSaoPaulo()}>{children}</TodayProvider>
+        <PreferencesProvider initialTheme={theme} initialPrivacy={privacy}>
+          <TodayProvider today={todayInSaoPaulo()}>{children}</TodayProvider>
+        </PreferencesProvider>
         <ServiceWorkerRegister />
       </body>
     </html>
