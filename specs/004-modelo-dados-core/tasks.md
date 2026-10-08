@@ -34,7 +34,7 @@ nas duas.
 - [x] T067 [P] Testes de `schemas.ts` (zod 4): limites de `IncomingTx`, `ManualTxInput`, `TxPatch`, `AccountInput`, `AccountPatch`, `NewInstitution`, `NewCategory`, `CategoryPatch`, `NewBatch`, `TxQuery` iguais aos `CHECK` do data-model (500/200/2000 chars, parcela 1..420 com n ≤ m, moeda original ≠ BRL, confiança 0..100, `last4`, dias 1..31, `limit` 1..200) — `tests/unit/core/schemas.test.ts` (FR-013, FR-015, FR-018)
 
 ### Domínio puro — implementação
-- [ ] T007 Implementar `src/domain/core/{types,money,dates,text,errors}.ts` (tipos de contracts/core-store.md §Tipos; `CoreError` com códigos e motivos de §Erros) até T004–T006 e T066 passarem
+- [x] T007 Implementar `src/domain/core/{types,money,dates,text,errors}.ts` (tipos de contracts/core-store.md §Tipos; `CoreError` com códigos e motivos de §Erros) até T004–T006 e T066 passarem
 - [ ] T008 Implementar `src/domain/core/schemas.ts` até T067 passar
 
 ### Taxonomia
