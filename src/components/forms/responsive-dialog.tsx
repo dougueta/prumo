@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +15,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useBackToClose } from "@/components/shell/use-back-to-close";
+import { useBackToClose, useOpener } from "@/components/shell/use-back-to-close";
 import { DESKTOP_QUERY, useMediaQuery } from "@/components/shell/use-media-query";
 
 /**
@@ -42,15 +42,10 @@ export function ResponsiveDialog({
   useBackToClose(open, () => onOpenChange(false));
 
   // Diálogo controlado (sem Trigger do Radix): devolve o foco a quem o abriu.
-  const opener = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    if (open && document.activeElement instanceof HTMLElement) {
-      opener.current = document.activeElement;
-    }
-  }, [open]);
+  const opener = useOpener(open);
   const restoreFocus = (event: Event) => {
     event.preventDefault();
-    opener.current?.focus();
+    opener?.focus();
   };
 
   if (desktop) {
