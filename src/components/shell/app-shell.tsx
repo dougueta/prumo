@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { BottomNav } from "./bottom-nav";
+import { OfflineBanner } from "./offline-banner";
 import { SideNav } from "./side-nav";
 import { SkipLink } from "./skip-link";
 
@@ -14,6 +15,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <SkipLink />
       <SideNav />
       <div className="flex min-w-0 flex-1 flex-col">
+        <OfflineBanner />
         <main
           id="conteudo"
           tabIndex={-1}
