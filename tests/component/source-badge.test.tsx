@@ -40,18 +40,18 @@ describe("SourceBadge", () => {
   });
 
   it("fonte nomeia quem informou a categoria", async () => {
-    render(<SourceBadge origin="source" sourceName="o arquivo importado" />);
+    render(<SourceBadge origin="source" sourceName="arquivo importado" />);
     await userEvent.click(screen.getByRole("button", { name: /Fonte/ }));
     expect(await screen.findByRole("dialog")).toHaveTextContent(
-      "Categoria informada por o arquivo importado.",
+      "Categoria informada por arquivo importado.",
     );
   });
 
-  it("fonte sem nome usa 'a instituição' e sem onCorrect não há botão Corrigir", async () => {
+  it("fonte sem nome usa 'pela instituição' e sem onCorrect não há botão Corrigir", async () => {
     render(<SourceBadge origin="source" />);
     await userEvent.click(screen.getByRole("button", { name: /Fonte/ }));
     expect(await screen.findByRole("dialog")).toHaveTextContent(
-      "Categoria informada por a instituição.",
+      "Categoria informada pela instituição.",
     );
     expect(screen.queryByRole("button", { name: "Corrigir" })).toBeNull();
   });
