@@ -91,7 +91,7 @@
 - [x] T034 [P] [US2] `RelativeDate` com `TodayProvider` (Hoje/Ontem/Amanhã/mesmo ano/outro ano, `<time dateTime>`, `aria-label` completo) e `PeriodLabel` — `tests/component/relative-date.test.tsx` (FR-029, FR-030)
 
 ### Implementação
-- [ ] T035 [US2] `src/components/finance/money.tsx` (Server-compatível; popover só no compacto) até T033 passar (FR-005, FR-025–FR-028)
+- [x] T035 [US2] `src/components/finance/money.tsx` (Server-compatível; popover só no compacto) até T033 passar (FR-005, FR-025–FR-028)
 - [ ] T036 [P] [US2] `src/components/finance/relative-date.tsx` e `src/components/finance/period-label.tsx` até T034 passar (FR-029, FR-030)
 
 ---

@@ -52,7 +52,7 @@ describe("Money", () => {
     expect(visible(container)).toBe(`R$${NBSP}1,2${NBSP}mi`);
     expect(screen.getByText("1234000 reais")).toHaveClass("sr-only");
     await userEvent.click(screen.getByRole("button", { name: /1234000 reais/ }));
-    expect(await screen.findByRole("dialog")).toHaveTextContent(`R$${NBSP}1.234.000,00`);
+    expect(await screen.findByRole("dialog")).toHaveTextContent("R$ 1.234.000,00"); // jest-dom normaliza NBSP;
   });
 
   it("ausente: travessão e 'valor indisponível', nunca R$ 0,00", () => {
