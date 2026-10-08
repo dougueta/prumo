@@ -358,6 +358,10 @@ BEGIN
         v_key := public.core_fp_identity(v_row->>'fp_base', v_k);
       END IF;
       v_account := (v_row->>'account_id')::uuid;
+      -- a conta precisa ser do dono antes de procurar a identidade (nunca tocar linha alheia)
+      IF NOT EXISTS (SELECT 1 FROM public.accounts WHERE id = v_account AND owner_id = v_owner) THEN
+        RAISE EXCEPTION 'core.not_found:accountId' USING ERRCODE = 'P0002';
+      END IF;
       v_cat := (v_row->>'category_id')::uuid;
       v_cat_source := CASE WHEN v_cat IS NULL THEN NULL ELSE COALESCE(v_row->>'category_source', 'source') END;
       v_cat_conf := CASE WHEN v_cat IS NULL THEN NULL ELSE (v_row->>'category_confidence')::int END;
@@ -383,7 +387,8 @@ BEGIN
         c_created := c_created + 1;
       ELSE
         SELECT * INTO v_old FROM public.transactions
-         WHERE account_id = v_account AND source = v_batch.source AND identity_key = v_key
+         WHERE owner_id = v_owner AND account_id = v_account AND source = v_batch.source
+           AND identity_key = v_key
          FOR UPDATE;
         v_id := v_old.id;
 
