@@ -1,6 +1,12 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import { createTestOwner, lit, sql, sqlTry } from "../../helpers/supabase-test";
-import { seedAccount, seedBatch, seedTx, sqlError } from "../../helpers/core-fixtures";
+import {
+  seedAccount,
+  seedBatch,
+  seedCategory,
+  seedTx,
+  sqlError,
+} from "../../helpers/core-fixtures";
 
 // 004 · T047 — auditoria imutável e atômica; nada apagado fisicamente (FR-036, FR-037, FR-040, SC-004).
 let owner: string;
@@ -11,6 +17,10 @@ beforeAll(async () => {
   owner = (await createTestOwner()).id;
   account = seedAccount(owner);
   tx = seedTx(owner, account, { batchId: seedBatch(owner) });
+  seedCategory(owner, { name: "Categoria Fictícia" });
+  sql(
+    `insert into public.institutions (owner_id, name, kind) values (${lit(owner)}, 'Banco Fictício Próprio', 'bank');`,
+  );
 });
 
 const asRole = (role: string, body: string) =>

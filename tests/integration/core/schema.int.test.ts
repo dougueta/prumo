@@ -149,7 +149,7 @@ describe("CHECKs", () => {
       }),
     ).toMatch(/check constraint|core\./);
     // categoria sem origem
-    expect(tx({ batchId: batch, extra: { category_source: "ai" } })).toMatch(/check constraint/);
+    expect(tx({ batchId: batch, categorySource: "ai" })).toMatch(/check constraint/);
     // moeda original BRL
     expect(
       tx({ batchId: batch, extra: { original_currency: "BRL", original_amount_minor: 100 } }),
