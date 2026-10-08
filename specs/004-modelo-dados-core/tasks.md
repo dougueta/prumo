@@ -27,7 +27,7 @@ nas duas.
 ## Phase 2: Foundational (bloqueia todas as histórias)
 
 ### Domínio puro — testes (vermelho)
-- [ ] T004 [P] Testes de `money.ts`: `assertCents` (inteiro seguro), `parseCentsStrict("12,34")=1234`, rejeita `"12,345"`, `NaN`, `1.5`, texto, nulo; aceita `0`; `sumCents` — `tests/unit/core/money.test.ts` (FR-018)
+- [x] T004 [P] Testes de `money.ts`: `assertCents` (inteiro seguro), `parseCentsStrict("12,34")=1234`, rejeita `"12,345"`, `NaN`, `1.5`, texto, nulo; aceita `0`; `sumCents` — `tests/unit/core/money.test.ts` (FR-018)
 - [ ] T005 [P] Testes de `dates.ts`: `isIsoDate` (calendário real, 1900–2100; data futura válida aceita), `toSaoPauloDate("2026-10-01T02:30:00Z") = "2026-09-30"` — `tests/unit/core/dates.test.ts` (FR-013, US1 cenário 6)
 - [ ] T006 [P] Testes de `text.ts`: `normalizeDescription` (NFKD, sem diacríticos, maiúsculas, espaços), `nameKey("Alimentação ") = "alimentacao"` — `tests/unit/core/text.test.ts` (FR-022, FR-032)
 - [ ] T066 [P] Testes de `errors.ts` (`mapDbError`): `core.not_found`/0 linhas/`23503` → `not_found`; `23505` → `conflict`; `23514`/`22P02`/`22007`/`22008`/`core.validation:<campo>` → `validation` com `field`; `core.forbidden:<motivo>` e `core.hard_delete_forbidden` → `forbidden_operation` com `reason`; `core.owner_required` → `owner_required`; erro de rede/5xx/`57014`/não mapeado → `unavailable`; mensagem nunca contém URL/chave/valores — `tests/unit/core/errors.test.ts` (FR-003, FR-018; edge case offline)
