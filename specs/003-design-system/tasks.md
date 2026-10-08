@@ -112,7 +112,7 @@
 - [x] T043 [P] [US3] `ConfirmDialog` (texto nomeia ação/objeto, foco inicial "Cancelar", não fecha por toque fora) e `ResponsiveDialog` (sheet < md, dialog ≥ md, Esc, `popstate` fecha, foco volta ao gatilho, véu `bg-overlay`); `notify` (duração ≥ 5 s, `undo` persistente e bloqueado offline, `aria-live`) — `tests/component/dialogs.test.tsx` (FR-024, FR-042, FR-043, FR-044)
 
 ### Implementação
-- [ ] T044 [P] [US3] `category-visuals.ts` (`CATEGORY_VISUALS`, `categoryVisual`, `CategoryVisualKey`), `category-icon.tsx` e `institution-avatar.tsx` (`institutionInitials`) — `src/components/finance/` até T082 passar (FR-036)
+- [x] T044 [P] [US3] `category-visuals.ts` (`CATEGORY_VISUALS`, `categoryVisual`, `CategoryVisualKey`), `category-icon.tsx` e `institution-avatar.tsx` (`institutionInitials`) — `src/components/finance/` até T082 passar (FR-036)
 - [ ] T045 [US3] `transaction-item.tsx`, `grouped-list.tsx`, `summary-card.tsx` até T037/T038 passarem — `src/components/finance/` (FR-032, FR-033, FR-034)
 - [ ] T046 [P] [US3] `source-badge.tsx` até T039 passar — `src/components/finance/source-badge.tsx` (FR-035)
 - [ ] T047 [P] [US3] `empty-state.tsx`, `loading-skeleton.tsx`, `slow-loading.tsx`, `error-state.tsx`; aplicar em `(app)/loading.tsx`/`error.tsx`/`not-found.tsx` e no `src/app/not-found.tsx`; criar `src/app/global-error.tsx` (html/body próprios, `globals.css`, textos padrão) — `src/components/states/`, `src/app/` até T040/T080 passarem (FR-037, FR-038)
