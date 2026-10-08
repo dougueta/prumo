@@ -1,0 +1,22 @@
+# Feature 002 · research R-01 — Gemini Code Assist (versão consumer, gratuita) como revisor
+# independente dos PRs autor:claude e autor:doug. Instruções: .gemini/styleguide.md →
+# docs/review-checklist.md. Não revisa .github/workflows/** (limitação da ferramenta): o
+# conteúdo dos workflows chega pelo espelho tests/unit/review/__snapshots__/workflows.md.
+have_fun: false
+memory_config:
+  # Revisor sem memória acumulada entre PRs = sem vícios herdados.
+  disabled: true
+ignore_patterns:
+  - tests/fixtures/synthetic/**
+  - package-lock.json
+code_review:
+  disable: false
+  # Inclui achados BAIXO (US2 cenário 4).
+  comment_severity_threshold: LOW
+  max_review_comments: -1
+  pull_request_opened:
+    help: false
+    summary: true
+    code_review: true
+    # Rascunho não é revisado; a revisão começa quando o PR fica pronto (FR-015).
+    include_drafts: false
