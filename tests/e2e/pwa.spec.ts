@@ -1,4 +1,14 @@
+import { createHash } from "node:crypto";
 import { expect, test } from "@playwright/test";
+import { BRAND_COLOR, SPLASH_BACKGROUND } from "../../src/styles/tokens";
+
+// Hashes (sha256, 16 primeiros) dos ícones provisórios da 001 — a 003 regenera com o Logo.
+const PROVISIONAL_ICON_HASHES = [
+  "8ba0ac29ed6890cb",
+  "358e2fedd96f28f7",
+  "e40b2fe9a292330b",
+  "a75d05570bbe7f9e",
+];
 
 test("manifesto PWA válido (FR-019)", async ({ request }) => {
   const response = await request.get("/manifest.webmanifest");
@@ -18,6 +28,21 @@ test("manifesto PWA válido (FR-019)", async ({ request }) => {
     const file = await request.get(icon.src);
     expect(file.ok(), icon.src).toBe(true);
     expect(file.headers()["content-type"]).toBe("image/png");
+  }
+});
+
+test("manifesto e ícones usam a identidade da 003 (FR-006)", async ({ request }) => {
+  const manifest = await (await request.get("/manifest.webmanifest")).json();
+  expect(manifest.theme_color.toUpperCase()).toBe(BRAND_COLOR.toUpperCase());
+  expect(manifest.background_color.toUpperCase()).toBe(SPLASH_BACKGROUND.toUpperCase());
+  const sources: string[] = [
+    ...manifest.icons.map((icon: { src: string }) => icon.src),
+    "/icons/apple-touch-icon.png",
+  ];
+  for (const src of sources) {
+    const body = await (await request.get(src)).body();
+    const hash = createHash("sha256").update(body).digest("hex").slice(0, 16);
+    expect(PROVISIONAL_ICON_HASHES, src).not.toContain(hash);
   }
 });
 
