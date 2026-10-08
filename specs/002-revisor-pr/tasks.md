@@ -128,7 +128,7 @@ nenhum teste usa rede.
 **Independent Test**: veredito com 3 achados, resposta para 2 → "achados sem resposta: #3"; responder o terceiro → segue.
 
 - [x] T046 [P] [US5] Teste do ciclo de ponta a ponta em `evaluateGate`, **apenas casos não cobertos por T011**: duas rodadas de MUDANÇAS seguidas (só a mais recente conta); respostas espalhadas em vários comentários; resposta publicada antes do veredito que pretende cobrir não conta; `corrigido` com sha fora dos commits do PR não conta; resposta de conta ≠ `dougueta` não conta; justificativa aceita × permanece em "Achados anteriores" — `tests/unit/review/review-cycle.test.ts` (FR-019, FR-020)
-- [ ] T047 [US5] Ajustar `src/review/evaluate-gate.ts`/`parse-responses.ts` até T046 passar (se T046 já nascer verde em algum caso, registrar no commit que a cobertura veio de T015)
+- [x] T047 [US5] Ajustar `src/review/evaluate-gate.ts`/`parse-responses.ts` até T046 passar (se T046 já nascer verde em algum caso, registrar no commit que a cobertura veio de T015) — **sem ajuste: os 7 casos do T046 nasceram verdes; a cobertura veio de T015**
 - [ ] T048 [US5] Aceite: quickstart §2 cenário 12 (SC-007)
 
 ---
