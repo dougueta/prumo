@@ -62,3 +62,22 @@ Qualquer custo recorrente novo precisa estar declarado na spec da feature e apro
 |---|---|
 | `PRODUCTION_URL` | `keepalive.yml` |
 | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, `SUPABASE_PROJECT_REF` | job `deploy-db` (migrações de produção) |
+
+## Revisão de PRs
+
+Todo PR passa pela verificação **"Revisão independente"** (Constitution VIII · feature 002 ·
+ADR 0007) e pelo ruleset **"main protegida"**: PR obrigatório, CI verde, veredito APROVADO do
+revisor designado no head atual, branch atualizada e merge só por squash, sem exceção para
+administrador.
+
+| Autor do PR | Revisor | Como |
+|---|---|---|
+| `autor:claude` / `autor:doug` | Gemini Code Assist | automático ao ficar pronto; re-acione com `/gemini review` |
+| `autor:gemini` | Claude em contexto limpo | `/revisar-pr <n>` no Claude Code + `npm run review:publish -- <n>` (Doug) |
+
+- Merge: só o Doug, com `npm run pr:merge -- <n>`.
+- Respostas aos achados: comentário `<!-- prumo:respostas v1 -->` (ver `docs/review-checklist.md`).
+- Configuração única (app `prumo-revisor`, rótulos, ruleset): `specs/002-revisor-pr/quickstart.md`.
+
+**Custo: R$ 0/mês** — Gemini Code Assist na versão gratuita (consumer), GitHub App gratuito,
+GitHub Actions gratuito em repositório público e o Claude Code que o Doug já assina.

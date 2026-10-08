@@ -60,4 +60,13 @@ Não inclua nenhum dado pessoal ou financeiro real do Doug.
 
 ## Revisões pendentes
 
-Nenhuma ainda. A partir da feature 001, todo PR `autor:claude` aguarda sua revisão.
+Desde a feature 002, todo PR `autor:claude` ou `autor:doug` aguarda a sua revisão (Gemini Code
+Assist), e a verificação "Revisão independente" fica **pending** até o seu veredito. Lista
+sempre atualizada (não mantida à mão):
+
+- PRs abertos aguardando você:
+  `https://github.com/dougueta/prumo/pulls?q=is%3Apr+is%3Aopen+-is%3Adraft+label%3Aautor%3Aclaude`
+  (busca `is:pr is:open -is:draft label:autor:claude`; troque por `label:autor:doug` para os do Doug)
+- No terminal: `gh pr list --label autor:claude --state open --search "-is:draft status:pending"`
+
+Revise seguindo `.gemini/styleguide.md` e termine sempre com o bloco `prumo:veredito`.
