@@ -1,6 +1,5 @@
-import Link from "next/link";
 import { Logo } from "@/components/brand/logo";
-import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/states/empty-state";
 
 export const metadata = { title: "Página não encontrada · Prumo" };
 
@@ -10,13 +9,14 @@ export const metadata = { title: "Página não encontrada · Prumo" };
  */
 export default function NotFound() {
   return (
-    <main className="flex flex-1 flex-col items-center justify-center gap-4 px-6 py-12 text-center">
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center gap-6 px-4 py-12">
       <Logo className="text-primary" />
-      <h1 className="text-2xl font-semibold">Página não encontrada</h1>
-      <p className="text-foreground-muted">O endereço pode ter mudado.</p>
-      <Button asChild>
-        <Link href="/">Voltar ao início</Link>
-      </Button>
+      <EmptyState
+        headingLevel={1}
+        title="Página não encontrada"
+        description="O endereço pode ter mudado."
+        action={{ label: "Voltar ao início", href: "/" }}
+      />
     </main>
   );
 }
