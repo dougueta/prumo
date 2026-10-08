@@ -141,7 +141,7 @@ nenhum teste usa rede.
 - [x] T071 [P] Teste de custo zero: `package.json` não contém `@octokit/*`, `jsonwebtoken`, `@anthropic-ai/*` nem dependências além das existentes antes da 002 (lista registrada no teste); nenhum workflow usa `anthropics/claude-code-action` nem segredos de API paga (`ANTHROPIC_API_KEY`, `GEMINI_API_KEY`) — `tests/unit/review/cost.test.ts` (FR-025, SC-008)
 - [x] T052 [P] `docs/gemini-handoff.md` (seção "Revisões pendentes" apontando a busca de PRs `autor:claude` com status pending; R5 marcada como substituída pela research da 002) e seção "Revisão de PRs" no `README.md` com custo R$ 0 (Gemini consumer, App, Actions gratuito em repo público) até T067 e T071 passarem (FR-023, FR-025, SC-008)
 - [x] T053 Rodar o `quickstart.md` inteiro do zero e corrigir divergências — **parcial: dry-runs dos três comandos gh:* e montagem de snapshot real (PRs #5 e #6, só leitura) validados em 2026-10-08; os passos que escrevem no GitHub ficam com o Doug (T010, T039, T044, T025)**
-- [ ] T054 Atualizar `docs/roadmap.md` (002 → `review`) e abrir PR `002 · Revisor de PR independente` com o template, rótulos `autor:claude` + `iniciativa:0` e milestone `0 · Plataforma`; último PR sob bootstrap (merge depois de 004, 003 e 006); o Gemini revisa os workflows pelo espelho
+- [x] T054 Atualizar `docs/roadmap.md` (002 → `review`) e abrir PR `002 · Revisor de PR independente` com o template, rótulos `autor:claude` + `iniciativa:0` e milestone `0 · Plataforma`; último PR sob bootstrap (merge depois de 004, 003 e 006); o Gemini revisa os workflows pelo espelho — **PR #10; rótulo `iniciativa:0` pendente até o Doug rodar `gh:labels`**
 
 ---
 
