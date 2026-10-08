@@ -8,7 +8,7 @@ export async function DemoBadge() {
   return (
     <div
       role="status"
-      className="sticky top-0 z-50 w-full bg-amber-100 px-4 py-1 text-center text-sm font-medium text-amber-900 dark:bg-amber-900 dark:text-amber-50"
+      className="sticky top-0 z-demo w-full bg-demo px-4 py-1 text-center text-sm font-medium text-demo-foreground"
     >
       Demonstração — dados fictícios
     </div>

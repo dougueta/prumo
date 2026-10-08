@@ -1,0 +1,325 @@
+/*
+ * Tokens do design system Prumo — spec 003, data-model §1–§2. ÚNICA fonte de cores do app
+ * (tests/unit/tokens-guard.test.ts). Contraste AA verificado por tests/unit/tokens-contrast.test.ts.
+ * Tema: claro em :root; escuro com data-theme="dark" ou, no automático (sem data-theme),
+ * pela preferência do sistema. O atributo vem do cookie prumo_theme, lido no servidor.
+ */
+
+/* data-model §1.1a — dark: dos primitivos segue o mesmo critério dos tokens (não só o sistema). */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]), :root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+}
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+  --background: #faf8f5;
+  --surface: #ffffff;
+  --surface-muted: #f2efea;
+  --foreground: #1f2421;
+  --foreground-muted: #5e5850;
+  --border: #e3ded6;
+  --border-strong: #8c857b;
+  --primary: #0f4c5c;
+  --primary-foreground: #ffffff;
+  --primary-subtle: #ddebee;
+  --info: #1e3a5f;
+  --info-subtle: #e3eaf3;
+  --income: #2b7249;
+  --income-subtle: #e5f1e9;
+  --expense: #a14a2b;
+  --expense-subtle: #f7e7e0;
+  --warning: #7a5200;
+  --warning-subtle: #fbf0d6;
+  --danger: #b42318;
+  --danger-foreground: #ffffff;
+  --danger-subtle: #fbe9e7;
+  --ai: #5b3f96;
+  --ai-subtle: #efeaf8;
+  --focus: #1f6f8b;
+  --demo: #fbf0d6;
+  --demo-foreground: #5c3d00;
+  --overlay: #14131299;
+  --cat-petroleo: #1f6b78;
+  --cat-petroleo-subtle: #dceff2;
+  --cat-azul: #2c5a99;
+  --cat-azul-subtle: #e1eaf7;
+  --cat-verde: #2e7340;
+  --cat-verde-subtle: #e2f2e5;
+  --cat-oliva: #5e6a1e;
+  --cat-oliva-subtle: #eef1dc;
+  --cat-ambar: #8a5a00;
+  --cat-ambar-subtle: #fbefd5;
+  --cat-terracota: #a24a2c;
+  --cat-terracota-subtle: #f8e5dd;
+  --cat-rosa: #a23a63;
+  --cat-rosa-subtle: #f8e2eb;
+  --cat-violeta: #5e43a0;
+  --cat-violeta-subtle: #ece6f7;
+  --cat-cinza: #5e5850;
+  --cat-cinza-subtle: #eeebe6;
+
+  /* Movimento (zerado com prefers-reduced-motion) */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+
+  /* Camadas: selo de demonstração acima de diálogos e avisos (edge case da spec) */
+  --z-nav: 30;
+  --z-overlay: 40;
+  --z-toast: 50;
+  --z-demo: 60;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #141312;
+  --surface: #1d1b19;
+  --surface-muted: #262320;
+  --foreground: #eeeae4;
+  --foreground-muted: #b3aca2;
+  --border: #3a3632;
+  --border-strong: #7d766c;
+  --primary: #6cbacb;
+  --primary-foreground: #0b1f25;
+  --primary-subtle: #17323a;
+  --info: #93b5e1;
+  --info-subtle: #1b2636;
+  --income: #7dc79c;
+  --income-subtle: #1c2e23;
+  --expense: #e59c7e;
+  --expense-subtle: #3a241b;
+  --warning: #e9bc5e;
+  --warning-subtle: #33280f;
+  --danger: #f28b82;
+  --danger-foreground: #141312;
+  --danger-subtle: #3b1a17;
+  --ai: #bca6ec;
+  --ai-subtle: #2a2340;
+  --focus: #7fc8da;
+  --demo: #33280f;
+  --demo-foreground: #f3d58f;
+  --overlay: #00000099;
+  --cat-petroleo: #7cc8d6;
+  --cat-petroleo-subtle: #17333a;
+  --cat-azul: #9bbbea;
+  --cat-azul-subtle: #1c2a40;
+  --cat-verde: #8acf98;
+  --cat-verde-subtle: #1b3021;
+  --cat-oliva: #c3cf7e;
+  --cat-oliva-subtle: #2a2e14;
+  --cat-ambar: #e9bc5e;
+  --cat-ambar-subtle: #33280f;
+  --cat-terracota: #e59c7e;
+  --cat-terracota-subtle: #3a241b;
+  --cat-rosa: #ee9bbb;
+  --cat-rosa-subtle: #3a1c29;
+  --cat-violeta: #bca6ec;
+  --cat-violeta-subtle: #2a2340;
+  --cat-cinza: #c4bdb3;
+  --cat-cinza-subtle: #2d2a26;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --background: #141312;
+    --surface: #1d1b19;
+    --surface-muted: #262320;
+    --foreground: #eeeae4;
+    --foreground-muted: #b3aca2;
+    --border: #3a3632;
+    --border-strong: #7d766c;
+    --primary: #6cbacb;
+    --primary-foreground: #0b1f25;
+    --primary-subtle: #17323a;
+    --info: #93b5e1;
+    --info-subtle: #1b2636;
+    --income: #7dc79c;
+    --income-subtle: #1c2e23;
+    --expense: #e59c7e;
+    --expense-subtle: #3a241b;
+    --warning: #e9bc5e;
+    --warning-subtle: #33280f;
+    --danger: #f28b82;
+    --danger-foreground: #141312;
+    --danger-subtle: #3b1a17;
+    --ai: #bca6ec;
+    --ai-subtle: #2a2340;
+    --focus: #7fc8da;
+    --demo: #33280f;
+    --demo-foreground: #f3d58f;
+    --overlay: #00000099;
+    --cat-petroleo: #7cc8d6;
+    --cat-petroleo-subtle: #17333a;
+    --cat-azul: #9bbbea;
+    --cat-azul-subtle: #1c2a40;
+    --cat-verde: #8acf98;
+    --cat-verde-subtle: #1b3021;
+    --cat-oliva: #c3cf7e;
+    --cat-oliva-subtle: #2a2e14;
+    --cat-ambar: #e9bc5e;
+    --cat-ambar-subtle: #33280f;
+    --cat-terracota: #e59c7e;
+    --cat-terracota-subtle: #3a241b;
+    --cat-rosa: #ee9bbb;
+    --cat-rosa-subtle: #3a1c29;
+    --cat-violeta: #bca6ec;
+    --cat-violeta-subtle: #2a2340;
+    --cat-cinza: #c4bdb3;
+    --cat-cinza-subtle: #2d2a26;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+  }
+}
+
+@theme inline {
+  /* Paleta padrão do Tailwind removida: só existem as cores do Prumo (FR-004). */
+  --color-*: initial;
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-foreground: var(--foreground);
+  --color-foreground-muted: var(--foreground-muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-subtle: var(--primary-subtle);
+  --color-info: var(--info);
+  --color-info-subtle: var(--info-subtle);
+  --color-income: var(--income);
+  --color-income-subtle: var(--income-subtle);
+  --color-expense: var(--expense);
+  --color-expense-subtle: var(--expense-subtle);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-danger: var(--danger);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-danger-subtle: var(--danger-subtle);
+  --color-ai: var(--ai);
+  --color-ai-subtle: var(--ai-subtle);
+  --color-focus: var(--focus);
+  --color-demo: var(--demo);
+  --color-demo-foreground: var(--demo-foreground);
+  --color-overlay: var(--overlay);
+  --color-cat-petroleo: var(--cat-petroleo);
+  --color-cat-petroleo-subtle: var(--cat-petroleo-subtle);
+  --color-cat-azul: var(--cat-azul);
+  --color-cat-azul-subtle: var(--cat-azul-subtle);
+  --color-cat-verde: var(--cat-verde);
+  --color-cat-verde-subtle: var(--cat-verde-subtle);
+  --color-cat-oliva: var(--cat-oliva);
+  --color-cat-oliva-subtle: var(--cat-oliva-subtle);
+  --color-cat-ambar: var(--cat-ambar);
+  --color-cat-ambar-subtle: var(--cat-ambar-subtle);
+  --color-cat-terracota: var(--cat-terracota);
+  --color-cat-terracota-subtle: var(--cat-terracota-subtle);
+  --color-cat-rosa: var(--cat-rosa);
+  --color-cat-rosa-subtle: var(--cat-rosa-subtle);
+  --color-cat-violeta: var(--cat-violeta);
+  --color-cat-violeta-subtle: var(--cat-violeta-subtle);
+  --color-cat-cinza: var(--cat-cinza);
+  --color-cat-cinza-subtle: var(--cat-cinza-subtle);
+
+  /* Aliases exigidos pelos primitivos do shadcn (não são cores novas) */
+  --color-card: var(--surface);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--foreground);
+  --color-secondary: var(--surface-muted);
+  --color-secondary-foreground: var(--foreground);
+  --color-muted: var(--surface-muted);
+  --color-muted-foreground: var(--foreground-muted);
+  --color-accent: var(--surface-muted);
+  --color-accent-foreground: var(--foreground);
+  --color-destructive: var(--danger);
+  --color-destructive-foreground: var(--danger-foreground);
+  --color-input: var(--border-strong);
+  --color-ring: var(--focus);
+
+  /* Tipografia: Inter (auto-hospedada) e escala fixa de 7 tamanhos, pesos 400/500/600 */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-heading: var(--font-inter), system-ui, sans-serif;
+  --text-*: initial;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.75rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.25rem;
+  --font-weight-*: initial;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* Raios: cards = lg, botões/campos = md */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+
+  /* Sombras: só em elementos sobrepostos (menus, diálogos, barra inferior) */
+  --shadow-sm: 0 1px 2px 0 var(--overlay);
+  --shadow-md: 0 4px 12px -2px var(--overlay);
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* Largura máxima do conteúdo no desktop (FR-016) */
+  --container-content: 64rem;
+}
+
+/* Áreas seguras (FR-015) — efetivas com viewport-fit=cover (root layout) */
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility pl-safe {
+  padding-left: env(safe-area-inset-left);
+}
+@utility pr-safe {
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Camadas */
+@utility z-nav {
+  z-index: var(--z-nav);
+}
+@utility z-overlay {
+  z-index: var(--z-overlay);
+}
+@utility z-toast {
+  z-index: var(--z-toast);
+}
+@utility z-demo {
+  z-index: var(--z-demo);
+}
+
+/* Durações de transição */
+@utility duration-fast {
+  transition-duration: var(--duration-fast);
+}
+@utility duration-base {
+  transition-duration: var(--duration-base);
+}
