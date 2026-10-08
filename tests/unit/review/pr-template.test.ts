@@ -56,7 +56,7 @@ describe(".github/pull_request_template.md", () => {
   });
 
   it("Respostas aos achados: explica que vai em comentário e traz exemplo aceito por parseResponses", () => {
-    const section = text().split(/^## Respostas aos achados/m)[1];
+    const section = text().slice(text().indexOf("## Respostas aos achados"));
     expect(section).toMatch(/comentário/);
     const block = /```markdown\n(<!-- prumo:respostas v1 -->[\s\S]*?)```/.exec(section)![1];
     const r = parseResponses(issueComment({ id: 1, at: "2026-10-06T12:00:00Z", body: block }));
