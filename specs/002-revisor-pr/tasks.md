@@ -62,7 +62,7 @@ nenhum teste usa rede.
 - [x] T015 [US1] `src/review/evaluate-gate.ts` + `src/review/warnings-comment.ts` (algoritmo do plan) até T011 passar
 - [x] T016 [US1] `scripts/review/github.ts` (cliente mínimo, `fetch` injetável, `GITHUB_TOKEN`/`gh auth token`, política de erro do OpenAPI) até T013 passar
 - [x] T017 [US1] `scripts/review/gate.ts` (snapshot → `evaluateGate` → `POST statuses` + comentário de avisos + job summary) e `.github/workflows/review-gate.yml` (contrato review-gate), atualizando o espelho, até T061 (parte review-gate), T062 e T072 passarem (FR-006, FR-008, FR-010, FR-026)
-- [ ] T018 [US1] `src/review/main-guard.ts` + `scripts/review/main-guard.ts` (modo push) + job `main-guard` ("Guarda da main") em `.github/workflows/ci.yml` com `deploy-db.needs: [..., main-guard]`, atualizando o espelho, até T012, T061 (parte ci.yml), T063 e T072 passarem (FR-002, FR-004, FR-005)
+- [x] T018 [US1] `src/review/main-guard.ts` + `scripts/review/main-guard.ts` (modo push) + job `main-guard` ("Guarda da main") em `.github/workflows/ci.yml` com `deploy-db.needs: [..., main-guard]`, atualizando o espelho, até T012, T061 (parte ci.yml), T063 e T072 passarem (FR-002, FR-004, FR-005)
 - [ ] T019 [US1] `src/review/merge-readiness.ts` + `scripts/review/merge.ts` (recalcula `evaluateGate`, check runs, `behind_by`, TTY, confirmações) até T014 e T064 passarem (FR-002, FR-003, FR-004)
 - [ ] T020 *Removida (D1 = A, 2026-10-05)* — hook `.githooks/pre-push`: o ruleset recusa push direto no servidor
 - [ ] T021 [P] [US1] `.claude/settings.json` (`permissions.deny`) e `.gemini/settings.json` (`excludeTools`; desativar shell interativo/PTY se a versão instalada oferecer) até T065 passar (FR-004, FR-005, FR-009)

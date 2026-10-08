@@ -8,7 +8,8 @@ on:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # Feature 002: na main nenhum run é cancelado — todo commit passa pela Guarda da main.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 permissions:
   contents: read
@@ -93,10 +94,37 @@ jobs:
           path: playwright-report/
           retention-days: 14
 
+  # Feature 002 · FR-004(c)/FR-024 — audita todo commit da main recalculando o portão
+  # (squash de PR, checks do GitHub Actions verdes, revisão independente válida). Sem checkout do
+  # PR e sem segredos além do GITHUB_TOKEN. Espelho: tests/unit/review/__snapshots__/workflows.md.
+  main-guard:
+    name: Guarda da main
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: write
+      checks: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with: { node-version: "${{ env.NODE_VERSION }}", cache: npm }
+      - run: npm ci --ignore-scripts
+      - name: Audita o commit
+        run: npm run review:main-guard -- --mode=push
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   deploy-db:
     name: Migrações de produção
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [quality, unit, integration, e2e]
+    needs: [quality, unit, integration, e2e, main-guard]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: production
