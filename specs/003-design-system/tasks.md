@@ -19,7 +19,7 @@
 
 ## Phase 1: Setup (infraestrutura compartilhada)
 
-- [ ] T086 [P] Teste de licenças e auto-hospedagem (vermelho até T002/T006): toda dependência de `package.json` tem licença em {MIT, ISC, Apache-2.0, BSD-*, OFL-1.1} lida de `node_modules/<pkg>/package.json`; existem `src/app/fonts/*.woff2` + `OFL.txt`; nenhum `src/**` referencia `fonts.googleapis`/`fonts.gstatic`/CDN de ícones — `tests/unit/licenses.test.ts` (FR-052)
+- [x] T086 [P] Teste de licenças e auto-hospedagem (vermelho até T002/T006): toda dependência de `package.json` tem licença em {MIT, ISC, Apache-2.0, BSD-*, OFL-1.1} lida de `node_modules/<pkg>/package.json`; existem `src/app/fonts/*.woff2` + `OFL.txt`; nenhum `src/**` referencia `fonts.googleapis`/`fonts.gstatic`/CDN de ícones — `tests/unit/licenses.test.ts` (FR-052)
 - [ ] T002 Instalar dependências fixadas do plan (`radix-ui`, `lucide-react`, `sonner`, `class-variance-authority`, `tailwind-merge`, `clsx`, `tw-animate-css`, `react-hook-form`, `@hookform/resolvers`; dev: `@axe-core/playwright`, `@testing-library/user-event`, `@testing-library/jest-dom`, `eslint-plugin-better-tailwindcss`) — `package.json`, `package-lock.json` (FR-052)
 - [ ] T003 Rodar `npx shadcn@4.21.1 init --base radix` primeiro com `--dry-run`; aplicar só `components.json` e `src/lib/utils.ts` (`cn`), preservando `globals.css`/`layout.tsx` da 001 (a variante `dark:` entra no T016) — `components.json`, `src/lib/utils.ts`
 - [ ] T004 [P] Adicionar projeto Vitest `component` (jsdom 29, `tests/component/**/*.test.tsx`, setup `tests/setup.ts` + `tests/setup-dom.ts` com jest-dom e stubs de `matchMedia`/`ResizeObserver`/`IntersectionObserver`) e script `test:component`; incluir em `check` — `vitest.config.ts`, `tests/setup-dom.ts`, `package.json`
