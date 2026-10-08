@@ -17,6 +17,7 @@ import type {
   RawIssueComment,
   RawReview,
   RawReviewComment,
+  RawUser,
 } from "../../src/review/types";
 
 export const API_BASE = "https://api.github.com";
@@ -272,15 +273,14 @@ export async function fingerprintAt(
 /** shas de head citados por possíveis vereditos (para calcular as impressões). */
 function verdictHeads(reviews: RawReview[], comments: RawIssueComment[]): string[] {
   const out = new Set<string>();
+  const isBot = (u: RawUser | null, who: "gemini" | "claude") =>
+    u?.login === REVIEWER_IDENTITY[who].login && u?.type === REVIEWER_IDENTITY[who].type;
   for (const r of reviews) {
-    if (
-      r.user?.login === REVIEWER_IDENTITY.gemini.login &&
-      (r.body ?? "").includes(VERDICT_MARKER)
-    ) {
-      out.add(r.commit_id);
-    }
+    if (isBot(r.user, "gemini") && (r.body ?? "").includes(VERDICT_MARKER)) out.add(r.commit_id);
   }
+  // Só o bot do revisor Claude publica head= — comentários de outras contas não geram compare.
   for (const cm of comments) {
+    if (!isBot(cm.user, "claude")) continue;
     const m = /<!-- prumo:veredito v1\s+head=([0-9a-f]{40})/.exec(cm.body ?? "");
     if (m) out.add(m[1]);
   }

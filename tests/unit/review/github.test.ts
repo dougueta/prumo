@@ -138,6 +138,24 @@ describe("buildPrSnapshot", () => {
     expect(s.fingerprints["e".repeat(40)]).toBeNull();
   });
 
+  it("head= em comentário de conta que não é o prumo-revisor[bot] não gera compare", async () => {
+    const forged = [
+      { login: "dougueta", type: "User" },
+      { login: "prumo-revisor[bot]", type: "User" },
+    ].map((user, i) =>
+      issueComment({
+        id: 20 + i,
+        at: "2026-10-06T12:00:00Z",
+        user,
+        body: verdictBody({ head: String(i + 1).repeat(40), inputs: ["diff.patch"] }),
+      }),
+    );
+    const { c, fake } = client(prRoutes({ [`GET ${R}/issues/42/comments`]: { body: forged } }));
+    const s = await buildPrSnapshot(c, 42);
+    expect(Object.keys(s.fingerprints).sort()).toEqual([HEAD, OLD_HEAD].sort());
+    expect(fake.calls.filter((x) => x.path.includes("/compare/"))).toHaveLength(2);
+  });
+
   it("compare sem patch ⇒ impressão null", async () => {
     const { c } = client(
       prRoutes({ [`GET ${R}/compare/main...${HEAD}`]: { body: apiCompareNoPatch() } }),
