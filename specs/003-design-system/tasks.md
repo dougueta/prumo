@@ -14,8 +14,8 @@
 
 ## Phase 0: Pré-condição
 
-- [ ] T001 Confirmar que a emenda da constitution v1.1.0 e a 001 estão na `main`, e que a 004 já foi integrada (ordem de merge da onda 1: 004 → 003 → 006 → 002); rebasear `003-design-system` em `origin/main`; rodar `npm ci && npm run check` verde antes de qualquer mudança — branch `003-design-system`
-- [ ] T087 Atualizar `docs/roadmap.md` (003 → `impl`) num commit próprio — `docs/roadmap.md`
+- [x] T001 Confirmar que a emenda da constitution v1.1.0 e a 001 estão na `main`, e que a 004 já foi integrada (ordem de merge da onda 1: 004 → 003 → 006 → 002); rebasear `003-design-system` em `origin/main`; rodar `npm ci && npm run check` verde antes de qualquer mudança — branch `003-design-system`
+- [x] T087 Atualizar `docs/roadmap.md` (003 → `impl`) num commit próprio — `docs/roadmap.md`
 
 ## Phase 1: Setup (infraestrutura compartilhada)
 
