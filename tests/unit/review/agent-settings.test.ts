@@ -46,8 +46,10 @@ const DENIED = [
   "gh api -X POST repos/dougueta/prumo/rulesets --input r.json",
   "gh pr edit 42 --add-label emergencia",
   "gh repo edit --enable-merge-commit",
-  "cat ~/.prumo/prumo-revisor.pem",
 ];
+/** Leitura da chave do prumo-revisor: o Claude nega por padrão; no Gemini CLI as ferramentas de
+ * arquivo ficam restritas ao workspace e a chave é cifrada com senha (ADR 0007). */
+const KEY_READ = "cat ~/.prumo/prumo-revisor.pem";
 const ALLOWED = [
   "git push origin 002-revisor-pr",
   "git push --force-with-lease origin 002-revisor-pr",
@@ -58,7 +60,7 @@ const ALLOWED = [
 describe(".claude/settings.json — permissions.deny", () => {
   const deny: string[] = json(".claude/settings.json").permissions.deny;
 
-  it.each(DENIED)("nega (Bash e PowerShell): %s", (cmd) => {
+  it.each([...DENIED, KEY_READ])("nega (Bash e PowerShell): %s", (cmd) => {
     expect(claudeDenies(deny, "Bash", cmd)).toBe(true);
     expect(claudeDenies(deny, "PowerShell", cmd)).toBe(true);
   });
