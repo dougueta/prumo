@@ -101,7 +101,7 @@ nenhum teste usa rede.
 
 ### Implementação
 - [x] T034 [US3] `src/review/app-jwt.ts` (`node:crypto`, chave cifrada + senha) até T031 passar
-- [ ] T035 [US3] `src/review/bundle.ts` + `scripts/review/bundle.ts` (`gh`, `git fetch origin pull/<n>/head`, `.review/<n>/`) até T032 e T069 passarem
+- [x] T035 [US3] `src/review/bundle.ts` + `scripts/review/bundle.ts` (`gh`, `git fetch origin pull/<n>/head`, `.review/<n>/`) até T032 e T069 passarem
 - [ ] T036 [US3] `src/review/publish-format.ts` + `scripts/review/publish.ts` (lê `.env.review.local`, exige TTY, pede a senha sem eco, token de instalação restrito, `POST issues/<n>/comments`; nunca loga segredos) até T033 e T068 passarem
 - [ ] T037 [P] [US3] `.claude/agents/revisor-limpo.md` (tools: Read, Glob, Grep; postura do checklist; ler somente `.review/<n>/`; em re-revisão preencher "Achados anteriores" a partir de `anteriores/`; gravar `veredito.md`) (FR-018, FR-020)
 - [ ] T038 [US3] `.claude/skills/revisar-pr/SKILL.md` (`/revisar-pr <n>`: bundle → subagente → instrui o Doug a rodar `npm run review:publish -- <n>` no terminal dele; a sessão principal não lê o pacote) (FR-017)
