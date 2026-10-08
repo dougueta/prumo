@@ -63,7 +63,7 @@
 **Independent Test**: preview em 360px e 1280px → navegar pelas 5 seções, destaque correto, selo demo, telas "em breve".
 
 ### Testes (escrever primeiro)
-- [ ] T023 [P] [US1] Componentes `BottomNav`/`SideNav`: 5 links com ícone + rótulo, `aria-current` no ativo, landmark `nav` "Principal", `BottomNav` com `pb-safe` e links `min-h-11` — `tests/component/nav.test.tsx` (FR-007, FR-011, FR-015, FR-021)
+- [x] T023 [P] [US1] Componentes `BottomNav`/`SideNav`: 5 links com ícone + rótulo, `aria-current` no ativo, landmark `nav` "Principal", `BottomNav` com `pb-safe` e links `min-h-11` — `tests/component/nav.test.tsx` (FR-007, FR-011, FR-015, FR-021)
 - [ ] T088 [P] [US1] `PageHeader`: `h1` com o título; `back` vira link "Voltar" acessível; 1–2 ações visíveis e, a partir da 3ª, menu "Mais ações" (teclado: abre, navega, Esc fecha); `PrivacyToggle` sempre presente; `pt-safe` aplicado — `tests/component/page-header.test.tsx` (FR-010, FR-015)
 - [ ] T024 [P] [US1] Componente `OfflineBanner` + `useOnline` (eventos online/offline) e `ComingSoon` ("Em breve" + texto padrão) — `tests/component/offline-banner.test.tsx` (FR-009, FR-014)
 - [ ] T025 [P] [US1] E2E shell: 360px barra inferior / 1280px menu lateral; clicar em cada destino muda URL e destaque; voltar/avançar; `ComingSoon` nas 4 seções com h1 = nome da seção; `/mais` lista Ajustes e Catálogo; chip "Local"; 1º Tab foca "Pular para o conteúdo" e leva a `#conteudo`; sem rolagem horizontal; `context.setOffline(true)` mostra e remove o aviso; `/nao-existe` → "Página não encontrada" em pt-BR, com tokens e sem a navegação "Principal" — `tests/e2e/shell.spec.ts` (FR-007, FR-009, FR-011, FR-013, FR-014, FR-016, FR-020, FR-038)
