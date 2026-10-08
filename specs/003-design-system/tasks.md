@@ -76,7 +76,7 @@
 - [x] T029 [US1] `PageHeader` (h1, voltar, até 2 ações + menu "Mais ações", slot do `PrivacyToggle`, `pt-safe`) — `src/components/shell/page-header.tsx` até T088 passar (FR-010, FR-015)
 - [x] T030 [US1] `OfflineBanner` + `use-online.ts` e `ComingSoon` até T024 passar — `src/components/shell/offline-banner.tsx`, `src/components/shell/use-online.ts`, `src/components/shell/coming-soon.tsx` (FR-009, FR-014)
 - [x] T031 [US1] Route group `(app)`: `layout.tsx` com `AppShell`, `page.tsx` (Início), `extrato`, `planejamento`, `investimentos`, `mais` (atalhos existentes), `loading.tsx`, `error.tsx`, `not-found.tsx`; `src/app/not-found.tsx` raiz (fora do shell, pt-BR, tokens, `Logo`, "Voltar ao início"); remover `src/app/page.tsx` — `src/app/(app)/**`, `src/app/not-found.tsx` até T025/T026 passarem (FR-007, FR-009, FR-011, FR-016, FR-038)
-- [ ] T032 [P] [US1] Página offline com tokens e `Logo` + `public/sw.js` (`CACHE = "prumo-shell-v2"`, cache-first de `/_next/static/css/*` e `/_next/static/media/*`) — `src/app/~offline/page.tsx`, `public/sw.js` até T079 passar (FR-006)
+- [x] T032 [P] [US1] Página offline com tokens e `Logo` + `public/sw.js` (`CACHE = "prumo-shell-v2"`, cache-first de `/_next/static/css/*` e `/_next/static/media/*`) — `src/app/~offline/page.tsx`, `public/sw.js` até T079 passar (FR-006)
 
 **Checkpoint**: shell navegável em local e demo; telas fora do shell com selo e visual.
 
