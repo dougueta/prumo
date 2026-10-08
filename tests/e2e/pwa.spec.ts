@@ -63,3 +63,29 @@ test("sem conexão, a navegação cai na página offline em português (FR-020)"
   await expect(page.getByRole("heading", { name: "Você está sem conexão" })).toBeVisible();
   await context.setOffline(false);
 });
+
+test("página offline estilizada com o design system depois da 1ª visita (FR-006)", async ({
+  page,
+  context,
+  request,
+}) => {
+  const sw = await (await request.get("/sw.js")).text();
+  expect(sw).toContain('const CACHE = "prumo-shell-v2"');
+
+  await page.goto("/");
+  await page.evaluate(async () => {
+    await navigator.serviceWorker.ready;
+  });
+  await page.reload();
+  await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true);
+  // Mais uma carga controlada pelo SW: CSS e fontes passam pelo cache de runtime.
+  await page.reload();
+
+  await context.setOffline(true);
+  await page.goto("/outra-rota");
+  await expect(page.getByRole("heading", { name: "Você está sem conexão" })).toBeVisible();
+  await expect(page.getByRole("img", { name: "Prumo" })).toBeVisible();
+  const background = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  expect(["rgb(250, 248, 245)", "rgb(20, 19, 18)"]).toContain(background);
+  await context.setOffline(false);
+});
