@@ -54,7 +54,7 @@ nas duas.
 - [x] T011 Migração `<ts>_core_schema.sql`: `unaccent`, `core_name_key`, `core_fp_identity`, `core_resolve_owner`, `core_current_actor`, 6 tabelas de dados + `category_templates` com todas as colunas, `CHECK`, FKs compostas e índices do data-model §2; triggers `core_touch_updated_at`, `transactions_guard` (INSERT; data-model §2.6) e `import_batches_state_guard` até T069, T027 e T070 passarem (exceto partes que dependem de T013)
 - [x] T012 Migração `<ts>_core_audit.sql`: `audit_log`, `core_audit()` (`SECURITY DEFINER`, `search_path=''`, `changes` só de colunas alteradas, ação derivada conforme data-model §2.7), triggers `AFTER INSERT/UPDATE` nas 5 tabelas, `audit_log_immutable` (UPDATE/DELETE/TRUNCATE), `core_forbid_delete` e `core_forbid_truncate` (data-model §2.8) até T047 passar
 - [x] T013 Migração `<ts>_core_rls.sql`: `ENABLE` + `FORCE ROW LEVEL SECURITY` nas 7 tabelas, policies e matriz GRANT/REVOKE do data-model §3 até T034 e T035 passarem
-- [ ] T014 Gerar e versionar `<ts>_core_seed_catalog.sql` via T010; `supabase db reset` local sem erros até T069 passar por completo
+- [x] T014 Gerar e versionar `<ts>_core_seed_catalog.sql` via T010; `supabase db reset` local sem erros até T069 passar por completo
 
 ### Porta, contexto e esqueletos
 - [ ] T015 `src/data/core/ports.ts` (interface `CoreStore` de contracts/core-store.md) e `src/data/core/index.ts` (exporta só porta, tipos, `createCoreStore`, `getCoreStore`, `registerOwnerContextProvider`, `CoreError`, `DEMO_OWNER_ID`) — verificado por T065/T016
