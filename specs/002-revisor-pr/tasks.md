@@ -135,7 +135,7 @@ nenhum teste usa rede.
 
 ## Phase 8: Emergência e transversais
 
-- [ ] T049 [P] Teste do modo agendado do `mainGuard` (pendente, fechada ao achar veredito pós-merge, `VENCIDA —` após 7 dias, idempotência) — `tests/unit/review/emergency.test.ts` (FR-024)
+- [x] T049 [P] Teste do modo agendado do `mainGuard` (pendente, fechada ao achar veredito pós-merge, `VENCIDA —` após 7 dias, idempotência) — `tests/unit/review/emergency.test.ts` (FR-024)
 - [ ] T050 `.github/workflows/main-guard.yml` (só `schedule` 11:00 UTC + `workflow_dispatch`) + modo agendado em `scripts/review/main-guard.ts`, atualizando o espelho, até T049, T061 (parte main-guard.yml) e T072 passarem (FR-024)
 - [ ] T051 Aceite: quickstart §2 cenário 13 — emergência numa branch `NNN-slug` de feature já integrada; e trava (cenário 13b) (FR-024)
 - [ ] T071 [P] Teste de custo zero: `package.json` não contém `@octokit/*`, `jsonwebtoken`, `@anthropic-ai/*` nem dependências além das existentes antes da 002 (lista registrada no teste); nenhum workflow usa `anthropics/claude-code-action` nem segredos de API paga (`ANTHROPIC_API_KEY`, `GEMINI_API_KEY`) — `tests/unit/review/cost.test.ts` (FR-025, SC-008)
