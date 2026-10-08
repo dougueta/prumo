@@ -4,12 +4,13 @@ import { pathToFileURL } from "node:url";
 import {
   EMERGENCY_ISSUE_PREFIX,
   EMERGENCY_LABEL,
+  OVERDUE_PREFIX,
   OWNER_LOGIN,
   REPO_FULL_NAME,
   VIOLATION_LABEL,
 } from "../../src/review/catalog";
 import { requiredChecksFromCi } from "../../src/review/ci-checks";
-import { mainGuard } from "../../src/review/main-guard";
+import { emergencyAction, mainGuard } from "../../src/review/main-guard";
 import {
   REPO_PATH,
   buildPrSnapshot,
@@ -109,6 +110,39 @@ async function runPush(c: GitHubClient, env: MainGuardDeps["env"], log: (m: stri
   return 0;
 }
 
+/** Modo agendado: regulariza ou marca como VENCIDA cada emergência aberta (FR-024). */
+async function runSchedule(c: GitHubClient, now: () => Date, log: (m: string) => void) {
+  for (const issue of await openIssues(c, EMERGENCY_LABEL)) {
+    const m = new RegExp(`^(?:${OVERDUE_PREFIX})?${EMERGENCY_ISSUE_PREFIX}(\\d+)$`).exec(
+      issue.title,
+    );
+    if (!m) continue;
+    const n = Number(m[1]);
+    const pr = await buildPrSnapshot(c, n);
+    const result = emergencyAction({ issue, pr, now: now() });
+    const comment = (body: string) =>
+      c.request("POST", `${REPO_PATH}/issues/${issue.number}/comments`, { body: { body } });
+    if (result.action === "close") {
+      await comment(
+        `Revisão independente pós-merge publicada no PR #${n} (https://github.com/${REPO_FULL_NAME}/pull/${n}). Emergência regularizada.`,
+      );
+      await c.request("PATCH", `${REPO_PATH}/issues/${issue.number}`, {
+        body: { state: "closed" },
+      });
+      log(`emergência #${n}: regularizada`);
+    } else if (result.action === "overdue") {
+      await c.request("PATCH", `${REPO_PATH}/issues/${issue.number}`, {
+        body: { title: `${OVERDUE_PREFIX}${issue.title}` },
+      });
+      await comment(
+        `@${OWNER_LOGIN} o prazo de 7 dias para a revisão independente pós-merge do PR #${n} venceu (Constitution VIII). Re-acione o revisor designado.`,
+      );
+      log(`emergência #${n}: VENCIDA`);
+    }
+  }
+  return 0;
+}
+
 export async function runMainGuard(deps: MainGuardDeps): Promise<number> {
   const log = deps.log ?? console.log;
   const token = deps.env.GITHUB_TOKEN;
@@ -119,8 +153,7 @@ export async function runMainGuard(deps: MainGuardDeps): Promise<number> {
   const c = createGitHubClient({ token, fetch: deps.fetch, sleep: deps.sleep });
   try {
     if (deps.mode === "push") return await runPush(c, deps.env, log);
-    log("modo schedule ainda não implementado");
-    return 1;
+    return await runSchedule(c, deps.now ?? (() => new Date()), log);
   } catch (e) {
     log(`erro: ${e instanceof Error ? e.message : String(e)}`);
     return 1;
