@@ -35,7 +35,7 @@ nas duas.
 
 ### Domínio puro — implementação
 - [x] T007 Implementar `src/domain/core/{types,money,dates,text,errors}.ts` (tipos de contracts/core-store.md §Tipos; `CoreError` com códigos e motivos de §Erros) até T004–T006 e T066 passarem
-- [ ] T008 Implementar `src/domain/core/schemas.ts` até T067 passar
+- [x] T008 Implementar `src/domain/core/schemas.ts` até T067 passar
 
 ### Taxonomia
 - [ ] T009 [P] Teste: `default-categories.ts` tem 15 despesas, 5 receitas, 3 neutras + "Sem categoria"; 75 subcategorias; system keys `uncategorized, internal_transfer, card_payment, salary, bank_fees` (`bank_fees` subcategoria de "Impostos, tarifas e juros"); só #21, #22 e `uncategorized` neutras de sistema; nomes únicos por irmãos (`nameKey`) — `tests/unit/core/default-categories.test.ts` (FR-029)
