@@ -88,7 +88,7 @@
 
 ### Testes
 - [x] T033 [P] [US2] `Money`: variantes movement/balance/neutral/compact (texto, classe de token, `tabular-nums`), sinal sempre presente em movimentação negativa/positiva (não só cor), `null` → "—"/"valor indisponível", sr-only com fala, máscara presente, popover do compacto com valor completo, `TypeError` com `cents` não inteiro — `tests/component/money.test.tsx` (FR-005, FR-019, FR-025, FR-026, FR-027, FR-028)
-- [ ] T034 [P] [US2] `RelativeDate` com `TodayProvider` (Hoje/Ontem/Amanhã/mesmo ano/outro ano, `<time dateTime>`, `aria-label` completo) e `PeriodLabel` — `tests/component/relative-date.test.tsx` (FR-029, FR-030)
+- [x] T034 [P] [US2] `RelativeDate` com `TodayProvider` (Hoje/Ontem/Amanhã/mesmo ano/outro ano, `<time dateTime>`, `aria-label` completo) e `PeriodLabel` — `tests/component/relative-date.test.tsx` (FR-029, FR-030)
 
 ### Implementação
 - [ ] T035 [US2] `src/components/finance/money.tsx` (Server-compatível; popover só no compacto) até T033 passar (FR-005, FR-025–FR-028)
