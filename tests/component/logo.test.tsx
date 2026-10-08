@@ -12,7 +12,7 @@ describe("Logo", () => {
 
   it("mostra o nome Prumo sem duplicar a leitura", () => {
     const { container } = render(<Logo />);
-    const word = [...container.querySelectorAll("span")].find((s) => s.textContent === "Prumo");
+    const word = [...container.querySelectorAll("span")].findLast((s) => s.textContent === "Prumo");
     expect(word).toBeDefined();
     expect(word).toHaveAttribute("aria-hidden", "true");
   });
