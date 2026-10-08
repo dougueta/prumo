@@ -38,7 +38,7 @@ nas duas.
 - [x] T008 Implementar `src/domain/core/schemas.ts` até T067 passar
 
 ### Taxonomia
-- [ ] T009 [P] Teste: `default-categories.ts` tem 15 despesas, 5 receitas, 3 neutras + "Sem categoria"; 75 subcategorias; system keys `uncategorized, internal_transfer, card_payment, salary, bank_fees` (`bank_fees` subcategoria de "Impostos, tarifas e juros"); só #21, #22 e `uncategorized` neutras de sistema; nomes únicos por irmãos (`nameKey`) — `tests/unit/core/default-categories.test.ts` (FR-029)
+- [x] T009 [P] Teste: `default-categories.ts` tem 15 despesas, 5 receitas, 3 neutras + "Sem categoria"; 75 subcategorias; system keys `uncategorized, internal_transfer, card_payment, salary, bank_fees` (`bank_fees` subcategoria de "Impostos, tarifas e juros"); só #21, #22 e `uncategorized` neutras de sistema; nomes únicos por irmãos (`nameKey`) — `tests/unit/core/default-categories.test.ts` (FR-029)
 - [ ] T068 [P] Teste: `scripts/generate-category-seed.ts` gera SQL determinístico com 99 `category_templates` e 11 instituições de catálogo (UUIDs `…000000000NNN`, "Outra instituição" = `999`); `--check` falha se a migração versionada divergir — `tests/unit/core/category-seed.test.ts` (FR-005, FR-029, R-12)
 - [ ] T010 Implementar `src/domain/core/default-categories.ts` (data-model §4) e `scripts/generate-category-seed.ts` até T009 e T068 passarem
 
