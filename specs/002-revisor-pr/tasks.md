@@ -59,7 +59,7 @@ nenhum teste usa rede.
 - [x] T067 [P] [US1] Teste dos documentos de processo: `docs/workflow.md`, `AGENTS.md`, `CLAUDE.md` e `GEMINI.md` contêm "exceção de bootstrap encerrada em AAAA-MM-DD", o trailer `Co-Authored-By: Gemini <noreply@google.com>` (AGENTS/GEMINI), a exigência dos rótulos `autor:*` + `iniciativa:N`, `npm run pr:merge`, "atualize o espelho dos workflows" e "rode `npm run gh:ruleset` ao mudar jobs do CI"; `docs/gemini-handoff.md` tem a seção "Revisões pendentes"; `README.md` tem a seção "Revisão de PRs" com custo R$ 0; `docs/adr/0007-protecao-main-repo-publico.md` existe, está no índice e tem as seções "Análise de ameaça — repositório público" e "Riscos residuais" — `tests/unit/review/process-docs.test.ts` (FR-023, FR-025, FR-026)
 
 ### Implementação
-- [ ] T015 [US1] `src/review/evaluate-gate.ts` + `src/review/warnings-comment.ts` (algoritmo do plan) até T011 passar
+- [x] T015 [US1] `src/review/evaluate-gate.ts` + `src/review/warnings-comment.ts` (algoritmo do plan) até T011 passar
 - [ ] T016 [US1] `scripts/review/github.ts` (cliente mínimo, `fetch` injetável, `GITHUB_TOKEN`/`gh auth token`, política de erro do OpenAPI) até T013 passar
 - [ ] T017 [US1] `scripts/review/gate.ts` (snapshot → `evaluateGate` → `POST statuses` + comentário de avisos + job summary) e `.github/workflows/review-gate.yml` (contrato review-gate), atualizando o espelho, até T061 (parte review-gate), T062 e T072 passarem (FR-006, FR-008, FR-010, FR-026)
 - [ ] T018 [US1] `src/review/main-guard.ts` + `scripts/review/main-guard.ts` (modo push) + job `main-guard` ("Guarda da main") em `.github/workflows/ci.yml` com `deploy-db.needs: [..., main-guard]`, atualizando o espelho, até T012, T061 (parte ci.yml), T063 e T072 passarem (FR-002, FR-004, FR-005)
