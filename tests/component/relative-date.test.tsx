@@ -29,7 +29,7 @@ describe("RelativeDate", () => {
 
   it("data completa sempre disponível ao leitor de tela e no título", () => {
     const { container } = withToday(<RelativeDate date="2026-09-29" />);
-    expect(screen.getByText("29 de setembro de 2026")).toHaveClass("sr-only");
+    expect(screen.getByText("Ontem, 29 de setembro de 2026")).toHaveClass("sr-only");
     expect(container.querySelector("time")).toHaveAttribute("title", "29/09/2026");
   });
 

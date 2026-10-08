@@ -23,7 +23,9 @@ function data(kind: Parameters<typeof firstOfKind>[0], extra: Partial<Transactio
 function renderItem(node: React.ReactNode) {
   return render(
     <TodayProvider today="2026-09-30" fixed>
-      <ul>{node}</ul>
+      <ul>
+        <li>{node}</li>
+      </ul>
     </TodayProvider>,
   );
 }

@@ -17,10 +17,14 @@ export function RelativeDate({
 }) {
   const today = useToday();
   const text = variant === "absolute" ? formatAbsoluteDate(date) : formatRelativeDate(date, today);
+  // "Hoje"/"Ontem"/"Amanhã" também vão ao leitor de tela, junto da data completa.
+  const speech = /^(Hoje|Ontem|Amanhã)$/.test(text)
+    ? `${text}, ${dateToSpeech(date)}`
+    : dateToSpeech(date);
   return (
     <time dateTime={date} title={formatAbsoluteDate(date)}>
       <span aria-hidden="true">{text}</span>
-      <span className="sr-only">{dateToSpeech(date)}</span>
+      <span className="sr-only">{speech}</span>
     </time>
   );
 }
