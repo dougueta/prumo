@@ -1,0 +1,10 @@
+# INSEGURO (T061): sem permissions: {} no topo e checkout com credenciais persistidas.
+name: Revisão independente
+on:
+  pull_request_target:
+permissions: write-all
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7

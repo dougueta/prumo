@@ -1,0 +1,12 @@
+# INSEGURO (T061): gatilho pull_request executa o código do PR.
+name: Revisão independente
+on:
+  pull_request:
+permissions: {}
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    steps:
+      - uses: actions/checkout@v7
+        with: { ref: main, persist-credentials: false }

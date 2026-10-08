@@ -1,0 +1,23 @@
+# ci.yml sintético (T059): jobs sem if são verificações de PR.
+name: CI
+on: [pull_request, push]
+jobs:
+  quality:
+    name: Qualidade
+    runs-on: ubuntu-latest
+    steps: [{ run: "true" }]
+  unit:
+    name: Testes unitários
+    runs-on: ubuntu-latest
+    steps: [{ run: "true" }]
+  main-guard:
+    name: Guarda da main
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps: [{ run: "true" }]
+  deploy-db:
+    name: Migrações de produção
+    if: github.event_name == 'push'
+    needs: [quality, unit, main-guard]
+    runs-on: ubuntu-latest
+    steps: [{ run: "true" }]

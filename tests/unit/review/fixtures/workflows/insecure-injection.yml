@@ -1,0 +1,11 @@
+# INSEGURO (T061): texto do PR interpolado em run: (injeção de script).
+name: Revisão independente
+on:
+  pull_request_target:
+permissions: {}
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    permissions: { contents: read }
+    steps:
+      - run: echo "${{ github.event.pull_request.title }}"
