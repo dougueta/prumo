@@ -6,3 +6,11 @@ export type { CoreStore } from "./ports";
 export type * from "@/domain/core/types";
 export { CoreError } from "@/domain/core/errors";
 export type { CoreErrorCode, ForbiddenReason } from "@/domain/core/errors";
+export {
+  createCoreStore,
+  getCoreStore,
+  registerOwnerContextProvider,
+  DEMO_OWNER_ID,
+  DEMO_SESSION_COOKIE,
+} from "./context";
+export type { OwnerContext, OwnerContextProvider } from "./context";
