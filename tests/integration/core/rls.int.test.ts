@@ -81,6 +81,7 @@ describe("RLS com JWT (dono A × dono B)", () => {
   });
 
   it("DELETE é negado mesmo nas próprias linhas", async () => {
+    // eslint-disable-next-line no-restricted-syntax -- o teste prova que o DELETE é negado (FR-037)
     const { error } = await clientA.from("transactions").delete().eq("id", a.tx);
     expect(error).not.toBeNull();
     expect(sql(`select count(*) from public.transactions where id = '${a.tx}';`)).toBe("1");
