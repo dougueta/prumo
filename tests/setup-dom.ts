@@ -2,7 +2,28 @@
 // jsdom não implementa (usadas por Radix, sonner e pelos componentes responsivos).
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
-import { afterEach } from "vitest";
+import { createElement, type AnchorHTMLAttributes } from "react";
+import { afterEach, vi } from "vitest";
+
+// Next fora do App Router: Link vira <a> e o roteador é um dublê controlável pelos testes
+// (vi.mocked(usePathname).mockReturnValue("/extrato")).
+vi.mock("next/link", () => ({
+  default: ({
+    href,
+    prefetch: _prefetch,
+    ...props
+  }: AnchorHTMLAttributes<HTMLAnchorElement> & {
+    href: string;
+    prefetch?: boolean;
+  }) => createElement("a", { href, ...props }),
+}));
+vi.mock("next/navigation", () => ({
+  usePathname: vi.fn(() => "/"),
+  useRouter: vi.fn(() => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn(), refresh: vi.fn() })),
+  notFound: vi.fn(() => {
+    throw new Error("NEXT_NOT_FOUND");
+  }),
+}));
 
 afterEach(() => cleanup());
 
