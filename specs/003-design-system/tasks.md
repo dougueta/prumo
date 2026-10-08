@@ -26,7 +26,7 @@
 - [x] T005 [P] Playwright: projeto `visual` (só `process.platform === "linux"`, `toHaveScreenshot` com `maxDiffPixelRatio: 0.01`), novos specs em `mobile-chrome`/`demo`, script `test:visual:update` via imagem `mcr.microsoft.com/playwright:v1.63.0-noble`; base URL sempre `http://localhost:<porta>` — `playwright.config.ts`, `package.json`, `scripts/visual-update.mjs`
 - [x] T006 [P] Copiar Inter Variable (latin + latin-ext, normal + itálico) de `@fontsource-variable/inter@5.3.0` (via `npm pack`, sem virar dependência) para `src/app/fonts/` com `OFL.txt`, até a parte de fontes do T086 passar (R-04, FR-052)
 - [x] T007 [P] ESLint: `eslint-plugin-better-tailwindcss` com `entryPoint: src/app/globals.css`; `no-unknown-classes` em `src/app/**` e `src/components/**` (**inclui `ui/`**); `no-restricted-classes` (proíbe `^dark:`, `\[.*\]`) em `src/app/**` e `src/components/{finance,states,forms,shell,brand}/**` — `eslint.config.mjs` (FR-004)
-- [ ] T008 CI **sem renomear jobs** (nomes da 001 são os checks obrigatórios da 002): job "Testes unitários" roda `test:unit` e `test:component`; job "Testes ponta a ponta (Playwright)" roda também o projeto `visual`, publica diffs de screenshot no artefato e tem `timeout-minutes` revisto (20 → medir; máx. 25) — `.github/workflows/ci.yml` (FR-049)
+- [x] T008 CI **sem renomear jobs** (nomes da 001 são os checks obrigatórios da 002): job "Testes unitários" roda `test:unit` e `test:component`; job "Testes ponta a ponta (Playwright)" roda também o projeto `visual`, publica diffs de screenshot no artefato e tem `timeout-minutes` revisto (20 → medir; máx. 25) — `.github/workflows/ci.yml` (FR-049)
 
 ## Phase 2: Foundational (bloqueia todas as histórias)
 
