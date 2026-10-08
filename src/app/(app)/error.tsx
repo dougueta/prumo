@@ -1,16 +1,22 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ErrorState } from "@/components/states/error-state";
 
-/** Erro numa página do shell: texto padrão, sem detalhe técnico (FR-038). */
-export default function RouteError({ retry, reset }: { retry?: () => void; reset?: () => void }) {
+/**
+ * Erro numa página do shell (FR-038): texto padrão, nunca `error.message`/`digest`.
+ * Next 16.3 entrega `retry` (recarrega os dados); `reset` fica como alternativa.
+ */
+export default function RouteError({
+  retry,
+  reset,
+}: {
+  error?: Error & { digest?: string };
+  retry?: () => void;
+  reset?: () => void;
+}) {
   return (
-    <section className="mt-6 flex flex-col items-center gap-3 rounded-lg border border-border bg-surface px-6 py-12 text-center">
-      <h2 className="text-lg font-semibold">Não foi possível carregar.</h2>
-      <p className="text-foreground-muted">Verifique sua conexão e tente de novo.</p>
-      <Button variant="secondary" onClick={() => (retry ?? reset)?.()}>
-        Tentar novamente
-      </Button>
-    </section>
+    <div className="py-6">
+      <ErrorState scope="page" onRetry={() => (retry ?? reset)?.()} />
+    </div>
   );
 }
