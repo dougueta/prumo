@@ -62,7 +62,7 @@ nas duas.
 - [x] T017 Implementar `src/data/core/context.ts` até T016 passar
 - [x] T018 Bateria de contrato vazia parametrizada `describeCoreStoreContract(name, makeStore: () => Promise<{ store; other }>)` (dois donos por execução) + runners `tests/unit/core/memory-store.contract.test.ts` e `tests/integration/core/supabase-store.contract.int.test.ts` (rodando modos `user` e `service`) — `tests/contract/core-store.contract.ts` (FR-045, FR-046, SC-005)
 - [x] T071 Caso de contrato (vermelho): "bootstrap idempotente cria 99 categorias; 2ª chamada cria 0; `categories.tree()` vazio dispara bootstrap preguiçoso" — `tests/contract/core-store.contract.ts` (FR-029)
-- [ ] T019 Esqueletos `src/data/core/memory/memory-store.ts` e `src/data/core/supabase/{supabase-store,mappers}.ts` (`server-only`; mapeamento `LockableField` camelCase ⇄ snake_case) implementando `bootstrap()` (memória: copia taxonomia; Supabase: `core_bootstrap_owner` em `<ts>_core_functions.sql`) até T071 passar nas duas
+- [x] T019 Esqueletos `src/data/core/memory/memory-store.ts` e `src/data/core/supabase/{supabase-store,mappers}.ts` (`server-only`; mapeamento `LockableField` camelCase ⇄ snake_case) implementando `bootstrap()` (memória: copia taxonomia; Supabase: `core_bootstrap_owner` em `<ts>_core_functions.sql`) até T071 passar nas duas
 
 **Checkpoint**: schema aplicado com RLS/GRANTs/auditoria testados, porta definida, contrato rodando nas duas implementações.
 
