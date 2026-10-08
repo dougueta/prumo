@@ -621,7 +621,7 @@ BEGIN
       CONTINUE WHEN (v_new->v_field) IS NOT DISTINCT FROM (v_old->v_field);
       IF v_field = 'category_id' AND v_action = 'reassign' THEN
         CONTINUE;                                       -- reatribuição por exclusão de categoria
-      ELSIF v_field = 'related_transaction_id' AND v_force_unlink THEN
+      ELSIF v_field IN ('related_transaction_id', 'nature') AND v_force_unlink THEN
         CONTINUE;                                       -- contrapartida excluída: vínculo desfeito
       ELSIF v_user THEN
         IF NOT (v_field = ANY (v_locked)) THEN v_locked := v_locked || v_field; END IF;

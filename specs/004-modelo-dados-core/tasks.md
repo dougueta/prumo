@@ -80,7 +80,7 @@ nas duas.
 
 ### Implementação
 - [x] T023 [US1] `src/domain/core/identity.ts` e `src/domain/core/state.ts` até T020–T021 passarem
-- [ ] T024 [US1] Funções `core_create_batch`, `core_finish_batch`, `core_resume_batch`, `core_find_completed_batch_by_file` e `core_upsert_transactions` (formato de `p_rows` e algoritmo do data-model §5, ramos `created/updated/duplicate/protected/rejected`) em `<ts>_core_functions.sql` até a parte Supabase de T022 e T072 passar
+- [x] T024 [US1] Funções `core_create_batch`, `core_finish_batch`, `core_resume_batch`, `core_find_completed_batch_by_file` e `core_upsert_transactions` (formato de `p_rows` e algoritmo do data-model §5, ramos `created/updated/duplicate/protected/rejected`) em `<ts>_core_functions.sql` até a parte Supabase de T022 e T072 passar
 - [ ] T025 [US1] `MemoryCoreStore`: `batches.*` (exceto `undo`), `transactions.upsertMany/list/get` com o mesmo contador de ocorrências até a parte memória de T022 passar
 - [ ] T026 [US1] `SupabaseCoreStore`: mesmas operações via `rpc()` (cálculo de `fp_base` em TS, fatiamento em 1.000 linhas, `mapDbError`, cursor opaco) até a parte Supabase de T022 passar
 
