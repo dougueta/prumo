@@ -1,8 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-test("tela inicial exibe Prumo em pt-BR (FR-001, FR-021)", async ({ page }) => {
+test("tela inicial: shell com h1 Início, logotipo Prumo e pt-BR (FR-001, FR-006, FR-021)", async ({
+  page,
+}) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1, name: "Prumo" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Início" })).toBeVisible();
+  await expect(page.getByRole("img", { name: "Prumo" }).first()).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
   await expect(page.getByText("Demonstração — dados fictícios")).toHaveCount(0);
 });
