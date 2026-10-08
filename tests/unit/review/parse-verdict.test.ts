@@ -1,4 +1,6 @@
 // T006 · contracts/veredito.md §1 — parseVerdict (FR-007, FR-010, FR-016, FR-020).
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { inlineSeverity, parseVerdict } from "../../../src/review/parse-verdict";
 import { HEAD, verdictBody, warningsCommentBody } from "./fixtures";
@@ -215,5 +217,31 @@ describe("inlineSeverity — selos do Gemini", () => {
 
   it("sem selo → null", () => {
     expect(inlineSeverity("comentário sem selo")).toBeNull();
+  });
+});
+
+describe("exemplos de docs/review-checklist.md (fonte única do formato — T029)", () => {
+  const blocks = () =>
+    [
+      ...readFileSync(path.resolve(__dirname, "../../../docs/review-checklist.md"), "utf8")
+        .replace(/\r\n/g, "\n")
+        .matchAll(/```markdown\n([\s\S]*?)```/g),
+    ].map((m) => m[1]);
+
+  it("o modelo, preenchido com um resultado, é aceito pelo parser (Gemini)", () => {
+    const model = blocks().find((b) => b.startsWith("<!-- prumo:veredito v1 -->"))!;
+    expect(
+      parseVerdict(model.replace("APROVADO | MUDANÇAS NECESSÁRIAS", "APROVADO"), "gemini").status,
+    ).toBe("ok");
+  });
+
+  it("o exemplo do Claude limpo é aceito com head= e Insumos lidos", () => {
+    const example = blocks().find((b) => b.includes("head="))!;
+    const r = parseVerdict(example, "claude");
+    expect(r.status).toBe("ok");
+    if (r.status === "ok") {
+      expect(r.verdict.findings.map((f) => f.severity)).toEqual(["ALTO", "BAIXO"]);
+      expect(r.verdict.inputsRead).toEqual(["diff.patch", "spec/spec.md", "constitution.md"]);
+    }
   });
 });

@@ -1,4 +1,6 @@
 // T007 · contracts/veredito.md §2 — resposta do autor (FR-019).
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { answeredFindings, parseResponses } from "../../../src/review/parse-responses";
 import { issueComment, responsesBody, users } from "./fixtures";
@@ -89,5 +91,17 @@ describe("answeredFindings", () => {
       issueComment({ id: 1, at, body: responsesBody([[1, "corrigido", "c".repeat(7)]]) }),
     )!;
     expect([...answeredFindings([a], commits)]).toEqual([]);
+  });
+});
+
+describe("exemplo de docs/review-checklist.md (T029)", () => {
+  it("o bloco de resposta do checklist é aceito por parseResponses", () => {
+    const text = readFileSync(path.resolve(__dirname, "../../../docs/review-checklist.md"), "utf8");
+    const block = /```markdown\n(<!-- prumo:respostas v1 -->[\s\S]*?)```/.exec(
+      text.replace(/\r\n/g, "\n"),
+    )![1];
+    expect(parseResponses(issueComment({ id: 1, at, body: block }))?.lines.map((l) => l.n)).toEqual(
+      [1, 2],
+    );
   });
 });
