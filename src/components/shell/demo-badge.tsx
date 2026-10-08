@@ -1,7 +1,10 @@
 import { connection } from "next/server";
 import { isDemo } from "@/lib/app-env";
 
-/** Selo exibido em toda tela no modo demonstração (FR-011, ADR 0006). Lido em runtime. */
+/**
+ * Selo exibido em toda tela no modo demonstração — dentro e fora do shell (FR-012, ADR 0006).
+ * Renderizado no root layout; `z-demo` fica acima de diálogos e avisos. Lido em runtime.
+ */
 export async function DemoBadge() {
   await connection();
   if (!isDemo()) return null;
