@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { toast } from "sonner";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { Form, TextField } from "@/components/forms/form-field";
@@ -34,7 +35,10 @@ function setOnline(value: boolean) {
   Object.defineProperty(navigator, "onLine", { configurable: true, value });
 }
 
-afterEach(() => setOnline(true));
+afterEach(() => {
+  setOnline(true);
+  toast.dismiss(); // o store do sonner é global: não deixa avisos para o próximo teste
+});
 
 async function fillValid(user: ReturnType<typeof userEvent.setup>) {
   await user.type(screen.getByLabelText("Descrição"), "Exemplo");
