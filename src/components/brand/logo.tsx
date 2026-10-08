@@ -10,9 +10,12 @@ const geometry = plumbGeometry(LOGO_VIEWBOX, 0);
 export function Logo({
   variant = "full",
   className,
+  wordClassName,
 }: {
   variant?: "full" | "symbol";
   className?: string;
+  /** Classes do nome (ex.: esconder em telas estreitas). */
+  wordClassName?: string;
 }) {
   return (
     <span className={cn("inline-flex items-center gap-2", className)}>
@@ -34,7 +37,10 @@ export function Logo({
         <path d={geometry.bob} fill="currentColor" />
       </svg>
       {variant === "full" && (
-        <span aria-hidden="true" className="text-lg font-semibold tracking-tight">
+        <span
+          aria-hidden="true"
+          className={cn("text-lg font-semibold tracking-tight", wordClassName)}
+        >
           Prumo
         </span>
       )}
