@@ -117,7 +117,7 @@
 - [x] T046 [P] [US3] `source-badge.tsx` até T039 passar — `src/components/finance/source-badge.tsx` (FR-035)
 - [x] T047 [P] [US3] `empty-state.tsx`, `loading-skeleton.tsx`, `slow-loading.tsx`, `error-state.tsx`; aplicar em `(app)/loading.tsx`/`error.tsx`/`not-found.tsx` e no `src/app/not-found.tsx`; criar `src/app/global-error.tsx` (html/body próprios, `globals.css`, textos padrão) — `src/components/states/`, `src/app/` até T040/T080 passarem (FR-037, FR-038)
 - [ ] T048 [US3] `form-field.tsx`, `money-input.tsx`, `date-input.tsx`, `select-field.tsx`, `switch-field.tsx`, `textarea-field.tsx`, `submit-button.tsx`, `use-app-form.ts`, `run-online.ts` até T041/T042 passarem — `src/components/forms/` (FR-039, FR-040, FR-041, FR-044)
-- [ ] T049 [US3] `confirm-dialog.tsx`, `responsive-dialog.tsx`, `use-back-to-close.ts`, `notify.ts` (inclui `offlineAction`) + `<Toaster>` **único no root layout** (top-center < md, bottom-right ≥ md) até T043 passar — `src/components/forms/`, `src/components/shell/`, `src/app/layout.tsx` (FR-024, FR-042, FR-043, FR-044)
+- [x] T049 [US3] `confirm-dialog.tsx`, `responsive-dialog.tsx`, `use-back-to-close.ts`, `notify.ts` (inclui `offlineAction`) + `<Toaster>` **único no root layout** (top-center < md, bottom-right ≥ md) até T043 passar — `src/components/forms/`, `src/components/shell/`, `src/app/layout.tsx` (FR-024, FR-042, FR-043, FR-044)
 
 ---
 

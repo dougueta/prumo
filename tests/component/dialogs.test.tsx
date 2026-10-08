@@ -152,7 +152,7 @@ describe("notify", () => {
     const onUndo = vi.fn();
     notify.undo("Transação excluída.", onUndo);
     Object.defineProperty(navigator, "onLine", { configurable: true, value: false });
-    const options = vi.mocked(toast.message).mock.calls[0][1] as {
+    const options = vi.mocked(toast.message).mock.calls[0][1] as unknown as {
       action: { onClick: () => Promise<void> };
     };
     await options.action.onClick();

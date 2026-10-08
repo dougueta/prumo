@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { cookies } from "next/headers";
+import { AppToaster } from "@/components/shell/app-toaster";
 import { DemoBadge } from "@/components/shell/demo-badge";
 import { EnvIndicator } from "@/components/shell/env-indicator";
 import { PreferencesProvider } from "@/components/shell/preferences-provider";
@@ -64,6 +65,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <PreferencesProvider initialTheme={theme} initialPrivacy={privacy}>
           <TodayProvider today={todayInSaoPaulo()}>{children}</TodayProvider>
         </PreferencesProvider>
+        <AppToaster />
         <ServiceWorkerRegister />
       </body>
     </html>
