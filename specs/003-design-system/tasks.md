@@ -47,7 +47,7 @@
 
 ### Implementação
 - [x] T016 `src/styles/tokens.css` (data-model §1–2: cores, `--overlay`, categorias, raios, sombras, movimento, z, container; `--color-*: initial` + `@theme inline`; aliases shadcn; `@custom-variant dark` de §1.1a; utilitários `*-safe`) + `src/styles/tokens.ts` (§1.1b) e import em `globals.css` com base, `color-scheme`, foco visível global (`--focus`), `prefers-reduced-motion` e regras de privacidade — até T009/T010/T084 passarem (FR-001, FR-002, FR-003, FR-005, FR-015, FR-019, FR-022)
-- [ ] T017 [P] `src/lib/format.ts`: `formatMoney`, `moneyToSpeech`, `parseMoneyInput`, datas e períodos (algoritmos do plan); remover `formatCents`/`formatDate` e atualizar chamadores + `tests/unit/format.test.ts` — até T011–T013 passarem (FR-025, FR-026, FR-028, FR-029, FR-030, FR-039)
+- [x] T017 [P] `src/lib/format.ts`: `formatMoney`, `moneyToSpeech`, `parseMoneyInput`, datas e períodos (algoritmos do plan); remover `formatCents`/`formatDate` e atualizar chamadores + `tests/unit/format.test.ts` — até T011–T013 passarem (FR-025, FR-026, FR-028, FR-029, FR-030, FR-039)
 - [ ] T018 [P] `src/lib/preferences.ts` até T014 passar (FR-018, FR-031)
 - [ ] T019 [P] `src/lib/navigation.ts` (`DESTINATIONS`, `FEATURE_SLOTS` de contracts/navigation.md §2, `OUTSIDE_SHELL_ROUTES` de §2.1, `isActive`) até T015 passar (FR-007, FR-008)
 - [ ] T020 Root layout: `next/font/local` (Inter); `cookies()` → `data-theme`/`data-privacy` no `<html>`; `viewport` com `viewportFit: "cover"` e `themeColor` de `tokens.ts` (por mídia no automático, único com tema fixo); `TodayProvider` com `todayInSaoPaulo()`; `DemoBadge` continua no root layout — `src/app/layout.tsx`, `src/components/shell/today-provider.tsx` até T075/T078 passarem (FR-012, FR-015, FR-018, FR-029)

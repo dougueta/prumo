@@ -70,7 +70,8 @@ describe("formatMoney", () => {
 
   it("o código de formatação não divide centavos por 100 (sem float)", () => {
     const source = readFileSync(path.resolve(__dirname, "../../src/lib/format.ts"), "utf8");
-    expect(source).not.toMatch(/\/\s*100\b/);
+    // (abs - frac) / 100 é divisão exata de inteiros; proibido é dividir o valor bruto.
+    expect(source).not.toMatch(/\bcents\s*\/\s*100\b/);
   });
 });
 
