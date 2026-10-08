@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useBackToClose } from "@/components/shell/use-back-to-close";
+import { useBackToClose, useOpener } from "@/components/shell/use-back-to-close";
 
 /**
  * Confirmação de ação destrutiva (FR-042): o título nomeia ação e objeto ("Excluir transação
@@ -50,12 +50,7 @@ export function ConfirmDialog({
   useBackToClose(open, () => setOpen(false));
 
   // Modo controlado (sem gatilho): devolve o foco a quem abriu o diálogo.
-  const opener = useRef<HTMLElement | null>(null);
-  useEffect(() => {
-    if (open && document.activeElement instanceof HTMLElement) {
-      opener.current = document.activeElement;
-    }
-  }, [open]);
+  const opener = useOpener(open);
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
@@ -64,7 +59,7 @@ export function ConfirmDialog({
         onCloseAutoFocus={(event) => {
           if (trigger) return;
           event.preventDefault();
-          opener.current?.focus();
+          opener?.focus();
         }}
       >
         <AlertDialogHeader>
