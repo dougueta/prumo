@@ -28,8 +28,8 @@ Este documento é operacional. As regras vêm da constitution
 7. IMPLEMENT (agente dono)  /speckit-implement no worktree da feature; commit por task
 8. PR        (agente dono)  PR → main usando o template; CI roda
 9. REVIEW    (OUTRO agente) checklist docs/review-checklist.md → veredito APROVADO / MUDANÇAS NECESSÁRIAS
-              autor responde cada achado (corrige ou justifica tecnicamente)
-   🔒 GATE 3: CI verde + APROVADO + Doug aprova → Doug faz merge (squash) → deploy Vercel
+              autor responde cada achado em comentário prumo:respostas (corrige ou justifica)
+   🔒 GATE 3: CI verde + "Revisão independente" verde + Doug → npm run pr:merge (squash) → deploy Vercel
 10. CLOSE    roadmap: done; milestone da iniciativa atualizado
    * opcional
 ```
@@ -71,7 +71,36 @@ Ver `GEMINI.md` (onboarding completo) e `docs/gemini-handoff.md` (tarefas atuais
 
 - Branch/pasta: `NNN-slug` (ex.: `004-modelo-dados-core`).
 - Commits: Conventional Commits, referenciando a task: `feat(004): T012 cria tabela transactions`.
-- PR: título `NNN · <Feature>`; corpo pelo template `.github/pull_request_template.md` (criado pela feature 002);
-  rótulo do agente autor (`autor:claude` / `autor:gemini`) e da iniciativa.
+- PR: título `NNN · <Feature>`; corpo pelo template `.github/pull_request_template.md`;
+  rótulo do agente autor (`autor:claude` / `autor:gemini` / `autor:doug`) e `iniciativa:N`.
 - Cada iniciativa = um Milestone no GitHub.
 - Decisões que atravessam features = ADR em `docs/adr/NNNN-titulo.md`.
+
+## Revisão de PRs e merge (feature 002)
+
+A **exceção de bootstrap encerrada em 2026-10-08** (vale a partir do merge do PR da 002, o
+último integrado sob ela): todo PR — inclusive de documentação de processo — passa pela
+verificação **"Revisão independente"** e pelo ruleset **"main protegida"** (ADR 0007).
+
+- **Rótulos obrigatórios**: exatamente um `autor:claude` / `autor:gemini` / `autor:doug` e, em PR
+  de feature, `iniciativa:N` (N = número da iniciativa no roadmap) + o marco da iniciativa.
+- **Trailers de autoria** em todo commit: `Co-Authored-By: Claude …` ou
+  `Co-Authored-By: Gemini <noreply@google.com>`. Commits de dois agentes no mesmo PR ou trailer
+  que contradiz o rótulo reprovam o PR.
+- **Revisores**: PR `autor:claude`/`autor:doug` → Gemini Code Assist (automático ao ficar pronto;
+  re-acione com `/gemini review`). PR `autor:gemini` → `/revisar-pr <n>` no Claude Code +
+  `npm run review:publish -- <n>` no terminal do Doug (senha da chave do app `prumo-revisor`).
+- **Resposta aos achados**: em **comentário** no PR com o bloco `<!-- prumo:respostas v1 -->`
+  (uma linha por achado: `corrigido` + sha, ou `justificado` + justificativa técnica). O corpo
+  do PR não conta como resposta.
+- **Merge só pelo Doug**: `npm run pr:merge -- <n>` (recalcula o portão, exige terminal e as
+  confirmações; squash). Agentes nunca integram PR.
+- **Rebase neutro**: rebase na `main` que não muda o conteúdo do PR mantém o veredito; se muda,
+  peça nova revisão.
+- **Emergência**: só o Doug aplica o rótulo `emergencia` e escreve `Motivo da emergência:` no
+  corpo; nunca em PR que altera a constitution ou os mecanismos de revisão. Revisão pós-merge em
+  até 7 dias (issue "Revisão pós-merge pendente"; depois do prazo, `VENCIDA —`).
+- **Mudou um workflow?** Rode `npm run review:mirror` e atualize o espelho dos workflows
+  (`tests/unit/review/__snapshots__/workflows.md`) no mesmo PR — é por ele que o Gemini revisa.
+- **Mudou jobs de PR do `ci.yml`?** Depois do merge, o Doug executa: rode `npm run gh:ruleset` ao mudar jobs do CI.
+- **PRs de terceiros** (outra conta ou fork) não são aceitos: o portão bloqueia.

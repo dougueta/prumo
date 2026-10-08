@@ -62,6 +62,21 @@ Ao rodar o script de criação de feature, **sempre** passe `--number NNN --shor
 - Existe um app antigo em `../controle-financeiro` (Vite/React) — só referência para
   pesquisa; nada é copiado sem spec/plan.
 
+## 6. Revisão de PRs e merge (feature 002)
+
+- A exceção de bootstrap encerrada em 2026-10-08: todo PR passa pela verificação "Revisão
+  independente" (detalhes em `docs/workflow.md` e no ADR 0007).
+- **Como revisor** (Gemini Code Assist): siga `.gemini/styleguide.md` e termine **toda** review
+  com o bloco `<!-- prumo:veredito v1 -->` de `docs/review-checklist.md`; na re-revisão, preencha
+  "Achados anteriores" para todos os # do veredito anterior.
+- **Como autor**: PR com rótulos `autor:gemini` + `iniciativa:N` + marco, template de PR, e
+  **todo commit** com o trailer `Co-Authored-By: Gemini <noreply@google.com>`. O Claude revisa
+  em contexto limpo; responda a cada achado em comentário `<!-- prumo:respostas v1 -->`.
+- Nunca integre PR (o merge é do Doug, com `npm run pr:merge -- <n>`), nunca aplique o rótulo
+  `emergencia` e nunca altere rótulos/status/ruleset pela API (negado em `.gemini/settings.json`).
+- Mudou um workflow? Rode `npm run review:mirror` e atualize o espelho dos workflows. Mudou jobs
+  de PR do CI? Registre no PR para o Doug: rode `npm run gh:ruleset` ao mudar jobs do CI.
+
 <!-- SPECKIT START -->
 Plano atual: `specs/001-setup-projeto/plan.md` (stack, estrutura de pastas, comandos).
 Ao trabalhar em outra feature, leia o `plan.md` da pasta `specs/NNN-slug/` correspondente.
