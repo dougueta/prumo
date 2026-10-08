@@ -55,6 +55,9 @@ export const GATE_SELF_PATHS = [
   ".claude/agents/revisor-limpo.md",
   ".claude/skills/revisar-pr/**",
   "docs/review-checklist.md",
+  // Os workflows executam scripts npm (review:gate, review:main-guard): redefini-los altera o portão.
+  "package.json",
+  "package-lock.json",
 ] as const;
 
 export const OWNER_LOGIN = "dougueta";

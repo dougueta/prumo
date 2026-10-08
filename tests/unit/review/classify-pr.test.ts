@@ -60,6 +60,8 @@ describe("touchesGate", () => {
     ".claude/agents/revisor-limpo.md": ".claude/agents/revisor-limpo.md",
     ".claude/skills/revisar-pr/**": ".claude/skills/revisar-pr/SKILL.md",
     "docs/review-checklist.md": "docs/review-checklist.md",
+    "package.json": "package.json",
+    "package-lock.json": "package-lock.json",
   };
 
   it.each(Object.entries(oneFilePer))("%s ⇒ true (%s)", (_pattern, file) => {

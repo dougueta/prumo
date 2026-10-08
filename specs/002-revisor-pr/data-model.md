@@ -22,7 +22,7 @@ e suas regras de validação.
 | `EMERGENCY_LABEL` | `emergencia` |
 | `VIOLATION_LABEL` | `violacao-main` |
 | `PROCESS_PATHS` | `docs/**`, `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `README.md`, `.specify/**`, `.gemini/**`, `.claude/**`, `.github/pull_request_template.md` |
-| `GATE_SELF_PATHS` | `.github/workflows/**`, `scripts/review/**`, `src/review/**`, `tests/unit/review/**` (inclui o espelho `__snapshots__/workflows.md`), `.gemini/**`, `.claude/settings.json`, `.claude/agents/revisor-limpo.md`, `.claude/skills/revisar-pr/**`, `docs/review-checklist.md` — são os "mecanismos de revisão" da trava do FR-024 |
+| `GATE_SELF_PATHS` | `.github/workflows/**`, `scripts/review/**`, `src/review/**`, `tests/unit/review/**` (inclui o espelho `__snapshots__/workflows.md`), `.gemini/**`, `.claude/settings.json`, `.claude/agents/revisor-limpo.md`, `.claude/skills/revisar-pr/**`, `docs/review-checklist.md`, `package.json`, `package-lock.json` (os workflows executam os scripts `review:*` definidos ali — achado 2 da revisão do PR #10) — são os "mecanismos de revisão" da trava do FR-024 |
 | `OWNER_LOGIN` | `dougueta` — única conta autora aceita (Doug e agentes); FR-026 |
 | `REPO_FULL_NAME` | `dougueta/prumo` — branch de PR precisa vir deste repositório (não de fork); FR-026 |
 | `ACTIONS_INTEGRATION_ID` | `15368` (app GitHub Actions) — fixado no ruleset para as verificações obrigatórias, para que status/checks de outra origem não satisfaçam a proteção |

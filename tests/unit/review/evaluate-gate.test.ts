@@ -224,6 +224,18 @@ describe("evaluateGate — emergência (8–9, FR-024)", () => {
     });
   });
 
+  it.each(["package.json", "package-lock.json"])(
+    "9 (trava): PR que altera %s (scripts executados pelos workflows) ⇒ failure",
+    (file) => {
+      const r = evaluateGate(emerg({ changedFiles: ["src/app/page.tsx", file] }));
+      expect(r).toMatchObject({
+        state: "failure",
+        reason: "emergência não vale para PR que altera a constitution ou os mecanismos de revisão",
+        touchesGate: true,
+      });
+    },
+  );
+
   it("9 (trava): emenda da constitution ⇒ failure", () => {
     const r = evaluateGate(
       emerg({
