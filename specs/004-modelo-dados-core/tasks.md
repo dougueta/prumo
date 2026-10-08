@@ -22,7 +22,7 @@ nas duas.
 - [x] T001 Rebase da branch `004-modelo-dados-core` sobre a `main` com a 001 e a emenda da constitution v1.1.0 integradas; confirmar `npm run check` e `npm run test:integration` verdes antes de qualquer mudança
 - [x] T065 [P] Teste (vermelho): `tests/unit/core/lint-boundaries.test.ts` roda ESLint (API `ESLint`) sobre fixtures em `tests/fixtures/lint/` com `import "@/data/core/supabase/supabase-store"` fora de `src/data/core/**` e `.from("transactions").delete()` e espera erro das duas regras
 - [x] T002 Regra ESLint `no-restricted-imports`: fora de `src/data/core/**`, proibir `@/data/core/supabase/*` e `@/data/core/memory/*`; proibir `.from("<tabela core>").delete` via `no-restricted-syntax` — `eslint.config.mjs` (plan §Bibliotecas) até T065 passar
-- [ ] T003 [P] `scripts/ci-supabase-env.mjs` passa a exportar também `SUPABASE_PUBLISHABLE_KEY` (mascarada; na 004 usada só por testes — nome único da onda 1) + helper `tests/helpers/supabase-test.ts`: `createTestOwner()` (Admin API, e-mail `owner-<uuid>@example.test`), `userClient(owner)` (login por senha → JWT; chave de `SUPABASE_PUBLISHABLE_KEY` ou `supabase status -o env`), `serviceClient()`, `resetCore()` (R-15)
+- [x] T003 [P] `scripts/ci-supabase-env.mjs` passa a exportar também `SUPABASE_PUBLISHABLE_KEY` (mascarada; na 004 usada só por testes — nome único da onda 1) + helper `tests/helpers/supabase-test.ts`: `createTestOwner()` (Admin API, e-mail `owner-<uuid>@example.test`), `userClient(owner)` (login por senha → JWT; chave de `SUPABASE_PUBLISHABLE_KEY` ou `supabase status -o env`), `serviceClient()`, `resetCore()` (R-15)
 
 ## Phase 2: Foundational (bloqueia todas as histórias)
 
