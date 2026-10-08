@@ -57,7 +57,7 @@ nas duas.
 - [x] T014 Gerar e versionar `<ts>_core_seed_catalog.sql` via T010; `supabase db reset` local sem erros até T069 passar por completo
 
 ### Porta, contexto e esqueletos
-- [ ] T015 `src/data/core/ports.ts` (interface `CoreStore` de contracts/core-store.md) e `src/data/core/index.ts` (exporta só porta, tipos, `createCoreStore`, `getCoreStore`, `registerOwnerContextProvider`, `CoreError`, `DEMO_OWNER_ID`) — verificado por T065/T016
+- [x] T015 `src/data/core/ports.ts` (interface `CoreStore` de contracts/core-store.md) e `src/data/core/index.ts` (exporta só porta, tipos, `createCoreStore`, `getCoreStore`, `registerOwnerContextProvider`, `CoreError`, `DEMO_OWNER_ID`) — verificado por T065/T016
 - [ ] T016 [P] Teste de `context.ts`: `createCoreStore` por `kind`; `DEMO_OWNER_ID = "00000000-0000-4000-8000-00000000d3e0"` exportado por `@/data/core`; `getCoreStore()` com provedor registrado usa `current()` (`user` e `demo`); sem provedor em preview → `mode="memory"` com dono `DEMO_OWNER_ID` e `sessionId` do cookie `prumo_demo_sid`; sem provedor em local/production → `owner_required` — `tests/unit/core/context.test.ts` (contracts/owner-context.md)
 - [ ] T017 Implementar `src/data/core/context.ts` até T016 passar
 - [ ] T018 Bateria de contrato vazia parametrizada `describeCoreStoreContract(name, makeStore: () => Promise<{ store; other }>)` (dois donos por execução) + runners `tests/unit/core/memory-store.contract.test.ts` e `tests/integration/core/supabase-store.contract.int.test.ts` (rodando modos `user` e `service`) — `tests/contract/core-store.contract.ts` (FR-045, FR-046, SC-005)
