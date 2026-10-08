@@ -16,7 +16,16 @@
     "test:unit": "vitest run --project unit",
     "test:integration": "vitest run --project integration",
     "test:e2e": "next build && playwright test",
-    "synthetic": "tsx scripts/synthetic.ts"
+    "synthetic": "tsx scripts/synthetic.ts",
+    "review:gate": "tsx scripts/review/gate.ts",
+    "review:main-guard": "tsx scripts/review/main-guard.ts",
+    "review:bundle": "tsx scripts/review/bundle.ts",
+    "review:publish": "tsx scripts/review/publish.ts",
+    "review:mirror": "tsx scripts/review/mirror.ts",
+    "pr:merge": "tsx scripts/review/merge.ts",
+    "gh:labels": "tsx scripts/review/labels.ts",
+    "gh:repo-settings": "tsx scripts/review/repo-settings.ts",
+    "gh:ruleset": "tsx scripts/review/ruleset.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.117.2",
