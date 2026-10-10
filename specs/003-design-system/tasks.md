@@ -126,7 +126,7 @@
 **Independent Test**: alternar tema do sistema e manual, recarregar, navegar só por teclado/leitor, axe 0 violações nos dois temas.
 
 ### Testes
-- [ ] T050 [P] [US4] `ThemeSelect` (radio Automático/Claro/Escuro altera `data-theme` e grava cookie; cookie bloqueado (`document.cookie` lançando) mantém a mudança na sessão sem erro; atualiza todas as `meta[name=theme-color]` e restaura por mídia no Automático) — `tests/component/theme-select.test.tsx` (FR-017, FR-018)
+- [x] T050 [P] [US4] `ThemeSelect` (radio Automático/Claro/Escuro altera `data-theme` e grava cookie; cookie bloqueado (`document.cookie` lançando) mantém a mudança na sessão sem erro; atualiza todas as `meta[name=theme-color]` e restaura por mídia no Automático) — `tests/component/theme-select.test.tsx` (FR-017, FR-018)
 - [ ] T051 [P] [US4] E2E tema: HTML do servidor sem `data-theme` no automático e com `light`/`dark` pelo cookie; `emulateMedia({colorScheme:"dark"})` → fundo `#141312` antes de qualquer script (`javaScriptEnabled: false`); escolha persiste após reload; **cookie `light` + sistema dark → diálogo e popover de `ui/` com `surface` claro** (variante `dark:` redefinida) — `tests/e2e/theme.spec.ts` (FR-018)
 - [ ] T052 [P] [US4] E2E acessibilidade: `@axe-core/playwright` (wcag2a/aa, 21a/aa) em todas as rotas do shell, do catálogo, `/~offline` e `/nao-existe` × claro/escuro × 360/1280 px → 0 violações — `tests/e2e/a11y.spec.ts` (FR-019, FR-020, SC-002)
 - [ ] T053 [P] [US4] E2E teclado: "Pular para o conteúdo" é o 1º Tab; foco visível (outline ≥ 2px em cor `focus`) em todo interativo; ordem segue o visual; diálogo prende e devolve foco; `history.back()` com diálogo aberto fecha o diálogo (gesto de voltar) — `tests/e2e/keyboard.spec.ts` (FR-020, FR-024, SC-007)
