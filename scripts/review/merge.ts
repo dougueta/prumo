@@ -3,6 +3,7 @@
 import { execFile } from "node:child_process";
 import { createInterface } from "node:readline/promises";
 import { pathToFileURL } from "node:url";
+import { commitAgent, labelAgent } from "../../src/review/authorship";
 import { requiredChecksFromCi } from "../../src/review/ci-checks";
 import { evaluateGate } from "../../src/review/evaluate-gate";
 import { MERGE_MESSAGES, mergeReadiness } from "../../src/review/merge-readiness";
@@ -66,6 +67,10 @@ export async function runMerge(deps: MergeDeps): Promise<number> {
       return pre.exit;
     }
     gate.warnings.forEach((w) => log(`aviso: ${w}`));
+    const byCommits = commitAgent(snapshot.commits);
+    if (labelAgent(snapshot.labels) === "doug" && byCommits.ok && byCommits.agent === "doug") {
+      log(`aviso: ${MERGE_MESSAGES.dougNoTrailers}`);
+    }
     let gateSelfConfirmed = false;
     let emergencyConfirmed = false;
     if (gate.touchesGate) {

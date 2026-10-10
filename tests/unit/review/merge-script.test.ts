@@ -142,6 +142,19 @@ describe("runMerge", () => {
     expect(ok.merges).toHaveLength(1);
   });
 
+  it("autor:doug sem nenhum trailer de agente ⇒ aviso (risco residual do ADR 0007)", async () => {
+    const pr = apiPull({ labels: [{ name: "autor:doug" }, { name: "iniciativa:0" }] });
+    const r = routes({
+      [`GET ${P}`]: { body: pr },
+      [`GET ${P}/commits`]: { body: [{ sha: HEAD, commit: { message: trailers.none } }] },
+    });
+    const { code, out } = await run(r);
+    expect(code).toBe(0);
+    expect(out).toContain("autor:doug sem nenhum trailer de agente");
+    const claude = await run(routes());
+    expect(claude.out).not.toContain("sem nenhum trailer");
+  });
+
   it("falha do gh pr merge ⇒ exit 1", async () => {
     const fake = createFakeFetch(routes());
     const exec = vi.fn<Exec>(async (_cmd, args) =>

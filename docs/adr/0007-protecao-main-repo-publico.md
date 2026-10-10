@@ -68,6 +68,12 @@ push protection ativos.
 - [ ] proteção de PR de fork da Vercel ativa
 
 ## Riscos residuais
+- **`autor:doug` sem trailers direciona o revisor**: a autoria vem dos trailers `Co-Authored-By`;
+  um commit sem nenhum trailer é atribuído ao Doug. Um agente que omita o próprio trailer e
+  rotule o PR como `autor:doug` faz o PR ser revisado pelo Gemini — um Gemini autor escaparia
+  assim do revisor Claude. Mitigação: o `npm run pr:merge` avisa quando um PR `autor:doug` não
+  tem nenhum trailer de agente, para o Doug confirmar que foi ele quem escreveu; os agentes são
+  instruídos (AGENTS.md, GEMINI.md) a sempre assinar os commits (achado 4 da revisão do PR #10).
 - **Status forjado**: um workflow na versão de um PR da própria conta (evento
   `pull_request_review`) pode publicar o status "Revisão independente" com o mesmo
   `integration_id` do Actions e satisfazer o ruleset. Mitigação: `pr:merge` recalcula e recusa

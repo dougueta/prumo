@@ -17,6 +17,8 @@ export const MERGE_MESSAGES = {
   behind: "faça rebase na main e aguarde o CI",
   gateSelf: "revisão manual dos arquivos do portão não confirmada",
   emergency: "emergência não confirmada pelo Doug",
+  dougNoTrailers:
+    "PR autor:doug sem nenhum trailer de agente — confirme que foi você quem escreveu (um agente sem trailer escolheria o próprio revisor)",
 } as const;
 
 export function mergeReadiness(i: MergeReadinessInput): MergeReadiness {
