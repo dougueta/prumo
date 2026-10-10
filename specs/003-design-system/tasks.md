@@ -173,7 +173,7 @@
 ## Phase 9: Polish & transversais
 
 - [ ] T068 [P] E2E desempenho: CDP CPU 4× + rede "Fast 4G" → navegação principal visível e clicável ≤ 2 s após `goto("/")`; troca de seção ≤ 300 ms; JS de cliente transferido na 1ª carga de `/` ≤ 120 kB gzip (soma dos `script` via `performance.getEntriesByType("resource")`) — `tests/e2e/perf.spec.ts` (SC-005)
-- [ ] T081 [P] E2E da tela de exemplo (vermelho até T069): `/catalogo/exemplo-extrato` renderiza; nenhum elemento com `style` inline de cor/tamanho; toda `color`/`background-color`/`border-color` calculada ∈ conjunto de tokens do tema ativo (claro e escuro); tamanhos de fonte ∈ escala de data-model §2 — `tests/e2e/example-screen.spec.ts` (FR-004, SC-006)
+- [x] T081 [P] E2E da tela de exemplo (vermelho até T069): `/catalogo/exemplo-extrato` renderiza; nenhum elemento com `style` inline de cor/tamanho; toda `color`/`background-color`/`border-color` calculada ∈ conjunto de tokens do tema ativo (claro e escuro); tamanhos de fonte ∈ escala de data-model §2 — `tests/e2e/example-screen.spec.ts` (FR-004, SC-006)
 - [ ] T069 Tela de exemplo só com componentes do catálogo (`/catalogo/exemplo-extrato`, contracts/catalog.md §5), incluída em T052/T063; lint sem violações — `src/app/(app)/catalogo/exemplo-extrato/page.tsx` até T081 passar (FR-004, SC-006)
 - [ ] T070 [P] Acrescentar seção "UI: use o design system" em `AGENTS.md` (link para `/catalogo`, `contracts/components.md`, `contracts/navigation.md` §2/§2.1, regras de lint; telas fora do shell também usam o DS) — `AGENTS.md` (FR-047)
 - [ ] T071 Rodar `quickstart.md` do zero (Windows Git Bash) e corrigir divergências — `specs/003-design-system/quickstart.md`
