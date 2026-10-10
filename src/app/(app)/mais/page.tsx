@@ -2,6 +2,7 @@ import { ChevronRight, LibraryBig, Settings, type LucideIcon } from "lucide-reac
 import Link from "next/link";
 import { PageHeader } from "@/components/shell/page-header";
 import { getAppEnv } from "@/lib/app-env";
+import { isCatalogEnabled } from "@/lib/catalog-access";
 
 export const metadata = { title: "Mais · Prumo" };
 
@@ -17,7 +18,7 @@ export default function MaisPage() {
       icon: Settings,
     },
   ];
-  if (getAppEnv() !== "production") {
+  if (isCatalogEnabled(getAppEnv())) {
     shortcuts.push({
       href: "/catalogo",
       label: "Catálogo do design system",
