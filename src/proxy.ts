@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { applyDemoSessionCookie } from "@/lib/demo-session-cookie";
 import { loadEnv } from "@/lib/env";
 import { evaluateGate } from "@/lib/production-gate";
 
@@ -15,7 +16,9 @@ export function proxy(request: NextRequest) {
         : { user: "", password: "" },
   });
 
-  if (decision === "allow") return NextResponse.next();
+  // 004: sessão do modo demonstração (só em preview; independente da trava acima)
+  if (decision === "allow")
+    return applyDemoSessionCookie(request, NextResponse.next(), env.APP_ENV);
   return new NextResponse("Acesso restrito.", {
     status: 401,
     headers: { "WWW-Authenticate": 'Basic realm="Prumo", charset="UTF-8"' },
