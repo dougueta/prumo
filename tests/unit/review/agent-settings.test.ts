@@ -96,3 +96,17 @@ describe(".gemini/settings.json — tools.exclude", () => {
     expect(settings.tools.shell.enableInteractiveShell).toBe(false);
   });
 });
+
+describe(".claude/agents/revisor-limpo.md (achado 7 da revisão do PR #10)", () => {
+  const text = () => readFileSync(path.join(root, ".claude/agents/revisor-limpo.md"), "utf8");
+
+  it("só tem Read, Glob e Grep", () => {
+    expect(text()).toMatch(/^tools: Read, Glob, Grep$/m);
+  });
+
+  it("não manda gravar arquivo: devolve o veredito entre delimitadores", () => {
+    expect(text()).not.toMatch(/^Grave /m);
+    expect(text()).toContain("--- veredito.md ---");
+    expect(text()).toContain("--- fim ---");
+  });
+});

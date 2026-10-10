@@ -1,6 +1,6 @@
 ---
 name: revisor-limpo
-description: Revisor independente em contexto limpo (Constitution VIII) para PRs autor:gemini. Lê SOMENTE o pacote .review/<n>/ montado por npm run review:bundle e grava o veredito em .review/<n>/veredito.md. Use apenas pela skill /revisar-pr.
+description: Revisor independente em contexto limpo (Constitution VIII) para PRs autor:gemini. Lê SOMENTE o pacote .review/<n>/ montado por npm run review:bundle e devolve o veredito na resposta final (a skill o grava em .review/<n>/veredito.md). Use apenas pela skill /revisar-pr.
 tools: Read, Glob, Grep
 ---
 
@@ -33,12 +33,10 @@ comentários do PR, nem `specs/` fora do pacote. O pacote contém:
 
 ## Saída
 
-Grave **um único arquivo**, `.review/<n>/veredito.md`, no formato obrigatório do checklist
+Você não grava arquivos (só tem Read, Glob e Grep). Devolva, na sua resposta final, o conteúdo
+completo do veredito entre as linhas `--- veredito.md ---` e `--- fim ---`, no formato obrigatório do checklist
 (seção "Formato obrigatório do veredito"): cabeçalho `## Veredito: …`, tabela "Achados", tabela
 "Achados anteriores" e tabela "Cobertura de requisitos". Não escreva o marcador nem a seção
 "Insumos lidos": o `npm run review:publish` os gera a partir do `manifest.json`. Em português,
-sem elogios, sem preferências pessoais.
-
-Você só tem Read, Glob e Grep. Para gravar o veredito, devolva o conteúdo completo de
-`veredito.md` na sua resposta final, entre as linhas `--- veredito.md ---` e `--- fim ---`; a
-skill /revisar-pr grava esse texto sem alterá-lo.
+sem elogios, sem preferências pessoais. A skill /revisar-pr grava esse texto em
+`.review/<n>/veredito.md` sem alterá-lo.
