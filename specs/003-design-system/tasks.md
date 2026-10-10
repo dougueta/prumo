@@ -133,7 +133,7 @@
 - [x] T054 [P] [US4] E2E reflow e movimento: 320 e 1920 px sem rolagem horizontal; texto 200% (`html { font-size: 200% }`) sem conteúdo cortado nas seções; `reducedMotion: "reduce"` → `transition-duration` efetiva 0; alvos de toque ≥ 44×44 na nav e botões — `tests/e2e/reflow.spec.ts` (FR-016, FR-021, FR-022, FR-023, SC-008)
 
 ### Implementação
-- [ ] T055 [US4] `theme-select.tsx` + página `src/app/(app)/mais/ajustes/page.tsx` (seção Tema) + atualização das `<meta name="theme-color">` (plan "Fluxo — preferências" passo 5) até T050/T051 passarem (FR-017, FR-018)
+- [x] T055 [US4] `theme-select.tsx` + página `src/app/(app)/mais/ajustes/page.tsx` (seção Tema) + atualização das `<meta name="theme-color">` (plan "Fluxo — preferências" passo 5) até T050/T051 passarem (FR-017, FR-018)
 - [ ] T056 [US4] Corrigir violações apontadas por T052–T054 (rótulos, landmarks, ordem de foco, tamanhos) até passarem — arquivos afetados em `src/components/**` (FR-019–FR-023)
 
 ---

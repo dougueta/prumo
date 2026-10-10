@@ -8,7 +8,7 @@ import { THEME_COLOR } from "@/styles/tokens";
 function addMeta(media: string, content: string) {
   const meta = document.createElement("meta");
   meta.name = "theme-color";
-  meta.media = media;
+  meta.setAttribute("media", media);
   meta.content = content;
   document.head.append(meta);
 }
@@ -25,10 +25,10 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.restoreAllMocks();
   document.head.querySelectorAll('meta[name="theme-color"]').forEach((meta) => meta.remove());
   delete document.documentElement.dataset.theme;
   document.cookie = "prumo_theme=; Max-Age=0; Path=/";
-  vi.restoreAllMocks();
 });
 
 describe("ThemeSelect", () => {
