@@ -15,7 +15,7 @@ servidor** pelo ruleset "main protegida" (data-model §7), fixada ao app GitHub 
 | `workflow_dispatch` | input `pr` (número) | `main` | `GITHUB_TOKEN` do job `gate` |
 
 - `permissions: {}` no nível do workflow; cada job declara as suas:
-  - job `gate`: `contents: read, pull-requests: write, issues: write, statuses: write, checks: read`
+  - job `gate`: `contents: read, pull-requests: write, issues: write, statuses: write`
     (`pull-requests`/`issues: write` só para o comentário de avisos);
   - job `redispatch` (`pull_request_review`): **somente** `actions: write`; nenhum checkout,
     só `gh workflow run review-gate.yml --ref main -f pr=<número>`.

@@ -282,7 +282,6 @@ jobs:
       pull-requests: write
       issues: write
       statuses: write
-      checks: read
     steps:
       - uses: actions/checkout@v7
         with:

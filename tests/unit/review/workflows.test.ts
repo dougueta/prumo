@@ -134,7 +134,6 @@ describe("review-gate.yml", () => {
       "pull-requests": "write",
       issues: "write",
       statuses: "write",
-      checks: "read",
     });
     expect(gate.if).toMatch(/pull_request_review/);
     const run = gate.steps!.find((s) => s.run?.includes("review:gate"))!;
