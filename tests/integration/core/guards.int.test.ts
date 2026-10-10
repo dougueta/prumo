@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { createTestOwner, lit, sql } from "../../helpers/supabase-test";
+import { asOwnerSql, createTestOwner, lit, sql, userClient } from "../../helpers/supabase-test";
 import {
   seedAccount,
   seedBatch,
@@ -108,5 +108,69 @@ describe("transactions_guard em INSERT", () => {
     expect(sql(`select locked_fields::text from public.transactions where id = ${lit(id)};`)).toBe(
       "{}",
     );
+  });
+});
+
+// 004 · T033 — guarda de UPDATE (R-07, FR-024): PostgREST com JWT trava; ator IA respeita trava.
+describe("transactions_guard em UPDATE", () => {
+  it("UPDATE direto via PostgREST com JWT trava o campo (ator padrão user)", async () => {
+    const user = await createTestOwner();
+    const userAccount = seedAccount(user.id);
+    const id = seedTx(user.id, userAccount, { batchId: seedBatch(user.id) });
+    const client = await userClient(user);
+    const { data, error } = await client
+      .from("transactions")
+      .update({ description: "Feira do sábado" })
+      .eq("id", id)
+      .select("description, locked_fields, description_original");
+    expect(error).toBeNull();
+    expect(data![0]).toMatchObject({
+      description: "Feira do sábado",
+      locked_fields: ["description"],
+      description_original: "CAFE FICTICIO",
+    });
+    const audit = sql(
+      `select actor_type || '|' || action from public.audit_log where entity_id = ${lit(id)} order by id desc limit 1;`,
+    );
+    expect(audit).toBe("user|update");
+  });
+
+  it('prumo.actor={"type":"ai"} em campo travado mantém o valor', () => {
+    const id = seedTx(owner, account, { batchId: seedBatch(owner) });
+    sql(
+      asOwnerSql(
+        owner,
+        `update public.transactions set description = 'Minha' where id = ${lit(id)};`,
+      ),
+    );
+    sql(
+      asOwnerSql(
+        owner,
+        `update public.transactions set description = 'Da IA', notes = 'nota IA' where id = ${lit(id)};`,
+        { type: "ai" },
+      ),
+    );
+    expect(
+      sql(`select description || '|' || notes from public.transactions where id = ${lit(id)};`),
+    ).toBe("Minha|nota IA");
+  });
+
+  it("posted → pending ⇒ core.forbidden:status_regression", () => {
+    const id = seedTx(owner, account, { batchId: seedBatch(owner), status: "posted" });
+    expect(
+      sqlError(`update public.transactions set status = 'pending' where id = ${lit(id)};`),
+    ).toMatch(/core\.forbidden:status_regression/);
+  });
+
+  it("usuário não altera fato de importada (imported_fact)", () => {
+    const id = seedTx(owner, account, { batchId: seedBatch(owner) });
+    expect(
+      sqlError(
+        asOwnerSql(
+          owner,
+          `update public.transactions set amount_cents = -1 where id = ${lit(id)};`,
+        ),
+      ),
+    ).toMatch(/core\.forbidden:imported_fact/);
   });
 });
