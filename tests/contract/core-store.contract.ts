@@ -5,6 +5,7 @@ import { us2Contract } from "./us2";
 import { us3Contract } from "./us3";
 import { us4Contract } from "./us4";
 import { us5Contract } from "./us5";
+import { us7Contract } from "./us7";
 
 export type { StorePair } from "./helpers";
 
@@ -57,5 +58,6 @@ export function describeCoreStoreContract(name: string, makeStore: () => Promise
     us3Contract(get);
     us4Contract(get);
     us5Contract(get);
+    us7Contract(get);
   });
 }
