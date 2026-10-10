@@ -133,7 +133,7 @@ export const SHELL: CatalogEntry[] = [
         title: "Errado: cor fixa na tela",
         kind: "dont",
         note: "Cores literais quebram o tema escuro e o contraste.",
-        render: () => <Note>(classe bg-[#fff] numa tela)</Note>,
+        render: () => <Note>(cor literal escrita direto numa tela)</Note>,
       },
     ],
   },

@@ -43,7 +43,7 @@ test("toda página de componente tem as seções de regras de uso", async ({ pag
 
 test("controles de tema e privacidade da página refletem na hora", async ({ page }) => {
   await page.goto("/catalogo/money");
-  await page.getByRole("radio", { name: "Escuro" }).check();
+  await page.locator("label", { hasText: "Escuro" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
   expect(bg).toBe("rgb(20, 19, 18)");

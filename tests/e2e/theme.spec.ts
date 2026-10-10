@@ -33,7 +33,7 @@ for (const theme of ["light", "dark"] as const) {
 test("escolha manual em Ajustes persiste após recarregar", async ({ page, context }) => {
   await page.emulateMedia({ colorScheme: "dark" });
   await page.goto("/mais/ajustes");
-  await page.getByRole("radio", { name: "Claro" }).check();
+  await page.locator("label", { hasText: "Claro" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");

@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { BRAND_COLOR, BRAND_INK, SPLASH_BACKGROUND, THEME_COLOR } from "@/styles/tokens";
+import {
+  BRAND_COLOR,
+  BRAND_INK,
+  COLOR_TOKENS,
+  SPLASH_BACKGROUND,
+  THEME_COLOR,
+} from "@/styles/tokens";
 import {
   DARK_MEDIA_SELECTOR,
   extractBlock,
@@ -23,6 +29,17 @@ describe("espelho TS dos tokens (src/styles/tokens.ts)", () => {
     expect(BRAND_COLOR.toUpperCase()).toBe(light["--primary"].toUpperCase());
     expect(SPLASH_BACKGROUND.toUpperCase()).toBe(light["--primary"].toUpperCase());
     expect(BRAND_INK.toUpperCase()).toBe(light["--background"].toUpperCase());
+  });
+});
+
+describe("COLOR_TOKENS (catálogo)", () => {
+  it("espelha todas as cores de tokens.css nos dois temas", () => {
+    const fromCss = Object.fromEntries(
+      Object.keys(light)
+        .filter((name) => /^#/.test(light[name]))
+        .map((name) => [name.slice(2), [light[name].toUpperCase(), dark[name].toUpperCase()]]),
+    );
+    expect(COLOR_TOKENS).toEqual(fromCss);
   });
 });
 
