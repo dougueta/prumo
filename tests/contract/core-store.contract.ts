@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import type { StorePair } from "./helpers";
 import { us1Contract } from "./us1";
 import { us2Contract } from "./us2";
+import { us3Contract } from "./us3";
 
 export type { StorePair } from "./helpers";
 
@@ -51,5 +52,6 @@ export function describeCoreStoreContract(name: string, makeStore: () => Promise
 
     us1Contract(get);
     us2Contract(get);
+    us3Contract(get);
   });
 }

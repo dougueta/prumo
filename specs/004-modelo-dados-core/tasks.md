@@ -111,7 +111,7 @@ nas duas.
 (T034 e T035 — RLS, privilégios e `core_resolve_owner` — foram movidas para a Phase 2.)
 
 ### Testes
-- [ ] T036 [US3] Contrato US3: com `store` (A) e `other` (B), `get/update/softDelete/restore` de id de B → `not_found`; `list`/`tree`/`batches.list`/`audit.history` nunca retornam B; vincular conta/categoria/lote/relacionada de B → `not_found` (FK composta, `23503`); `last4` aceita só 4 dígitos e nenhum campo aceita número completo — `tests/contract/core-store.contract.ts` (FR-001–FR-004, SC-003)
+- [x] T036 [US3] Contrato US3: com `store` (A) e `other` (B), `get/update/softDelete/restore` de id de B → `not_found`; `list`/`tree`/`batches.list`/`audit.history` nunca retornam B; vincular conta/categoria/lote/relacionada de B → `not_found` (FK composta, `23503`); `last4` aceita só 4 dígitos e nenhum campo aceita número completo — `tests/contract/core-store.contract.ts` (FR-001–FR-004, SC-003)
 
 ### Implementação
 - [ ] T037 [US3] Garantir filtro `owner_id` explícito em toda consulta do `SupabaseCoreStore` (helper `scoped(table)`), e passagem de `p_owner_id` em modo `service`, até T036 passar em `user` e `service`
