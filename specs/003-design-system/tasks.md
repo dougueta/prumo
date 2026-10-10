@@ -143,7 +143,7 @@
 **Independent Test**: ativar no cabeçalho → todo valor vira `R$ ••••` (inclusive para leitor), recarregar mantém; campos de digitação não mascaram.
 
 ### Testes
-- [ ] T057 [P] [US5] `PrivacyToggle`: `aria-pressed`, rótulo "Ocultar valores"/"Mostrar valores", alterna `data-privacy` e grava cookie; cookie bloqueado não quebra (mantém na sessão) — `tests/component/privacy-toggle.test.tsx` (FR-031)
+- [x] T057 [P] [US5] `PrivacyToggle`: `aria-pressed`, rótulo "Ocultar valores"/"Mostrar valores", alterna `data-privacy` e grava cookie; cookie bloqueado não quebra (mantém na sessão) — `tests/component/privacy-toggle.test.tsx` (FR-031)
 - [ ] T058 [P] [US5] E2E privacidade: em `/catalogo/money` e `/catalogo/summary-card` todos os `[data-money]` mostram `R$ ••••` com largura igual entre valores pequenos e grandes; snapshot de acessibilidade contém "valor oculto" e nenhum "R$ 1"; reload mantém via HTML do servidor; o switch "Ocultar valores" em `/mais/ajustes` liga/desliga o mesmo estado que o cabeçalho; `MoneyInput` continua mostrando o digitado — `tests/e2e/privacy.spec.ts` (FR-017, FR-027, FR-031)
 
 ### Implementação
