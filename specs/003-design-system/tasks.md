@@ -164,7 +164,7 @@
 
 ### Implementação
 - [x] T064 [US6] `src/lib/catalog-access.ts` + `src/app/(app)/catalogo/layout.tsx` (`notFound()` em produção, navegação lateral do catálogo, busca, `<TodayProvider today={CATALOG_TODAY} fixed>`) até T060 passar (FR-046)
-- [ ] T065 [US6] `src/catalog/registry.ts` + `src/catalog/examples.ts` (gerador seed 42, memoizado, derivação de data-model §7) + entradas em `src/catalog/entries/*.tsx` para todos os componentes de finance/states/forms/shell até T061/T083 passarem (FR-045, FR-047, FR-050)
+- [x] T065 [US6] `src/catalog/registry.ts` + `src/catalog/examples.ts` (gerador seed 42, memoizado, derivação de data-model §7) + entradas em `src/catalog/entries/*.tsx` para todos os componentes de finance/states/forms/shell até T061/T083 passarem (FR-045, FR-047, FR-050)
 - [ ] T066 [US6] Páginas `catalogo/page.tsx`, `[slug]/page.tsx`, `fundamentos/[topic]/page.tsx` (cores com nome/valor/contraste, tipografia, espaçamento, ícones — inclui o mapa de categorias —, movimento) e `escrita/page.tsx` até T062 passar — `src/app/(app)/catalogo/**` (FR-045, FR-047, FR-048)
 - [ ] T067 [US6] Gerar baselines visuais (`npm run test:visual:update`) e versionar, até T063 passar — `tests/e2e/visual.spec.ts-snapshots/` (FR-049)
 
