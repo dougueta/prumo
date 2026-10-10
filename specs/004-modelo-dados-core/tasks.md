@@ -99,9 +99,9 @@ nas duas.
 - [x] T073 [US2] Teste de integração de concorrência: sync (`upsertMany` de pendente atualizada) e edição manual (`update`) na mesma transação em duas conexões simultâneas — a edição manual prevalece nos campos que alterou, os fatos da fonte são aplicados, as duas ações aparecem na auditoria — `tests/integration/core/concurrency.int.test.ts` (FR-024, edge case gravação concorrente)
 
 ### Implementação
-- [ ] T030 [US2] `src/domain/core/locks.ts` até T028 passar
-- [ ] T031 [US2] Trigger `transactions_guard` BEFORE UPDATE (matriz de campos do data-model §2.6, travas, `posted→pending` proibido, normalização de "sem categoria") + funções `core_update_transaction`, `core_unlock_field` até T033 e T073 passarem
-- [ ] T032 [US2] `transactions.update/unlockField` em memória e Supabase até T029 passar nas duas
+- [x] T030 [US2] `src/domain/core/locks.ts` até T028 passar
+- [x] T031 [US2] Trigger `transactions_guard` BEFORE UPDATE (matriz de campos do data-model §2.6, travas, `posted→pending` proibido, normalização de "sem categoria") + funções `core_update_transaction`, `core_unlock_field` até T033 e T073 passarem
+- [x] T032 [US2] `transactions.update/unlockField` em memória e Supabase até T029 passar nas duas
 
 ---
 
