@@ -35,7 +35,7 @@
 | 006 | `login` | 1 · Autenticação | Login single-user com allowlist, sessão segura, logout | 001 | 1 | Claude | ✅ | plan-ok |
 | 007 | `conexao-open-finance` | 2 · Contas e conexões | Conectar instituições via Pluggy (widget, contas/cartões, status, reconexão) | 004, 006 | 2 | Claude | ✅ | backlog |
 | 008 | `sync-automatica` | 2 · Contas e conexões | Sincronização automática (cron + webhooks Pluggy, retries, log) | 007 | 3 | Claude | ✅ | backlog |
-| 009 | `importacao-csv-ofx` | 2 · Contas e conexões | Importação manual CSV/OFX com mapeamento e pré-visualização | 004, 006 | 2 | Claude | ✅ | backlog |
+| 009 | `importacao-csv-ofx` | 2 · Contas e conexões | Importação manual CSV/OFX com mapeamento e pré-visualização | 004, 006 | 2 | Claude | ✅ | spec |
 | 010 | `importacao-pdf-fatura` | 2 · Contas e conexões | Importação de PDF de fatura com extração via Gemini + revisão | 009 | 3 | Gemini | ✅ | backlog |
 | 011 | `deduplicacao` | 2 · Contas e conexões | Deduplicação entre fontes (Pluggy × CSV × PDF), merge auditável | 008, 009, 010 | 4 | Claude | ✅ | backlog |
 | 012 | `extrato-consolidado` | 3 · Extrato | Extrato unificado de todas as contas, paginação, detalhe, edição manual | 003, 004, 006 | 3 | Claude | ✅ | backlog |
