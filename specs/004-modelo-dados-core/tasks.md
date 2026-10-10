@@ -146,8 +146,8 @@ nas duas.
 - [x] T048 [US5] Contrato US5: `audit.history` (paginado, mais recente primeiro) traz `create/update/soft_delete/restore/merge/archive/unarchive/reassign/undo_batch/unlock` com ator, `batchId`, `reason` e `changes` antes/depois; `undo_batch` só ao entrar em `undone`; nenhum campo de segredo; `undo` de lote concluído com 2 editadas → `{deleted, withManualEdits: 2}` e lote `undone`; `undo` de lote `failed`; `undo` de `in_review`/`undone` → `batch_state`; **reimportar o mesmo arquivo após undo → `restored = n`, `created = 0`, auditoria `restore` com `reason='reimport'` e `batchId` do lote novo; arquivo sobreposto restaura por linha (só as linhas coincidentes com `batch_undone`; excluídas por `user` seguem `duplicate`)** (D-C, por linha); restaurar manualmente após undo — `tests/contract/core-store.contract.ts` (FR-035, FR-039, FR-041, FR-043, US5 cenários 3–5)
 
 ### Implementação
-- [ ] T049 [US5] Função `core_undo_batch` (`completed|failed`), `core_list_audit` e ramo `restored` de `core_upsert_transactions` (data-model §5) + `audit.history` no `SupabaseCoreStore` até a parte Supabase de T048 passar
-- [ ] T050 [US5] Auditoria em memória (mesmo formato de `changes`, mesmas ações derivadas e `reason`) + `batches.undo` + ramo `restored` do `upsertMany` até T048 passar nas duas
+- [x] T049 [US5] Função `core_undo_batch` (`completed|failed`), `core_list_audit` e ramo `restored` de `core_upsert_transactions` (data-model §5) + `audit.history` no `SupabaseCoreStore` até a parte Supabase de T048 passar
+- [x] T050 [US5] Auditoria em memória (mesmo formato de `changes`, mesmas ações derivadas e `reason`) + `batches.undo` + ramo `restored` do `upsertMany` até T048 passar nas duas
 
 ---
 

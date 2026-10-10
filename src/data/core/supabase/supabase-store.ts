@@ -184,7 +184,7 @@ export class SupabaseCoreStore implements CoreStore {
 
   private async ensuredCategories(): Promise<Category[]> {
     const categories = await this.allCategories();
-    if (categories.length > 0) return categories;
+    if (categories.some((c) => c.systemKey === "uncategorized")) return categories;
     await this.bootstrap();
     return this.allCategories();
   }

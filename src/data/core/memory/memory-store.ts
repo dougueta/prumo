@@ -411,7 +411,8 @@ export class MemoryCoreStore implements CoreStore {
   }
 
   private ensureBootstrapped(): void {
-    if (this.ownCategories().length === 0) this.bootstrapSync();
+    // taxonomia padrão garantida antes do 1º uso (inclusive se o dono já criou categorias)
+    if (!this.systemCategory("uncategorized")) this.bootstrapSync();
   }
 
   // ---- instituições ---------------------------------------------------------------------------
