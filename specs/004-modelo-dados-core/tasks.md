@@ -162,7 +162,7 @@ nas duas.
 - [x] T074 [US6] Teste de integração: o dataset da semente 42 adaptado e gravado no Supabase via `batches.create` + `upsertMany` (modo `service`) dá as mesmas somas por mês que a memória — `tests/integration/core/synthetic-supabase.int.test.ts` (SC-006, FR-045)
 
 ### Implementação
-- [ ] T054 [US6] `src/data/core/synthetic-adapter.ts` até T051 e T074 passarem
+- [x] T054 [US6] `src/data/core/synthetic-adapter.ts` até T051 e T074 passarem
 - [ ] T055 [US6] `src/data/core/memory/demo-sessions.ts` + integração em `getCoreStore()` (lê `prumo_demo_sid` via `cookies()` do Next quando não há provedor) até T052 passar
 - [ ] T056 [US6] Cookie de sessão demo em `src/proxy.ts` (só `APP_ENV=preview`; sem referenciar a trava de produção da 001 — a 006 reescreve o proxy preservando este trecho) até T053 passar; teste E2E existente `tests/e2e/demo.spec.ts` continua verde
 
