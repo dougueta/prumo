@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "deny": [
+      "Bash(gh pr merge:*)",
+      "Bash(npm run pr:merge:*)",
+      "Bash(npm run review:publish:*)",
+      "Bash(npm run gh:ruleset:*)",
+      "Bash(gh api *merge*)",
+      "Bash(gh api *statuses*)",
+      "Bash(gh api *labels*)",
+      "Bash(gh api *rulesets*)",
+      "Bash(gh pr edit *emergencia*)",
+      "Bash(gh repo edit:*)",
+      "Bash(git push * main)",
+      "Bash(git push *:main)",
+      "Bash(git push *:refs/heads/main)",
+      "Bash(*.prumo/*)",
+      "PowerShell(gh pr merge:*)",
+      "PowerShell(npm run pr:merge:*)",
+      "PowerShell(npm run review:publish:*)",
+      "PowerShell(npm run gh:ruleset:*)",
+      "PowerShell(gh api *merge*)",
+      "PowerShell(gh api *statuses*)",
+      "PowerShell(gh api *labels*)",
+      "PowerShell(gh api *rulesets*)",
+      "PowerShell(gh pr edit *emergencia*)",
+      "PowerShell(gh repo edit:*)",
+      "PowerShell(git push * main)",
+      "PowerShell(git push *:main)",
+      "PowerShell(git push *:refs/heads/main)",
+      "PowerShell(*.prumo/*)",
+      "Read(~/.prumo/**)"
+    ]
+  }
+}

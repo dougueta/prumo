@@ -28,7 +28,7 @@
 | # | Slug | Iniciativa | Feature | Depende de | Onda | Agente | MVP | Status |
 |---|---|---|---|---|---|---|---|---|
 | 001 | `setup-projeto` | 0 · Plataforma | Setup: Next.js, Supabase, Vercel, CI (lint/type/test/E2E), PWA base, gerador de dados sintéticos | — | 0 | Claude | ✅ | impl |
-| 002 | `revisor-pr` | 0 · Plataforma | Revisor de PR independente (Gemini Code Assist + revisor Claude limpo + branch protection + template de PR) | 001 | 1 | Claude | ✅ | plan-ok |
+| 002 | `revisor-pr` | 0 · Plataforma | Revisor de PR independente (Gemini Code Assist + revisor Claude limpo + branch protection + template de PR) | 001 | 1 | Claude | ✅ | review |
 | 003 | `design-system` | 0 · Plataforma | Design system e shell do app (navegação, layout mobile-first, componentes base, tema claro/escuro) | 001 | 1 | Claude | ✅ | plan-ok |
 | 004 | `modelo-dados-core` | 0 · Plataforma | Modelo de dados core: contas, transações, categorias, origens, lotes de importação, RLS | 001 | 1 | Claude | ✅ | plan-ok |
 | 005 | `export-backup` | 0 · Plataforma | Exportar todos os dados (CSV/JSON) e rotina de backup | 004 | 6 | Gemini | | backlog |

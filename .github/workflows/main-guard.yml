@@ -1,0 +1,35 @@
+# Feature 002 · FR-024 — revisões pós-merge de emergência (Constitution VIII, v1.2.0).
+# Todo dia às 08:00 de Brasília (11:00 UTC): fecha as issues "Revisão pós-merge pendente" cujo
+# PR já tem veredito válido publicado após o merge e marca como "VENCIDA —" as que passaram de
+# 7 dias. Só roda o código da main, sem segredos além do GITHUB_TOKEN.
+# Espelho revisável: tests/unit/review/__snapshots__/workflows.md (`npm run review:mirror`).
+name: Guarda da main (emergências)
+
+on:
+  schedule:
+    - cron: "0 11 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  emergencias:
+    name: Revisões pós-merge de emergência
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with: { node-version: "24", cache: npm }
+      - run: npm ci --ignore-scripts
+      - name: Atualiza as emergências abertas
+        run: npm run review:main-guard -- --mode=schedule
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

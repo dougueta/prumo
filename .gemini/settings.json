@@ -1,0 +1,18 @@
+{
+  "tools": {
+    "exclude": [
+      "run_shell_command(gh pr merge)",
+      "run_shell_command(npm run pr:merge)",
+      "run_shell_command(npm run review:publish)",
+      "run_shell_command(npm run gh:ruleset)",
+      "run_shell_command(gh api)",
+      "run_shell_command(gh pr edit)",
+      "run_shell_command(gh repo edit)",
+      "run_shell_command(git push origin main)",
+      "run_shell_command(git push origin HEAD:main)"
+    ],
+    "shell": {
+      "enableInteractiveShell": false
+    }
+  }
+}

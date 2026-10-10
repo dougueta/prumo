@@ -1,0 +1,81 @@
+# Feature 002 · FR-006/FR-008/FR-010/FR-026 — verificação "Revisão independente".
+# Repositório público: este workflow roda sempre o código da main (pull_request_target,
+# issue_comment, workflow_dispatch), nunca faz checkout nem executa código do PR, não usa
+# segredos além do GITHUB_TOKEN e só passa o NÚMERO do PR ao script (via env).
+# Contrato: specs/002-revisor-pr/contracts/review-gate.md. Espelho revisável:
+# tests/unit/review/__snapshots__/workflows.md (atualize com `npm run review:mirror`).
+name: Revisão independente
+
+on:
+  pull_request_target:
+    types:
+      [
+        opened,
+        reopened,
+        synchronize,
+        edited,
+        labeled,
+        unlabeled,
+        ready_for_review,
+        converted_to_draft,
+      ]
+  issue_comment:
+    types: [created, edited, deleted]
+  # Roda a versão do PR: o job "redispatch" só reencaminha a avaliação para a main.
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Número do PR
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: review-gate-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    name: Avaliação
+    if: >-
+      github.event_name != 'pull_request_review' &&
+      (github.event_name != 'issue_comment' || github.event.issue.pull_request)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      statuses: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with: { node-version: "24", cache: npm }
+      - run: npm ci --ignore-scripts
+      - name: Avalia o PR e publica o status
+        run: npm run review:gate
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number || github.event.issue.number || inputs.pr }}
+          RUN_ID: ${{ github.run_id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  redispatch:
+    name: Reavaliação após review
+    if: github.event_name == 'pull_request_review'
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      actions: write
+    steps:
+      - name: Dispara a avaliação a partir da main
+        run: gh workflow run review-gate.yml --repo "$REPO" --ref main -f pr="$PR_NUMBER"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}

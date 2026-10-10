@@ -44,6 +44,23 @@ shadcn/ui + Tailwind · Vitest + Playwright.
 | Analisar consistência | `/speckit-analyze` | `/speckit.analyze` |
 | Implementar | `/speckit-implement` | `/speckit.implement` |
 
+## Revisão de PRs e merge (Constitution VIII · feature 002)
+
+A exceção de bootstrap encerrada em 2026-10-08 (a partir do merge da 002): todo PR passa pela
+verificação **"Revisão independente"** e pelo ruleset da `main`. Detalhes em `docs/workflow.md`.
+
+- Todo PR leva exatamente um rótulo `autor:claude` / `autor:gemini` / `autor:doug` e, se for de
+  feature, `iniciativa:N` + o marco da iniciativa. Use o template de PR.
+- Todo commit leva o trailer do agente: `Co-Authored-By: Claude …` (Claude) ou
+  `Co-Authored-By: Gemini <noreply@google.com>` (Gemini). Um PR = um agente.
+- Responda aos achados em **comentário** com o bloco `<!-- prumo:respostas v1 -->`.
+- **Agentes nunca integram PR, nunca publicam veredito em nome do revisor, nunca aplicam o
+  rótulo `emergencia` e nunca alteram rótulos/status/ruleset pela API.** O merge é do Doug, com
+  `npm run pr:merge -- <n>`.
+- Mudou um workflow? Rode `npm run review:mirror` e atualize o espelho dos workflows no mesmo PR.
+- Mudou jobs de PR do `ci.yml`? Avise o Doug no PR: ele deve rodar `npm run gh:ruleset` depois
+  do merge (rode `npm run gh:ruleset` ao mudar jobs do CI — tarefa do Doug).
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know

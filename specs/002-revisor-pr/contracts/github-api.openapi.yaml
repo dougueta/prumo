@@ -1,0 +1,460 @@
+openapi: 3.1.0
+info:
+  title: Prumo 002 — subconjunto da API REST do GitHub consumido pelo revisor de PR
+  version: 1.0.0
+  description: |
+    Contrato de consumo (Constitution IX) das chamadas feitas por scripts/review/*.ts.
+    Somente os campos lidos/enviados pela 002 estão modelados. Testes de contrato:
+    tests/unit/review/github.test.ts, gate-script.test.ts, main-guard-script.test.ts,
+    merge-script.test.ts, publish-script.test.ts, repo-settings.test.ts, labels.test.ts
+    (fetch falso; nenhuma chamada de rede — tests/setup.ts bloqueia hosts externos).
+
+    Política de erro comum (todos os clientes):
+    - 401/403 sem cabeçalho de limite → erro fatal com mensagem "acesso negado à API do GitHub (<rota>)".
+    - 403/429 com x-ratelimit-remaining = 0 ou retry-after → uma nova tentativa após a espera indicada
+      (máx. 60 s); persistindo, erro fatal "limite de taxa da API do GitHub".
+    - 404 → tratado conforme a operação (ver descrição); nos demais casos, erro fatal.
+    - 422 → erro fatal com a mensagem do corpo.
+    - 5xx → uma nova tentativa após 2 s; persistindo, erro fatal.
+    O portão converte erro fatal em status pending "não foi possível avaliar (erro da API do GitHub) — reexecute".
+    Paginação: per_page=100 e cabeçalho Link (rel="next") até o fim.
+servers:
+  - url: https://api.github.com
+security:
+  - bearer: []
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      description: |
+        GITHUB_TOKEN (Actions), token do `gh auth token` (Doug, local), token de instalação do app
+        prumo-revisor (publicação) ou JWT RS256 do app (somente /repos/{owner}/{repo}/installation e
+        /app/installations/{id}/access_tokens).
+  parameters:
+    owner: { name: owner, in: path, required: true, schema: { type: string, const: dougueta } }
+    repo: { name: repo, in: path, required: true, schema: { type: string, const: prumo } }
+    number: { name: number, in: path, required: true, schema: { type: integer, minimum: 1 } }
+    sha: { name: sha, in: path, required: true, schema: { type: string, pattern: "^[0-9a-f]{40}$" } }
+    apiVersion:
+      name: X-GitHub-Api-Version
+      in: header
+      required: true
+      schema: { type: string, const: "2022-11-28" }
+    accept:
+      name: Accept
+      in: header
+      required: true
+      schema: { type: string, const: application/vnd.github+json }
+  schemas:
+    User:
+      type: object
+      required: [login, type]
+      properties:
+        login: { type: string }
+        type: { type: string, enum: [User, Bot, Organization] }
+    Pull:
+      type: object
+      required: [number, draft, state, head, base, labels, body]
+      properties:
+        number: { type: integer }
+        draft: { type: boolean }
+        state: { type: string, enum: [open, closed] }
+        merged_at: { type: [string, "null"], format: date-time }
+        merge_commit_sha: { type: [string, "null"] }
+        body: { type: [string, "null"] }
+        user: { $ref: "#/components/schemas/User" }
+        head:
+          type: object
+          required: [sha, ref, repo]
+          properties:
+            sha: { type: string }
+            ref: { type: string }
+            repo:
+              type: [object, "null"]
+              description: "null quando o fork foi apagado → tratado como fork (FR-026)"
+              properties: { full_name: { type: string } }
+        base: { type: object, required: [sha, ref], properties: { sha: { type: string }, ref: { type: string } } }
+        labels: { type: array, items: { type: object, required: [name], properties: { name: { type: string } } } }
+    Commit:
+      type: object
+      required: [sha, commit]
+      properties:
+        sha: { type: string }
+        parents: { type: array, items: { type: object, properties: { sha: { type: string } } } }
+        commit: { type: object, required: [message], properties: { message: { type: string } } }
+    PullFile:
+      type: object
+      required: [filename, status]
+      properties:
+        filename: { type: string }
+        previous_filename: { type: string }
+        status: { type: string, enum: [added, removed, modified, renamed, copied, changed, unchanged] }
+        patch: { type: string, description: "ausente para binários/diffs grandes (impressão = null)" }
+    Review:
+      type: object
+      required: [id, user, body, commit_id, submitted_at]
+      properties:
+        id: { type: integer }
+        user: { $ref: "#/components/schemas/User" }
+        body: { type: string }
+        state: { type: string }
+        commit_id: { type: string }
+        submitted_at: { type: string, format: date-time }
+    ReviewComment:
+      type: object
+      required: [id, pull_request_review_id, body, user]
+      properties:
+        id: { type: integer }
+        pull_request_review_id: { type: [integer, "null"] }
+        body: { type: string, description: "selo codereviewagent/<sev>-priority.svg" }
+        user: { $ref: "#/components/schemas/User" }
+    IssueComment:
+      type: object
+      required: [id, user, body, created_at]
+      properties:
+        id: { type: integer }
+        user: { $ref: "#/components/schemas/User" }
+        body: { type: string }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    Compare:
+      type: object
+      required: [behind_by, ahead_by, files]
+      properties:
+        status: { type: string, enum: [ahead, behind, diverged, identical] }
+        ahead_by: { type: integer }
+        behind_by: { type: integer }
+        files: { type: array, items: { $ref: "#/components/schemas/PullFile" }, maxItems: 300 }
+    CheckRuns:
+      type: object
+      required: [check_runs]
+      properties:
+        check_runs:
+          type: array
+          items:
+            type: object
+            required: [name, conclusion, app]
+            properties:
+              name: { type: string }
+              status: { type: string }
+              conclusion: { type: [string, "null"] }
+              app: { type: object, required: [slug], properties: { slug: { type: string } } }
+    StatusInput:
+      type: object
+      required: [state, context, description, target_url]
+      properties:
+        state: { type: string, enum: [success, pending, failure] }
+        context: { type: string, const: "Revisão independente" }
+        description: { type: string, maxLength: 140 }
+        target_url: { type: string, format: uri }
+    Ruleset:
+      type: object
+      description: data-model §7 — "main protegida"
+      required: [name, target, enforcement, bypass_actors, conditions, rules]
+      properties:
+        name: { const: "main protegida" }
+        target: { const: branch }
+        enforcement: { const: active }
+        bypass_actors: { type: array, maxItems: 0 }
+        conditions:
+          type: object
+          properties:
+            ref_name: { type: object, properties: { include: { const: ["refs/heads/main"] }, exclude: { const: [] } } }
+        rules:
+          type: array
+          items:
+            type: object
+            required: [type]
+            properties:
+              type: { type: string, enum: [deletion, non_fast_forward, required_linear_history, pull_request, required_status_checks] }
+              parameters:
+                type: object
+                properties:
+                  required_approving_review_count: { const: 0 }
+                  allowed_merge_methods: { const: [squash] }
+                  strict_required_status_checks_policy: { const: true }
+                  required_status_checks:
+                    type: array
+                    items:
+                      type: object
+                      required: [context, integration_id]
+                      properties:
+                        context: { type: string, description: "requiredChecksFromCi(ci.yml) + 'Revisão independente'" }
+                        integration_id: { const: 15368 }
+    Error:
+      type: object
+      properties:
+        message: { type: string }
+        documentation_url: { type: string }
+  responses:
+    Error:
+      description: Erro da API (ver política de erro em info.description)
+      content:
+        application/json: { schema: { $ref: "#/components/schemas/Error" } }
+paths:
+  /repos/{owner}/{repo}/pulls/{number}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/number" }, { $ref: "#/components/parameters/apiVersion" }, { $ref: "#/components/parameters/accept" }]
+    get:
+      operationId: getPull
+      summary: PR (draft, head, base, rótulos, corpo, merge)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Pull" } } } }
+        "404": { description: "PR inexistente → review:bundle exit 1; pr:merge exit 6" }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/pulls/{number}/commits:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/number" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: listPullCommits
+      summary: Commits do PR (trailers Co-Authored-By)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Commit" } } } } }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/pulls/{number}/files:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/number" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: listPullFiles
+      summary: Arquivos alterados (kind, GATE_SELF_PATHS, patch da constitution)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/PullFile" } } } } }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/pulls/{number}/reviews:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/number" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: listReviews
+      summary: Reviews (veredito do Gemini)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Review" } } } } }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/pulls/{number}/comments:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/number" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: listReviewComments
+      summary: Comentários de linha (selos de severidade do Gemini)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/ReviewComment" } } } } }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/issues/{number}/comments:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/number" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: listIssueComments
+      summary: Vereditos do prumo-revisor, respostas do autor, comentário de avisos
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/IssueComment" } } } } }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: createIssueComment
+      summary: Publica veredito (token de instalação do prumo-revisor) ou cria o comentário de avisos (GITHUB_TOKEN)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, required: [body], properties: { body: { type: string, maxLength: 65536 } } } } }
+      responses:
+        "201": { description: Criado, content: { application/json: { schema: { $ref: "#/components/schemas/IssueComment" } } } }
+        "403": { description: "Token sem pull_requests:write → review:publish exit 5" }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/issues/comments/{comment_id}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { name: comment_id, in: path, required: true, schema: { type: integer } }, { $ref: "#/components/parameters/apiVersion" }]
+    patch:
+      operationId: updateIssueComment
+      summary: Atualiza o comentário de avisos
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [body], properties: { body: { type: string } } } } } }
+      responses:
+        "200": { description: OK }
+        default: { $ref: "#/components/responses/Error" }
+    delete:
+      operationId: deleteIssueComment
+      summary: Remove o comentário de avisos quando não há avisos
+      responses:
+        "204": { description: Removido }
+        "404": { description: "Já removido — ignorado" }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/contents/{path}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { name: path, in: path, required: true, schema: { type: string } }, { name: ref, in: query, required: true, schema: { type: string } }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: getContent
+      summary: specs/<branch>/spec.md no head (specExists) e .github/workflows/ci.yml na main (requiredChecksFromCi)
+      responses:
+        "200": { description: "Existe (content base64)" }
+        "404": { description: "Não existe → specExists = false; ci.yml ausente = erro fatal" }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/compare/{basehead}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { name: basehead, in: path, required: true, schema: { type: string, pattern: "^[^.]+\\.\\.\\.[^.]+$" }, description: "main...<sha>" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: compare
+      summary: Impressão do conteúdo (rebase neutro) e behind_by (pr:merge)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Compare" } } } }
+        "404": { description: "sha inacessível (force-push) → impressão null" }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/statuses/{sha}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/sha" }, { $ref: "#/components/parameters/apiVersion" }]
+    post:
+      operationId: createStatus
+      summary: Publica o status "Revisão independente" (informativo; merge e main-guard recalculam)
+      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/StatusInput" } } } }
+      responses:
+        "201": { description: Criado }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/commits/{ref}/check-runs:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { name: ref, in: path, required: true, schema: { type: string } }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: listCheckRuns
+      summary: Verificações de CI do head (só app github-actions conta)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/CheckRuns" } } } }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/commits/{sha}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/sha" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: getCommit
+      summary: Pais do commit da main (squash = 1 pai)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { $ref: "#/components/schemas/Commit" } } } }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/commits/{sha}/pulls:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/sha" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: listPullsForCommit
+      summary: PR integrado que originou o commit (merge_commit_sha == sha)
+      responses:
+        "200": { description: "OK (lista vazia ⇒ violação 'commit sem PR')", content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Pull" } } } } }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/issues:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: listIssues
+      summary: Idempotência (issue aberta com o mesmo título) e emergências abertas
+      parameters: [{ name: labels, in: query, schema: { type: string } }, { name: state, in: query, schema: { type: string, const: open } }]
+      responses:
+        "200": { description: OK }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: createIssue
+      summary: 'Issue violacao-main / "Revisão pós-merge pendente: #N"'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, body, labels]
+              properties:
+                title: { type: string }
+                body: { type: string }
+                labels: { type: array, items: { type: string, enum: [violacao-main, emergencia] } }
+                assignees: { type: array, items: { type: string, const: dougueta } }
+      responses:
+        "201": { description: Criada }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/issues/{number}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/number" }, { $ref: "#/components/parameters/apiVersion" }]
+    patch:
+      operationId: updateIssue
+      summary: Fecha emergência regularizada ou prefixa "VENCIDA —"
+      requestBody: { required: true, content: { application/json: { schema: { type: object, properties: { title: { type: string }, state: { type: string, enum: [open, closed] } } } } } }
+      responses:
+        "200": { description: OK }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/installation:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: getRepoInstallation
+      summary: Instalação do prumo-revisor (autenticação por JWT do app)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: object, required: [id], properties: { id: { type: integer } } } } } }
+        "404": { description: "App não instalado → review:publish exit 5" }
+        default: { $ref: "#/components/responses/Error" }
+  /app/installations/{installation_id}/access_tokens:
+    parameters: [{ name: installation_id, in: path, required: true, schema: { type: integer } }, { $ref: "#/components/parameters/apiVersion" }]
+    post:
+      operationId: createInstallationToken
+      summary: Token de 1 h restrito a 1 repositório e pull_requests:write
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [repositories, permissions]
+              properties:
+                repositories: { type: array, items: { type: string, const: prumo }, minItems: 1, maxItems: 1 }
+                permissions: { type: object, required: [pull_requests], additionalProperties: false, properties: { pull_requests: { type: string, const: write } } }
+      responses:
+        "201": { description: "Criado (token nunca impresso/gravado)", content: { application/json: { schema: { type: object, required: [token, expires_at], properties: { token: { type: string }, expires_at: { type: string } } } } } }
+        "401": { description: "JWT inválido (relógio/chave) → review:publish exit 5" }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/apiVersion" }]
+    patch:
+      operationId: updateRepoSettings
+      summary: gh:repo-settings (só squash, apagar branch após merge)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [allow_squash_merge, allow_merge_commit, allow_rebase_merge, delete_branch_on_merge, allow_update_branch]
+              properties:
+                allow_squash_merge: { const: true }
+                allow_merge_commit: { const: false }
+                allow_rebase_merge: { const: false }
+                delete_branch_on_merge: { const: true }
+                allow_update_branch: { const: true }
+      responses:
+        "200": { description: OK }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/labels:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/apiVersion" }]
+    get: { operationId: listLabels, responses: { "200": { description: OK }, default: { $ref: "#/components/responses/Error" } } }
+    post:
+      operationId: createLabel
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [name, color, description], properties: { name: { type: string }, color: { type: string, pattern: "^[0-9A-Fa-f]{6}$" }, description: { type: string, maxLength: 100 } } } } } }
+      responses: { "201": { description: Criado }, "422": { description: "Já existe → tratar como atualização" }, default: { $ref: "#/components/responses/Error" } }
+  /repos/{owner}/{repo}/labels/{name}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { name: name, in: path, required: true, schema: { type: string } }, { $ref: "#/components/parameters/apiVersion" }]
+    patch: { operationId: updateLabel, responses: { "200": { description: OK }, default: { $ref: "#/components/responses/Error" } } }
+  /repos/{owner}/{repo}/milestones:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/apiVersion" }]
+    get: { operationId: listMilestones, responses: { "200": { description: OK }, default: { $ref: "#/components/responses/Error" } } }
+    post:
+      operationId: createMilestone
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [title], properties: { title: { type: string }, description: { type: string } } } } } }
+      responses: { "201": { description: Criado }, default: { $ref: "#/components/responses/Error" } }
+  /repos/{owner}/{repo}/rulesets:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { $ref: "#/components/parameters/apiVersion" }]
+    get:
+      operationId: listRulesets
+      summary: Idempotência do gh:ruleset (procura "main protegida" pelo nome)
+      responses:
+        "200": { description: OK, content: { application/json: { schema: { type: array, items: { type: object, required: [id, name], properties: { id: { type: integer }, name: { type: string } } } } } } }
+        default: { $ref: "#/components/responses/Error" }
+    post:
+      operationId: createRuleset
+      summary: Cria o ruleset "main protegida" (D1 = A, repositório público)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/Ruleset" } } }
+      responses:
+        "201": { description: Criado }
+        "422": { description: "Payload inválido → gh:ruleset exit 1 com a mensagem" }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/rulesets/{ruleset_id}:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { name: ruleset_id, in: path, required: true, schema: { type: integer } }, { $ref: "#/components/parameters/apiVersion" }]
+    put:
+      operationId: updateRuleset
+      summary: Atualiza o ruleset existente (por exemplo, quando os jobs de PR do ci.yml mudam)
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/Ruleset" } } }
+      responses:
+        "200": { description: OK }
+        default: { $ref: "#/components/responses/Error" }
+  /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches:
+    parameters: [{ $ref: "#/components/parameters/owner" }, { $ref: "#/components/parameters/repo" }, { name: workflow_id, in: path, required: true, schema: { type: string, const: review-gate.yml } }, { $ref: "#/components/parameters/apiVersion" }]
+    post:
+      operationId: dispatchGate
+      summary: Job redispatch (pull_request_review) → avaliação a partir da main
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [ref, inputs], properties: { ref: { const: main }, inputs: { type: object, required: [pr], properties: { pr: { type: string, pattern: "^[0-9]+$" } } } } } } } }
+      responses: { "204": { description: Disparado }, default: { $ref: "#/components/responses/Error" } }

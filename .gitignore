@@ -33,3 +33,6 @@ faturas/
 next-env.d.ts
 /build
 npm-debug.log*
+
+# pacote de revisão do revisor Claude limpo (feature 002)
+.review/
