@@ -173,7 +173,7 @@ nas duas.
 **Independent Test**: pendente via `pluggy` reenviada efetivada com outro valor → 1 transação, `posted`, novo valor, auditoria.
 
 - [x] T057 [US7] Contrato US7: pendente → efetivada (mesma transação); valor/descrição alterados na confirmação com auditoria do valor anterior; campos travados intocados; `posted` reenviada como `pending` não regride; `softDelete(reason='canceled_at_source')` e reenvio posterior não ressuscita — `tests/contract/core-store.contract.ts` (FR-020, FR-037, Clarificação Q2)
-- [ ] T058 [US7] Ajustar `core_upsert_transactions` e `upsertMany` em memória (ramo `pending` do algoritmo) até T057 passar nas duas
+- [x] T058 [US7] Ajustar `core_upsert_transactions` e `upsertMany` em memória (ramo `pending` do algoritmo) até T057 passar nas duas
 
 ---
 
