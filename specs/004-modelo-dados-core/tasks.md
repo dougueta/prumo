@@ -130,10 +130,10 @@ nas duas.
 - [x] T042 [US4] Contrato US4 — categorias: árvore 2 níveis, herança de `kind`, renomear reflete nas transações, nome único sem acento/caixa entre irmãs, ocultar, mover; categoria com filhos não ganha pai (`depth`); sistema não excluível nem movível; categoria com filho de sistema não excluível (`system_child`); excluir com destino (padrão "Sem categoria" ⇒ `categoryId null`) e `children: move|delete`; restaurar reativa sem desfazer reatribuição e revalida nome (`conflict`) — `tests/contract/core-store.contract.ts` (FR-027–FR-032, FR-043)
 
 ### Implementação
-- [ ] T043 [US4] `src/domain/core/balances.ts` até T039 passar
-- [ ] T044 [US4] Funções SQL `core_upsert_account`, `core_archive_account`, `core_set_reported_balance`, `core_account_balances`, `core_create_manual_transaction`, `core_soft_delete_transactions`, `core_restore_transactions`, `core_create_category`, `core_update_category`, `core_delete_category`, `core_restore_category`, triggers `accounts_guard` (partição de campos) e `categories_guard` (data-model §2.3/§2.5) até a parte Supabase de T040–T042 passar
-- [ ] T045 [US4] `accounts.*`, `institutions.*`, `transactions.createManual/softDelete/restore`, `categories.*` em memória até a parte memória de T040–T042 passar
-- [ ] T046 [US4] Mesmas operações no `SupabaseCoreStore` até T040–T042 passarem nas duas
+- [x] T043 [US4] `src/domain/core/balances.ts` até T039 passar
+- [x] T044 [US4] Funções SQL `core_upsert_account`, `core_archive_account`, `core_set_reported_balance`, `core_account_balances`, `core_create_manual_transaction`, `core_soft_delete_transactions`, `core_restore_transactions`, `core_create_category`, `core_update_category`, `core_delete_category`, `core_restore_category`, triggers `accounts_guard` (partição de campos) e `categories_guard` (data-model §2.3/§2.5) até a parte Supabase de T040–T042 passar
+- [x] T045 [US4] `accounts.*`, `institutions.*`, `transactions.createManual/softDelete/restore`, `categories.*` em memória até a parte memória de T040–T042 passar
+- [x] T046 [US4] Mesmas operações no `SupabaseCoreStore` até T040–T042 passarem nas duas
 
 ---
 
