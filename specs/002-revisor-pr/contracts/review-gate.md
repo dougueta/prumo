@@ -102,5 +102,7 @@ versão do PR (PR da própria conta) satisfaria o ruleset; o `main-guard` recalc
 | `push` em `main` com PR `emergencia` | mesmo job | como acima, com regra 8 | cria issue `emergencia` "Revisão pós-merge pendente: #N" (não é violação) |
 | `schedule` diário 11:00 UTC | `.github/workflows/main-guard.yml` (só `schedule` + `workflow_dispatch`), `permissions: {issues: write, pull-requests: read}`, checkout da `main`, sem segredos | issues abertas `emergencia`: existe veredito válido do revisor designado publicado após `merged_at`? | sim: fecha a issue com link; > 7 dias sem: título prefixado `VENCIDA —` e comentário mencionando `@dougueta` |
 
+O job `main-guard` do `ci.yml` faz checkout de `${{ github.sha }}` (o commit auditado, que já está na `main`), não da ponta atual da `main` (achado 5 da revisão do PR #10).
+
 Idempotente: busca issue aberta com o mesmo título antes de criar. Risco residual (ADR 0007): o
 deploy de produção da Vercel a partir da `main` não espera o `main-guard`.

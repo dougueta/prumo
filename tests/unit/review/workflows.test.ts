@@ -34,8 +34,11 @@ interface Workflow {
 const TEXTUAL_EVENT =
   /github\.event\.(pull_request\.(title|body|head\.ref|head\.label)|issue\.(title|body)|comment\.body|review\.body)/;
 
+/** Refs de checkout aceitos: a main, ou o commit do push na main (Guarda da main, achado 5). */
+const SAFE_REFS = ["main", "${{ github.sha }}"];
+
 /** Problemas de segurança de um job (vale para todo job das automações da 002). */
-function jobProblems(id: string, job: Job): string[] {
+function jobProblems(id: string, job: Job, safeRefs = ["main"]): string[] {
   const out: string[] = [];
   const text = JSON.stringify(job);
   for (const m of text.matchAll(/secrets\.([A-Za-z_]+)/g)) {
@@ -47,7 +50,7 @@ function jobProblems(id: string, job: Job): string[] {
   for (const step of job.steps ?? []) {
     if (step.uses?.startsWith("actions/checkout")) {
       const w = step.with ?? {};
-      if (w.ref !== "main") out.push(`${id}: checkout sem ref: main`);
+      if (!safeRefs.includes(String(w.ref))) out.push(`${id}: checkout sem ref: main`);
       if (w["persist-credentials"] !== false) out.push(`${id}: checkout persiste credenciais`);
     }
     if (step.run && step.run.includes("${{")) out.push(`${id}: expressão interpolada em run:`);
@@ -163,7 +166,9 @@ describe("ci.yml — job main-guard", () => {
       issues: "write",
       checks: "read",
     });
-    expect(jobProblems("main-guard", job)).toEqual([]);
+    expect(jobProblems("main-guard", job, SAFE_REFS)).toEqual([]);
+    const checkout = job.steps!.find((s) => s.uses?.startsWith("actions/checkout"))!;
+    expect(checkout.with!.ref).toBe("${{ github.sha }}");
   });
 
   it("deploy-db depende do main-guard", () => {

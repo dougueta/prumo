@@ -108,9 +108,10 @@ jobs:
       issues: write
       checks: read
     steps:
+      # O próprio commit auditado (push na main), não a ponta atual da main.
       - uses: actions/checkout@v7
         with:
-          ref: main
+          ref: ${{ github.sha }}
           persist-credentials: false
       - uses: actions/setup-node@v7
         with: { node-version: "${{ env.NODE_VERSION }}", cache: npm }
