@@ -180,7 +180,7 @@ nas duas.
 ## Phase 10: Polish & transversais
 
 - [ ] T059 [P] Teste de desempenho: 100 mil transações (5 contas, `generate_series`) no Supabase local; `transactions.list` de 1 mês ≤ 1 s (mediana de 5) e upsert de 1.000 linhas ≤ 2 s; `EXPLAIN` usa `tx_owner_date_idx` — `tests/integration/core/perf.int.test.ts` (SC-007, FR-042)
-- [ ] T075 [P] Caso de contrato (vermelho): `exportAll()` produz chunks ≤ 500 na ordem do contrato, com todas as entidades do dono, inclusive excluídas, arquivadas e auditoria, e nada do outro dono — `tests/contract/core-store.contract.ts` (FR-044)
+- [x] T075 [P] Caso de contrato (vermelho): `exportAll()` produz chunks ≤ 500 na ordem do contrato, com todas as entidades do dono, inclusive excluídas, arquivadas e auditoria, e nada do outro dono — `tests/contract/core-store.contract.ts` (FR-044)
 - [ ] T060 `exportAll()` nas duas implementações (paginação ≤ 500, respeitando `max_rows` 1.000 da 001) até T075 passar
 - [ ] T061 [P] Teste de resiliência: 10 reimportações (lotes novos) do dataset sintético → 0 duplicatas (SC-001); 100 ciclos de sync/recategorização automática sobre transações editadas → 100% dos campos manuais intactos (SC-002) — `tests/integration/core/resilience.int.test.ts`
 - [ ] T062 Documentar no README (seção "Dados") o uso de `getCoreStore`/`createCoreStore`, `DEMO_OWNER_ID`, erros, pré-condição de `upsertMany` e regra de propriedade das tabelas; validar `quickstart.md` do zero (`supabase db reset` + testes)
