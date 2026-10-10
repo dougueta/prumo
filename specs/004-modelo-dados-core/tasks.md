@@ -157,7 +157,7 @@ nas duas.
 
 ### Testes
 - [x] T051 [P] [US6] Teste do adaptador: 5 contas mapeadas, 1 lote por conta, UUIDs v5 determinísticos, Σ centavos = Σ dataset (seed 42) no total **e por mês**, pares de transferência/pagamento ligados por `relatedTransactionId`, parcelas e moeda original preservadas, categorias conforme data-model §7 (compras sem categoria = `null`) — `tests/unit/core/synthetic-adapter.test.ts` (FR-047, SC-006)
-- [ ] T052 [P] [US6] Teste de `DemoSessions`: lojas isoladas por `sessionId`, LRU 50, TTL 2 h (relógio injetado), gravação de uma sessão invisível na outra, dono `DEMO_OWNER_ID`, `anchorDate` = hoje em São Paulo (relógio injetado) — `tests/unit/core/demo-sessions.test.ts` (FR-047)
+- [x] T052 [P] [US6] Teste de `DemoSessions`: lojas isoladas por `sessionId`, LRU 50, TTL 2 h (relógio injetado), gravação de uma sessão invisível na outra, dono `DEMO_OWNER_ID`, `anchorDate` = hoje em São Paulo (relógio injetado) — `tests/unit/core/demo-sessions.test.ts` (FR-047)
 - [ ] T053 [P] [US6] Teste do proxy: em `preview` sem cookie emite `prumo_demo_sid` (`HttpOnly`, `SameSite=Lax`, `Path=/`, `Max-Age=7200`, `Secure` fora de localhost); com cookie não reemite; fora de preview nunca emite — `tests/unit/demo-cookie.test.ts` (contracts/owner-context.md)
 - [ ] T074 [US6] Teste de integração: o dataset da semente 42 adaptado e gravado no Supabase via `batches.create` + `upsertMany` (modo `service`) dá as mesmas somas por mês que a memória — `tests/integration/core/synthetic-supabase.int.test.ts` (SC-006, FR-045)
 
