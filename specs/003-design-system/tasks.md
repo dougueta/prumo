@@ -160,7 +160,7 @@
 - [x] T061 [P] [US6] Registro do catálogo: invariantes de contracts/catalog.md §2 (todo componente exportado registrado; regras completas; slugs únicos; `states` cobre todas as variantes da API em contracts/components.md) — `tests/unit/catalog-registry.test.ts` (FR-045, FR-047, SC-001)
 - [x] T083 [P] [US6] `examples.ts`: determinístico (duas chamadas = mesmo resultado); toda linha da tabela de data-model §7 aparece ao menos uma vez; descrições/valores só do dataset seed 42 (nenhum literal fora dos casos-limite permitidos); `CATALOG_TODAY = anchorDate` — `tests/unit/catalog-examples.test.ts` (FR-045, FR-050)
 - [x] T062 [P] [US6] E2E catálogo: busca "valor" encontra "Valor monetário"; cada página tem seções "Quando usar", "Quando não usar", "Acessibilidade", "Textos padrão", "Certo × errado"; toggles de tema/privacidade refletem na hora; guia de escrita lista os textos padrão — `tests/e2e/catalog.spec.ts` (FR-045, FR-047, FR-048)
-- [ ] T063 [P] [US6] Visual: screenshot de cada página do catálogo × claro/escuro × 360/1280 px (baselines Linux geradas por `test:visual:update`; "hoje" fixo em `CATALOG_TODAY`, então as datas relativas não mudam) — `tests/e2e/visual.spec.ts` (FR-045, FR-049, SC-001)
+- [x] T063 [P] [US6] Visual: screenshot de cada página do catálogo × claro/escuro × 360/1280 px (baselines Linux geradas por `test:visual:update`; "hoje" fixo em `CATALOG_TODAY`, então as datas relativas não mudam) — `tests/e2e/visual.spec.ts` (FR-045, FR-049, SC-001)
 
 ### Implementação
 - [ ] T064 [US6] `src/lib/catalog-access.ts` + `src/app/(app)/catalogo/layout.tsx` (`notFound()` em produção, navegação lateral do catálogo, busca, `<TodayProvider today={CATALOG_TODAY} fixed>`) até T060 passar (FR-046)
