@@ -76,6 +76,7 @@ import type {
 } from "@/domain/core/types";
 import { DELETED_REASONS, LOCKABLE_FIELDS } from "@/domain/core/types";
 import type { CoreStore } from "../ports";
+import type { SyntheticCoreData } from "../synthetic-adapter";
 
 export type BatchRow = ImportBatch & { fpOccurrences: Record<string, number> };
 type AuditRow = AuditEntry & { ownerId: OwnerId };
@@ -413,6 +414,48 @@ export class MemoryCoreStore implements CoreStore {
   private ensureBootstrapped(): void {
     // taxonomia padrão garantida antes do 1º uso (inclusive se o dono já criou categorias)
     if (!this.systemCategory("uncategorized")) this.bootstrapSync();
+  }
+
+  /**
+   * Carrega os dados sintéticos adaptados (modo demonstração, FR-047). Dados confiáveis do
+   * gerador: gravados direto, com auditoria de criação pelo ator "system".
+   */
+  loadSynthetic(data: SyntheticCoreData): void {
+    this.db.atomic(() => {
+      this.bootstrapSync();
+      const ctx: OpContext = { actor: { type: "system", ref: "dados-sinteticos" } };
+      const byTemplate = new Map(
+        this.ownCategories()
+          .filter((c) => c.templateKey)
+          .map((c) => [c.templateKey as string, c.id]),
+      );
+      for (const institution of data.institutions) {
+        const row = { ...institution, ownerId: this.ownerId };
+        this.db.institutions.set(row.id, row);
+        this.record("institution", null, row, ctx);
+      }
+      for (const account of data.accounts) {
+        const row = { ...account, ownerId: this.ownerId };
+        this.db.accounts.set(row.id, row);
+        this.record("account", null, row, ctx);
+      }
+      for (const batch of data.batches) {
+        const row: BatchRow = { ...batch, ownerId: this.ownerId, fpOccurrences: {} };
+        this.db.batches.set(row.id, row);
+        this.record("import_batch", null, batch, ctx);
+      }
+      for (const { categoryKey, ...tx } of data.transactions) {
+        const categoryId = categoryKey ? (byTemplate.get(categoryKey) ?? null) : null;
+        const row: Transaction = {
+          ...tx,
+          ownerId: this.ownerId,
+          categoryId,
+          categorySource: categoryId ? tx.categorySource : null,
+        };
+        this.db.transactions.set(row.id, row);
+        this.record("transaction", null, row, ctx);
+      }
+    });
   }
 
   // ---- instituições ---------------------------------------------------------------------------
