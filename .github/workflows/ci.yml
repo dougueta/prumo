@@ -1,5 +1,6 @@
 # Feature 001 · FR-006/FR-007/FR-008 — verificações obrigatórias de todo PR e da main.
 # Feature 003 · FR-049 — componentes (jsdom) e aparência (projeto Playwright "visual").
+# Feature 006 · contratos de auth (MSW), Mailpit para o código por e-mail, Safari no E2E.
 name: CI
 
 on:
@@ -17,8 +18,9 @@ permissions:
 env:
   NODE_VERSION: "24"
   SUPABASE_CLI_VERSION: "2.119.0"
-  # Serviços do Supabase que a 001 não usa — sobem mais rápido sem eles.
-  SUPABASE_EXCLUDE: studio,imgproxy,mailpit,realtime,storage-api,edge-runtime,logflare,vector,supavisor,postgres-meta
+  # Serviços do Supabase que o app não usa — sobem mais rápido sem eles. Mailpit fica (006:
+  # e-mails do código de entrada nos E2E).
+  SUPABASE_EXCLUDE: studio,imgproxy,realtime,storage-api,edge-runtime,logflare,vector,supavisor,postgres-meta
 
 jobs:
   quality:
@@ -47,6 +49,18 @@ jobs:
       # Feature 003 · componentes em jsdom (mesmo job: o nome é check obrigatório da 002).
       - run: npm run test:component
 
+  contract:
+    name: Testes de contrato
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with: { node-version: "${{ env.NODE_VERSION }}", cache: npm }
+      - run: npm ci
+      # 006 · Supabase Auth simulado por MSW (sem rede).
+      - run: npm run test:contract
+
   integration:
     name: Testes de integração (Supabase efêmero)
     runs-on: ubuntu-latest
@@ -62,6 +76,9 @@ jobs:
         run: supabase start -x "$SUPABASE_EXCLUDE"
       - name: Exporta credenciais locais do Supabase
         run: node scripts/ci-supabase-env.mjs
+      # 006 · usuários sintéticos da allowlist (AUTH_ALLOWED_EMAILS) no Supabase efêmero.
+      - run: npm run auth:provision
+        env: { APP_ENV: local }
       - run: npm run test:integration
         env: { APP_ENV: local }
 
@@ -82,11 +99,14 @@ jobs:
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-      - run: npx playwright install --with-deps chromium
+      # 006: webkit para o login no Safari (desktop e iPhone).
+      - run: npx playwright install --with-deps chromium webkit
       - name: Supabase local (aplica migrações)
         run: supabase start -x "$SUPABASE_EXCLUDE"
       - name: Exporta credenciais locais do Supabase
         run: node scripts/ci-supabase-env.mjs
+      - run: npm run auth:provision
+        env: { APP_ENV: local }
       - run: npm run test:e2e
         env: { APP_ENV: local }
       - name: Relatório do Playwright
@@ -108,7 +128,7 @@ jobs:
   deploy-db:
     name: Migrações de produção
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [quality, unit, integration, e2e]
+    needs: [quality, unit, contract, integration, e2e]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: production
