@@ -1,7 +1,7 @@
 # Checklist do Revisor Independente
 
-Usado por **qualquer** revisor (Gemini Code Assist nos PRs do Claude; Claude em contexto
-limpo nos PRs do Gemini). O revisor lê **somente**: o diff, `specs/NNN-*/spec.md`,
+Usado pelo revisor independente: um subagente Claude **novo e sem histórico**, em todos os PRs
+(do Claude e do Gemini). O revisor lê **somente**: o diff, `specs/NNN-*/spec.md`,
 `plan.md`, `tasks.md`, `data-model.md`, `contracts/`, a constitution e `docs/adr/`.
 Não leia conversas ou justificativas do autor antes de formar seu veredito.
 

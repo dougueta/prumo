@@ -25,7 +25,7 @@ shadcn/ui + Tailwind · Vitest + Playwright.
 2. **Use o número do roadmap.** `--number NNN --short-name <slug>`; nunca numeração automática.
 3. **Uma feature por worktree, um agente por worktree.**
 4. **Respeite os gates do Doug** (spec → plan+tasks → PR). Não avance sem aprovação explícita.
-5. **Quem escreve não revisa.** Claude ↔ Gemini em revisão cruzada.
+5. **Quem escreve não revisa.** Todo PR é revisado por um subagente Claude sem histórico (Constitution VIII).
 6. **Dinheiro em centavos inteiros. RLS em toda tabela. Zero segredo ou dado real no repo.**
 7. **Não altere o schema de tabela que sua feature não possui.**
 8. **Atualize o status no `docs/roadmap.md`** a cada transição.

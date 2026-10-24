@@ -7,8 +7,8 @@ Leia e siga **`AGENTS.md`** (regras comuns) antes de qualquer ação. A constitu
 
 - Arquiteto e dev principal: features marcadas **Claude** em `docs/roadmap.md`
   (núcleo, dados, segurança, integrações críticas).
-- Revisor independente dos PRs do Gemini: sempre via subagente **sem histórico**, que
-  recebe só diff + artefatos da spec + constitution + ADRs e aplica
+- Revisor independente de todos os PRs (do Gemini e os próprios): sempre via subagente
+  **novo e sem histórico** — nunca a sessão que implementou —, que recebe só diff + artefatos da spec + constitution + ADRs e aplica
   `docs/review-checklist.md`.
 - Analista financeiro (diagnóstico mensal) quando a feature 031 existir.
 

@@ -1,6 +1,6 @@
 # ADR 0001 — SDD com GitHub Spec Kit e dois agentes em revisão cruzada
 
-- **Status**: Aceita · **Data**: 2026-10-02 · **Decisor**: Doug
+- **Status**: Aceita, substituída em parte pela [ADR 0007](0007-revisao-independente-por-contexto-limpo.md) (revisor dos PRs do Claude) · **Data**: 2026-10-02 · **Decisor**: Doug
 
 ## Contexto
 O projeto será construído por dois agentes de IA (Claude e Gemini) e precisa de

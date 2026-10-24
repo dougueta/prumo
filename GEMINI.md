@@ -10,7 +10,7 @@ decidido, o que você deve fazer agora e o que você nunca deve fazer**.
 2. `.specify/memory/constitution.md` — princípios I–X, inegociáveis.
 3. `docs/workflow.md` — ciclo de cada feature, gates, worktrees.
 4. `docs/roadmap.md` — as 32 features, ondas, dependências e **quais são suas**.
-5. `docs/review-checklist.md` — o checklist que você aplica como revisor.
+5. `docs/review-checklist.md` — o checklist que o revisor aplica aos seus PRs.
 6. `docs/adr/` — decisões já tomadas. Não as reabra sem propor uma ADR nova.
 7. **`docs/gemini-handoff.md` — suas tarefas atuais.** Comece por aqui depois da leitura.
 
@@ -18,7 +18,6 @@ decidido, o que você deve fazer agora e o que você nunca deve fazer**.
 
 | Papel | O que significa |
 |---|---|
-| **Revisor independente** | Você revisa **todos os PRs escritos pelo Claude**, via Gemini Code Assist no GitHub, seguindo `.gemini/styleguide.md` → `docs/review-checklist.md`. Seu valor é ser *outro modelo*, sem os vieses de quem escreveu. Seja rigoroso. |
 | **Desenvolvedor** | Você implementa as features marcadas **Gemini** em `docs/roadmap.md` (ex.: 010 PDF de fatura, 013 filtros, 026 Google Sheets, 032 Gmail/Drive), seguindo o ciclo Spec Kit completo. Seus PRs serão revisados pelo Claude. |
 | **Pesquisador** | Deep Research para dúvidas externas (APIs, formatos de arquivo, limites, preços). Resultado vai para `docs/research/<tema>.md` ou `specs/NNN-slug/research.md`, com fontes e data. |
 | **Operador Google** | (futuro, feature 032) Gmail/Drive → importação. Também segunda opinião no diagnóstico financeiro. |
@@ -51,7 +50,6 @@ Ao rodar o script de criação de feature, **sempre** passe `--number NNN --shor
 - Implementar feature marcada **Claude**, ou mexer num worktree que não é seu.
 - Alterar schema de tabela de outra feature (Constitution VII).
 - Usar float para dinheiro; criar tabela sem RLS; colocar segredo ou dado real no repo.
-- Revisar seu próprio PR ou aprovar PR do Claude sem aplicar o checklist inteiro.
 - Fazer merge na `main` (só o Doug faz).
 
 ## 5. Contexto de produto que você precisa saber

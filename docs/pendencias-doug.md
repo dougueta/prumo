@@ -14,8 +14,9 @@
 - [ ] **Secret `SUPABASE_DB_PASSWORD`** no GitHub — senha do banco do projeto Supabase `prumo`.
   Cadastrar pela interface ou no seu terminal com `gh secret set SUPABASE_DB_PASSWORD`
   (pede o valor; não colar em conversa com agentes).
-- [ ] **Instalar o Gemini Code Assist** (app do GitHub, gratuito) no repositório `dougueta/prumo` —
-  hoje nenhum PR recebe revisão automática do Gemini. Previsto na feature 002.
+- [ ] **Desinstalar o app Gemini Code Assist** do GitHub (Settings → Applications → Installed
+  GitHub Apps). A versão gratuita foi encerrada pelo Google e o revisor agora é um subagente
+  Claude em contexto limpo (constitution 2.0.0, ADR 0007).
 
 ## Verificações manuais
 
