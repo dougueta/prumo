@@ -178,8 +178,8 @@
 - [x] T070 [P] Acrescentar seção "UI: use o design system" em `AGENTS.md` (link para `/catalogo`, `contracts/components.md`, `contracts/navigation.md` §2/§2.1, regras de lint; telas fora do shell também usam o DS) — `AGENTS.md` (FR-047)
 - [x] T071 Rodar `quickstart.md` do zero (Windows Git Bash) e corrigir divergências — `specs/003-design-system/quickstart.md`
 - [ ] T072 Verificação manual (Doug) dos critérios de aprovação: escala de cinza 10/10 (SC-004), TalkBack/VoiceOver + NVDA/Narrador (SC-007), PWA no celular (confirmação complementar de área segura e de gesto de voltar fechando diálogo — já cobertos por T075/T084/T088/T053) — evidência no PR, sem dados reais
-- [ ] T073 Registrar no PR: licenças (saída do T086), minutos de CI e escopo (saída do T085: nenhuma migração/tabela; nenhuma tela de feature além de `ComingSoon`) — descrição do PR (FR-051, FR-052)
-- [ ] T074 Atualizar `docs/roadmap.md` (003 → `review`) e abrir PR `003 · Design system e shell` com rótulos `autor:claude` + `iniciativa:0`, milestone `0 · Plataforma` e template `.github/pull_request_template.md` se já existir; Doug revisa identidade no preview (SC-009)
+- [x] T073 Registrar no PR: licenças (saída do T086), minutos de CI e escopo (saída do T085: nenhuma migração/tabela; nenhuma tela de feature além de `ComingSoon`) — descrição do PR (FR-051, FR-052)
+- [x] T074 Atualizar `docs/roadmap.md` (003 → `review`) e abrir PR `003 · Design system e shell` com rótulos `autor:claude` + `iniciativa:0`, milestone `0 · Plataforma` e template `.github/pull_request_template.md` se já existir; Doug revisa identidade no preview (SC-009)
 
 ---
 
