@@ -1,6 +1,6 @@
 import { createHmac } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
-import { recordEvent, type EventSink } from "@/lib/auth/events";
+import { recordEvent, type EventInput, type EventSink } from "@/lib/auth/events";
 
 /** 006 · T062 (FR-017, FR-018, FR-019) — data-model §4. */
 const SECRET = "s".repeat(40);
@@ -109,15 +109,15 @@ describe("recordEvent", () => {
   });
 
   it("a assinatura não aceita código, token nem senha (FR-019)", async () => {
+    // Tipo: o campo não existe (falha de compilação se alguém o acrescentar ao tipo).
+    // @ts-expect-error — `code` não existe em EventInput
+    const typed: EventInput = { type: "logout", request, code: "123456" };
+    expect(typed).toBeDefined();
+    // Execução: qualquer campo a mais é recusado antes de tocar no banco.
     const s = sink();
     for (const forbidden of ["code", "token", "password", "otp", "accessToken"]) {
-      await expect(
-        recordEvent(
-          // @ts-expect-error — campos proibidos não existem no tipo
-          { type: "logout", request, [forbidden]: "123456" },
-          { client: s.client, hashSecret: SECRET },
-        ),
-      ).rejects.toThrow();
+      const input = { type: "logout", request, [forbidden]: "123456" } as unknown as EventInput;
+      await expect(recordEvent(input, { client: s.client, hashSecret: SECRET })).rejects.toThrow();
     }
     expect(s.insert).not.toHaveBeenCalled();
   });
