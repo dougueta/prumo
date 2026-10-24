@@ -36,6 +36,17 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          // 006: contratos com o Supabase Auth simulado por MSW — nenhuma requisição sai da máquina.
+          name: "contract",
+          include: ["tests/contract/**/*.test.ts"],
+          environment: "node",
+          // Sem tests/setup.ts: aquela trava libera localhost; aqui o MSW recusa qualquer host.
+          setupFiles: ["tests/contract/setup.ts"],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: "integration",
           include: ["tests/integration/**/*.int.test.ts"],
           // 004: um arquivo por vez — TRUNCATE (teste de proibição) e a carga de 100 mil linhas do
