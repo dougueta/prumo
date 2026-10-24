@@ -1,18 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { formatCents, formatDate, todayInSaoPaulo } from "@/lib/format";
+import { formatAbsoluteDate, formatMoney, todayInSaoPaulo } from "@/lib/format";
 
-describe("format (FR-021)", () => {
-  it("formata centavos em BRL pt-BR", () => {
-    expect(formatCents(123456).replace(/\s/g, " ")).toBe("R$ 1.234,56");
-    expect(formatCents(-5).replace(/\s/g, " ")).toBe("-R$ 0,05");
+// Casos da 001 (FR-021) mantidos sobre a API da 003 (formatCents/formatDate foram substituídas).
+describe("format (FR-021 da 001)", () => {
+  it("formata centavos em BRL pt-BR (saldo)", () => {
+    expect(formatMoney(123456, { variant: "balance" }).replace(/\s/g, " ")).toBe("R$ 1.234,56");
+    expect(formatMoney(-5, { variant: "balance" }).replace(/\s/g, " ")).toBe("\u2212R$ 0,05");
   });
 
   it("rejeita valores não inteiros (Constitution III)", () => {
-    expect(() => formatCents(10.5)).toThrow();
+    expect(() => formatMoney(10.5)).toThrow();
   });
 
   it("formata data de negócio YYYY-MM-DD sem deslocar o dia", () => {
-    expect(formatDate("2026-10-02")).toBe("02/10/2026");
+    expect(formatAbsoluteDate("2026-10-02")).toBe("02/10/2026");
   });
 
   it("calcula 'hoje' no fuso de São Paulo", () => {
