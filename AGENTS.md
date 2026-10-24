@@ -60,7 +60,8 @@ design system da 003. Antes de criar um componente ou estilo novo, procure no ca
 - **Lint (erro no CI)**: só classes do tema (`better-tailwindcss/no-unknown-classes`); em
   `src/app`, `src/catalog` e `src/components/{finance,states,forms,shell,brand}` é proibido
   `dark:` (o tema vem dos tokens em `src/styles/tokens.css`) e valor arbitrário `[...]`.
-  `src/components/ui/` é código gerado pelo shadcn — ajuste ali só o necessário.
+  `src/components/ui/` é código gerado pelo shadcn e pertence à 003 — não edite; peça
+  variante nova à 003.
 - Componente novo reutilizável entra no catálogo (`src/catalog/entries/`) no mesmo PR; o teste
   de invariantes do registro falha se faltar.
 
