@@ -17,8 +17,12 @@ describe(".env.example (FR-004)", () => {
 
   it("não contém valores de segredo preenchidos", () => {
     for (const line of example.split(/\r?\n/)) {
-      const match = line.match(/^(SUPABASE_SECRET_KEY|PRODUCTION_GATE_PASSWORD)=(.*)$/);
+      const match = line.match(/^(SUPABASE_SECRET_KEY|AUTH_ALLOWED_EMAILS|AUTH_HASH_SECRET)=(.*)$/);
       if (match) expect(match[2], match[1]).toBe("");
     }
+  });
+
+  it("não documenta mais a trava provisória da 001 (006 · FR-028)", () => {
+    expect(example).not.toMatch(/PRODUCTION_GATE_/);
   });
 });

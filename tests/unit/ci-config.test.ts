@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
-// @ts-expect-error — módulo .mjs sem tipos (script de CI)
 import { buildCiEnv } from "../../scripts/ci-env.mjs";
 
 /**
@@ -91,7 +90,7 @@ describe("buildCiEnv (scripts/ci-env.mjs)", () => {
       "AUTH_HASH_SECRET",
       "AUTH_ALLOWED_EMAILS",
     ]) {
-      expect(masks).toContain(vars[name]);
+      expect(masks).toContain((vars as Record<string, string>)[name]);
     }
   });
 

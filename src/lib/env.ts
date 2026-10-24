@@ -2,7 +2,7 @@ import { z } from "zod";
 
 /**
  * Único ponto do app que lê process.env (Constitution II; regra de lint em eslint.config.mjs).
- * Contrato: specs/001-setup-projeto/data-model.md §3.
+ * Contrato: specs/001-setup-projeto/data-model.md §3 + specs/006-login/data-model.md §7.
  */
 
 export const APP_ENVS = ["local", "preview", "production"] as const;
@@ -12,24 +12,64 @@ export const ENV_NAMES = [
   "APP_ENV",
   "SUPABASE_URL",
   "SUPABASE_SECRET_KEY",
-  "PRODUCTION_GATE_USER",
-  "PRODUCTION_GATE_PASSWORD",
+  "SUPABASE_PUBLISHABLE_KEY",
+  "AUTH_ALLOWED_EMAILS",
+  "AUTH_HASH_SECRET",
+  "APP_ORIGIN",
 ] as const;
 
-const supabase = {
+/** 006: credenciais que nunca podem existir em preview (FR-027). */
+const isCredentialName = (key: string) =>
+  key.startsWith("SUPABASE_") || key.startsWith("AUTH_") || key === "APP_ORIGIN";
+
+const allowedEmails = z
+  .string()
+  .transform((raw) =>
+    raw
+      .split(",")
+      .map((email) => email.trim().toLowerCase())
+      .filter(Boolean),
+  )
+  .pipe(z.array(z.email()).min(1));
+
+const IPV4 = /^\d{1,3}(\.\d{1,3}){3}$/;
+
+/** Origem pura (sem caminho) e nunca IP literal: vira o RP ID do WebAuthn. */
+const appOrigin = (protocols: string[]) =>
+  z.string().refine((value) => {
+    try {
+      const url = new URL(value);
+      return (
+        url.origin === value &&
+        protocols.includes(url.protocol) &&
+        !IPV4.test(url.hostname) &&
+        !url.hostname.startsWith("[")
+      );
+    } catch {
+      return false;
+    }
+  });
+
+const server = {
   SUPABASE_URL: z.url(),
   SUPABASE_SECRET_KEY: z.string().min(1),
+  SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
+  AUTH_ALLOWED_EMAILS: allowedEmails,
+  AUTH_HASH_SECRET: z.string().min(32),
 };
 
-const localSchema = z.object({ APP_ENV: z.literal("local"), ...supabase });
+const localSchema = z.object({
+  APP_ENV: z.literal("local"),
+  ...server,
+  APP_ORIGIN: appOrigin(["http:", "https:"]),
+});
 
 const previewSchema = z.object({ APP_ENV: z.literal("preview") });
 
 const productionSchema = z.object({
   APP_ENV: z.literal("production"),
-  ...supabase,
-  PRODUCTION_GATE_USER: z.string().min(1),
-  PRODUCTION_GATE_PASSWORD: z.string().min(20),
+  ...server,
+  APP_ORIGIN: appOrigin(["https:"]),
 });
 
 export type Env =
@@ -52,7 +92,7 @@ export function parseEnv(source: Source): Env {
   if (source.VERCEL_ENV === "preview" && appEnv !== "preview") fail(["APP_ENV"]);
 
   if (appEnv === "preview") {
-    const leaked = Object.keys(source).filter((key) => key.startsWith("SUPABASE_") && source[key]);
+    const leaked = Object.keys(source).filter((key) => isCredentialName(key) && source[key]);
     if (leaked.length > 0) fail(leaked);
   }
 

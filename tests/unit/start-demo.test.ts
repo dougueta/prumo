@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { parseEnv } from "@/lib/env";
-// @ts-expect-error — módulo .mjs sem tipos (script)
 import { buildDemoEnv } from "../../scripts/demo-env.mjs";
 
 /**
