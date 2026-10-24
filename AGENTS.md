@@ -44,6 +44,26 @@ shadcn/ui + Tailwind · Vitest + Playwright.
 | Analisar consistência | `/speckit-analyze` | `/speckit.analyze` |
 | Implementar | `/speckit-implement` | `/speckit.implement` |
 
+## UI: use o design system
+
+Toda tela — dentro ou fora do shell (login, offline, 404) — é montada com os componentes do
+design system da 003. Antes de criar um componente ou estilo novo, procure no catálogo.
+
+- **Catálogo**: `/catalogo` (só local e preview; em produção dá 404). Cada componente tem
+  "Quando usar", "Quando não usar", acessibilidade, textos padrão e certo × errado. O guia de
+  escrita fica em `/catalogo/escrita`.
+- **API dos componentes**: `specs/003-design-system/contracts/components.md`.
+- **Onde sua feature entra**: `specs/003-design-system/contracts/navigation.md` §2 (mapa das
+  32 features — `FEATURE_SLOTS`) e §2.1 (rotas fora do shell — `OUTSIDE_SHELL_ROUTES`).
+- **Dinheiro e datas**: sempre `Money`, `RelativeDate` e `PeriodLabel` (respeitam o modo
+  privacidade e o pt-BR); nunca formatar valor na mão.
+- **Lint (erro no CI)**: só classes do tema (`better-tailwindcss/no-unknown-classes`); em
+  `src/app`, `src/catalog` e `src/components/{finance,states,forms,shell,brand}` é proibido
+  `dark:` (o tema vem dos tokens em `src/styles/tokens.css`) e valor arbitrário `[...]`.
+  `src/components/ui/` é código gerado pelo shadcn — ajuste ali só o necessário.
+- Componente novo reutilizável entra no catálogo (`src/catalog/entries/`) no mesmo PR; o teste
+  de invariantes do registro falha se faltar.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 # This is NOT the Next.js you know
