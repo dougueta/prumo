@@ -12,7 +12,9 @@ const DEMO_SPECS = /demo\.spec\.ts/;
 // Comparação de aparência: só em Linux (baselines geradas na imagem oficial do Playwright).
 const VISUAL_SPECS = /visual\.spec\.ts/;
 // Specs de layout que também rodam num aparelho móvel emulado (toque, viewport estreita).
-const MOBILE_SPECS = /(home|pwa|shell|privacy)\.spec\.ts/;
+const MOBILE_SPECS = /(home|pwa|shell|privacy|auth[\\/]login)\.spec\.ts/;
+// 006: login no Safari (desktop e iPhone) — Google no navegador é MUST também ali (FR-003).
+const SAFARI_SPECS = /auth[\\/](google|login)\.spec\.ts/;
 
 export default defineConfig({
   testDir: "tests/e2e",
@@ -33,6 +35,16 @@ export default defineConfig({
       name: "mobile-chrome",
       testMatch: MOBILE_SPECS,
       use: { ...devices["Pixel 7"], baseURL: LOCAL_URL },
+    },
+    {
+      name: "webkit",
+      testMatch: SAFARI_SPECS,
+      use: { ...devices["Desktop Safari"], baseURL: LOCAL_URL },
+    },
+    {
+      name: "mobile-safari",
+      testMatch: SAFARI_SPECS,
+      use: { ...devices["iPhone 15"], baseURL: LOCAL_URL },
     },
     {
       name: "demo",
@@ -60,7 +72,8 @@ export default defineConfig({
             command: `npx next start -p ${LOCAL_PORT}`,
             url: `${LOCAL_URL}/api/health`,
             reuseExistingServer: !process.env.CI,
-            env: { APP_ENV: "local" },
+            // 006: origem do app = a do teste (WebAuthn e Origin); nunca IP literal.
+            env: { APP_ENV: "local", APP_ORIGIN: LOCAL_URL },
           },
         ]),
     {
