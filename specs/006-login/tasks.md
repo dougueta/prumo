@@ -43,7 +43,7 @@ e **003** integradas (ordem de merge da onda 1: 004 → 003 → 006 → 002).
 
 ### Implementação
 - [x] T010 Atualizar `src/lib/env.ts` + `.env.example` + `tests/unit/env-example.test.ts` (catálogo data-model §7) e `scripts/dev-setup.mjs` (preenche `SUPABASE_PUBLISHABLE_KEY`, `AUTH_HASH_SECRET` aleatório, `APP_ORIGIN=http://localhost:3000`) até T005 passar (FR-022)
-- [ ] T011 [P] Implementar puros em `src/lib/auth/{allowlist,crypto,safe-next,device}.ts` até T006 passar
+- [x] T011 [P] Implementar puros em `src/lib/auth/{allowlist,crypto,safe-next,device}.ts` até T006 passar
 - [ ] T012 [P] Implementar `src/lib/auth/session-state.ts` até T007 passar
 - [ ] T013 [P] Implementar `src/lib/auth/{rate-limit,otp-classify,neutral-timing}.ts` até T008 passar
 - [ ] T014 Migração `supabase/migrations/<ts>_auth_sessions_events.sql` (tipos, tabelas, CHECKs, FKs RESTRICT, índices, RLS, gatilho somente-inserção, `pg_cron` de retenção — data-model §1–§6) até T009 passar
