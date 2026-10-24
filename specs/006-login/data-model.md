@@ -145,7 +145,8 @@ Regras novas: em `preview`, `AUTH_*` e `APP_ORIGIN` MUST estar ausentes (falha d
 
 | Chave | Valor |
 |---|---|
-| `auth.enable_signup` / `auth.email.enable_signup` | `false` |
+| `auth.enable_signup` | `false` (cadastro fechado; usuário só via `auth:provision`) |
+| `auth.email.enable_signup` | **`true`** — apesar do nome, no Supabase é o interruptor do provedor de e-mail: `false` desliga o código **e** a senha ("Email logins are disabled"). Verificado na implementação (T003, 2026-10-24) |
 | `auth.site_url` | `APP_ORIGIN` (local: `http://localhost:3000`) |
 | `auth.additional_redirect_urls` | `["<APP_ORIGIN>/auth/callback"]` (local: portas 3000 e 3100) |
 | `auth.rate_limit.sign_in_sign_ups` / `token_verifications` (só local) | `1000` / `1000` — os testes (T023, E2E) fazem dezenas de chamadas do mesmo IP; produção mantém o padrão |
