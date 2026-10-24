@@ -29,16 +29,29 @@ export type SessionDeps = {
 
 export type Claims = { sub: string; email: string; sessionId: string };
 
-/** Claims verificados do JWT da sessão atual (getClaims: JWKS ou /user). */
-export async function verifiedClaims(auth: SupabaseClient): Promise<Claims | null> {
+/**
+ * Claims verificados do JWT da sessão atual (getClaims: JWKS ou /user). Distingue JWT inválido
+ * (sessão acabou) de provedor fora do ar (falha fechada, sem deslogar).
+ */
+export async function readClaims(
+  auth: SupabaseClient,
+): Promise<{ claims: Claims } | { error: "invalid" | "unavailable" }> {
   const { data, error } = await auth.auth.getClaims();
-  const claims = data?.claims as Record<string, unknown> | undefined;
-  if (error || !claims) return null;
-  const { sub, email, session_id: sessionId } = claims;
-  if (typeof sub !== "string" || typeof email !== "string" || typeof sessionId !== "string") {
-    return null;
+  if (error) {
+    const unavailable = error.name === "AuthRetryableFetchError" || (error.status ?? 0) >= 500;
+    return { error: unavailable ? "unavailable" : "invalid" };
   }
-  return { sub, email: normalizeEmail(email), sessionId };
+  const claims = data?.claims as Record<string, unknown> | undefined;
+  const { sub, email, session_id: sessionId } = claims ?? {};
+  if (typeof sub !== "string" || typeof email !== "string" || typeof sessionId !== "string") {
+    return { error: "invalid" };
+  }
+  return { claims: { sub, email: normalizeEmail(email), sessionId } };
+}
+
+export async function verifiedClaims(auth: SupabaseClient): Promise<Claims | null> {
+  const result = await readClaims(auth);
+  return "claims" in result ? result.claims : null;
 }
 
 /**
