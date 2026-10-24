@@ -17,8 +17,8 @@ e **003** integradas (ordem de merge da onda 1: 004 → 003 → 006 → 002).
 
 ## Phase 1: Setup
 
-- [ ] T072 Atualizar o status da 006 em `docs/roadmap.md` para `impl` (fluxo normal)
-- [ ] T001 Adicionar dependências fixadas `@supabase/ssr@0.12.7`, `@simplewebauthn/server@14.0.3`, `@simplewebauthn/browser@14.0.0` e dev `msw@3.0.2`; registrar justificativa no PR (research R-15). `@axe-core/playwright` já vem da 003 — não reinstalar — `package.json`, `package-lock.json`
+- [x] T072 Atualizar o status da 006 em `docs/roadmap.md` para `impl` (fluxo normal)
+- [x] T001 Adicionar dependências fixadas `@supabase/ssr@0.12.7`, `@simplewebauthn/server@14.0.3`, `@simplewebauthn/browser@14.0.0` e dev `msw@3.0.2`; registrar justificativa no PR (research R-15). `@axe-core/playwright` já vem da 003 — não reinstalar — `package.json`, `package-lock.json`
 - [ ] T002 [P] Criar projeto Vitest `contract` (MSW, sem rede) e pasta `tests/contract/auth/`; script `test:contract`, incluído em `check` — `vitest.config.ts`, `package.json`
 - [ ] T003 [P] Configurar `[auth]` do Supabase local conforme data-model §8 (cadastro desligado, OTP 6 dígitos/600 s, `max_frequency 60s`, `site_url` `http://localhost:3000`, redirects para portas 3000 e 3100, `rate_limit.sign_in_sign_ups`/`token_verifications` = 1000 só em local, senha **não** desligada, Google via `env(...)` opcional) e template `supabase/templates/codigo.html` só com `{{ .Token }}` — `supabase/config.toml` (FR-001, FR-003, FR-004)
 - [ ] T004 [P] Playwright: webServer local com `APP_ORIGIN=http://localhost:3100` (nunca IP); projeto `mobile-chrome` passa a incluir `auth/login.spec.ts`; novos projetos `webkit` (Desktop Safari) e `mobile-safari` (iPhone) para `auth/google.spec.ts` e `auth/login.spec.ts`; helper que lê o último código do Mailpit (`:57324`), helper de autenticador WebAuthn virtual via CDP (`WebAuthn.addVirtualAuthenticator`, `isUserVerified: true`) e helper `auth-session.ts` (login por OTP → `storageState`) — `playwright.config.ts`, `tests/e2e/helpers/{mailpit,webauthn,auth-session}.ts`
