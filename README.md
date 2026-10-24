@@ -46,6 +46,33 @@ Problemas comuns:
 - `ports are not available` no Windows → porta reservada pelo Hyper-V; veja
   `netsh int ipv4 show excludedportrange protocol=tcp` e ajuste `supabase/config.toml`.
 
+## Dados (modelo core — feature 004)
+
+Contrato único de dados de finanças: `specs/004-modelo-dados-core/` (spec, data-model, contracts).
+Outras features importam **somente** `@/data/core` (importar `@/data/core/supabase/*` ou
+`@/data/core/memory/*` e chamar `.from("<tabela core>").delete()` é barrado pelo lint).
+
+```ts
+import { getCoreStore, createCoreStore, CoreError, DEMO_OWNER_ID } from "@/data/core";
+
+const store = await getCoreStore(); // preview → memória (sessão prumo_demo_sid); demais → provedor da 006
+const page = await store.transactions.list({ from: "2026-09-01", to: "2026-09-30" });
+
+// jobs de servidor (ex.: sync 008): contexto service com dono explícito
+const job = createCoreStore({ kind: "service", ownerId, client: createServerClient() });
+```
+
+- **Erros** (`CoreError.code`): `not_found` (inclusive registro de outro dono), `validation`
+  (`field`), `conflict`, `forbidden_operation` (`reason`), `owner_required`, `unavailable` (o único
+  que vale tentar de novo).
+- **`upsertMany`**: cada linha do arquivo/sincronização vai **uma vez por lote**; para reprocessar,
+  crie um lote novo (a identidade reconhece o que já existe). Linhas idênticas sem id externo são
+  diferenciadas pela ordem de ocorrência no lote inteiro.
+- **Nada é apagado**: use `softDelete`/arquivamento; DELETE/TRUNCATE físicos são recusados pelo banco.
+- **Propriedade**: todas as tabelas core são da 004 (Constitution VII). Precisa de coluna ou
+  função nova? Proponha na spec da 004 — não altere o schema em outra feature.
+- `npx tsx scripts/generate-category-seed.ts --check` confere a migração da taxonomia padrão.
+
 ## Custos (teto R$ 0 — Constitution, ADR 0006)
 
 | Serviço | Plano | Uso no Prumo |

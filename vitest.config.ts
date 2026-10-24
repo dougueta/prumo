@@ -29,6 +29,9 @@ export default defineConfig({
         test: {
           name: "integration",
           include: ["tests/integration/**/*.int.test.ts"],
+          // 004: um arquivo por vez — TRUNCATE (teste de proibição) e a carga de 100 mil linhas do
+          // teste de desempenho disputam bloqueios com os demais testes no mesmo banco.
+          fileParallelism: false,
           environment: "node",
           setupFiles: ["tests/setup.ts"],
           testTimeout: 30_000,

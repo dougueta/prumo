@@ -16,7 +16,46 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  {
+    // 004 · Constitution VII: outras features usam só a porta pública `@/data/core`.
+    files: ["**/*.{ts,tsx,mts}"],
+    ignores: [
+      "src/data/core/**",
+      "tests/unit/**",
+      "tests/integration/**",
+      "tests/contract/**",
+      "tests/helpers/**",
+    ],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@/data/core/supabase/*", "@/data/core/memory/*"],
+              message: "Use a porta pública `@/data/core` (getCoreStore/createCoreStore).",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    // 004 · Constitution IV: nada é apagado fisicamente nas tabelas core (use softDelete).
+    files: ["**/*.{ts,tsx,mts,js,mjs}"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "CallExpression[callee.property.name='delete'][callee.object.callee.property.name='from'][callee.object.arguments.0.value=/^(institutions|accounts|transactions|categories|category_templates|import_batches|audit_log)$/]",
+          message: "DELETE físico em tabela core é proibido (FR-037): use softDelete/arquivamento.",
+        },
+      ],
+    },
+  },
   globalIgnores([
+    "tests/fixtures/lint/**",
     ".next/**",
     "out/**",
     "build/**",
