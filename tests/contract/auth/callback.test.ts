@@ -58,7 +58,8 @@ describe("completeGoogle (/auth/callback)", () => {
     });
     const user = h.fake.users.get(DOUG)!;
     expect(await h.store.listSessions(user.id)).toMatchObject([{ method: "google" }]);
-    expect((await allEvents(h.store)).find((e) => e.type === "login_succeeded")).toMatchObject({
+    const mine = await h.store.listEvents({ ownerId: user.id, now: new Date() });
+    expect(mine.find((e) => e.type === "login_succeeded")).toMatchObject({
       method: "google",
       owner_id: user.id,
       email_hash: hmacHex(HASH_SECRET, DOUG),
