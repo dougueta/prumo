@@ -64,7 +64,8 @@ spec/plan/tasks da feature + constitution + AGENTS.md. Revisões de PR (do Gemin
 do próprio Claude) são feitas por um subagente **novo e sem histórico** (contexto limpo), que
 recebe só o pacote de revisão e aplica `docs/review-checklist.md`. O prompt de despacho leva só
 o número do PR e o local dos artefatos, sem afirmações do autor. A sessão que despachou
-publica o veredito no PR, transcrito sem edição, com o commit revisado e os insumos recebidos.
+publica no PR **toda** execução, inclusive as reprovadas: prompt literal, resposta sem edição
+(veredito, commit, insumos, achados) e identificador da execução.
 Nunca revisa a sessão que implementou; novo commit no PR exige nova revisão.
 
 ## Como o Gemini participa

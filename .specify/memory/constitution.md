@@ -4,15 +4,23 @@ Sync Impact Report
 - Modified principles: VIII. Revisão Independente Obrigatória — o revisor dos PRs do Claude
   deixa de ser o Gemini Code Assist (versão consumer encerrada pelo Google em 2026-07-17; a
   enterprise exige Google Cloud com faturamento) e passa a ser um subagente Claude em contexto
-  limpo, com o mesmo pacote de revisão dos PRs do Gemini; prompt de despacho sem afirmações do
-  autor; veredito transcrito no PR com commit e insumos. "Revisão cruzada" (outro modelo) vira
+  limpo, com o mesmo pacote de revisão dos PRs do Gemini (e pacote definido para PR sem
+  `specs/`); prompt de despacho sem afirmações do autor; toda execução publicada no PR com
+  prompt literal, resposta sem edição e identificador. "Revisão cruzada" (outro modelo) vira
   "revisão independente" (outro contexto). Fluxo/Papéis: Gemini deixa de ser revisor.
 - Added/Removed sections: nenhuma
 - Origem: decisão do Doug em 2026-10-24 (PR #11 sem revisor disponível) — ADR 0007
+- Bootstrap: a 1.2.0 não oferecia caminho para revisar esta emenda (revisor Gemini
+  indisponível; exceção `emergencia` vedada a PR de constitution). Por decisão do Doug em
+  2026-10-24, o PR desta emenda (#12) foi revisado pelo protocolo novo, e a aprovação dele no
+  Gate 3 ratifica a adoção.
+- Mudança de processo aprovada junto: docs/adr/README.md passa a aceitar ADR no mesmo PR da
+  emenda da constitution que ela fundamenta (ADR 0007).
 - Templates: ✅ plan/spec/tasks templates (sem mudança estrutural) · ✅ AGENTS.md, CLAUDE.md,
   GEMINI.md, README.md, docs/gemini-handoff.md, docs/workflow.md, docs/review-checklist.md,
   docs/adr/0001 (superada em parte pela 0007) e README das ADRs, docs/roadmap.md,
-  docs/pendencias-doug.md, specs/001-setup-projeto (spec/plan/tasks, ainda em verificação)
+  docs/pendencias-doug.md, specs/001-setup-projeto e specs/004-modelo-dados-core
+  (spec/plan/tasks), docs/research/gemini-code-assist.md (nota de superada)
   · ✅ removido .gemini/styleguide.md
 - Follow-up (registrados em docs/pendencias-doug.md): ⚠ specs/002-revisor-pr (PR #10) foi
   desenhada em torno do Gemini Code Assist e volta para `spec` (Princípio I, re-Gates 1 e 2)
@@ -133,16 +141,20 @@ objetiva.
   sessão que implementou nem um subagente que herde o histórico dela.
 - Insumo do revisor: apenas o pacote de revisão — diff, artefatos da spec (`spec.md`,
   `plan.md`, `tasks.md`, `data-model.md`, `contracts/`), constitution, ADRs e
-  `docs/review-checklist.md`. O prompt de despacho MUST conter só o número do PR, o local
-  desses artefatos e o formato do veredito — nenhuma afirmação, justificativa ou
+  `docs/review-checklist.md`. PR sem `specs/` (emenda, ADR, docs de processo) tem como
+  pacote diff + constitution + ADRs + checklist; PR que emenda a constitution é julgado pela
+  versão da `main` e pela da branch. O prompt de despacho MUST conter só o número do PR, o
+  local desses artefatos e o formato do veredito — nenhuma afirmação, justificativa ou
   enquadramento do autor. Justificativas do autor valem só como respostas formais aos
   achados, depois do veredito.
 - O revisor aplica o checklist fixo de `docs/review-checklist.md` e emite veredito formal:
   **APROVADO** ou **MUDANÇAS NECESSÁRIAS**, com achados por severidade
   (CRÍTICO / ALTO / MÉDIO / BAIXO).
-- Registro: a sessão que despachou o revisor publica no PR um comentário com o veredito e os
-  achados transcritos sem edição, o commit revisado e a lista dos insumos recebidos. Novo
-  commit no PR exige nova revisão antes do merge.
+- Registro: **toda** execução de revisão, em qualquer commit, MUST ser publicada no PR —
+  inclusive as reprovadas ou superadas; nenhuma é descartada. Quem despachou publica um
+  comentário por execução com: o prompt de despacho literal, a resposta do revisor transcrita
+  sem edição (veredito, commit revisado, insumos recebidos, achados) e o identificador da
+  execução. Novo commit no PR exige nova revisão antes do merge.
 - O autor responde a cada achado com correção ou justificativa técnica — nunca concordância
   performática.
 - Merge na `main` exige: CI verde + veredito APROVADO do revisor + aprovação do Doug.

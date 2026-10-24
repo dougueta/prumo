@@ -4,6 +4,7 @@
 > **Autor**: Gemini (Deep Research)  
 > **Alimenta as features**: `002 · revisor-pr`  
 > **Formato de entrega**: Conforme padronizado em `docs/gemini-handoff.md`  
+> ⚠️ **Superado pela ADR 0007 / constitution 2.0.0 (2026-10-24)**: a versão consumer do app foi encerrada pelo Google em 2026-07-17 e o Gemini Code Assist deixou de ser o revisor do projeto. O conteúdo abaixo é só registro histórico.  
 > ⚠️ **Documento Exploratório / Superado**: Esta pesquisa preliminar foi complementada e detalhada pela pesquisa da Feature 002 em `specs/002-revisor-pr/research.md`. Onde houver divergência quanto a schemas, branch protection ou arquitetura de gates, **prevalecem as definições normativas da Feature 002**.
 
 ---

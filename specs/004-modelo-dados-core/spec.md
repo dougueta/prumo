@@ -5,7 +5,7 @@
 **Status**: Approved (Gate 1, 2026-10-02)
 **Iniciativa**: 0 · Plataforma
 **Onda**: 1
-**Agente**: Claude (revisor: Gemini)
+**Agente**: Claude (revisor: subagente Claude em contexto limpo — constitution 2.0.0)
 **Dependências**: 001 (setup-projeto — base do app e gerador de dados sintéticos)
 **Input**: "Modelo de dados core: o contrato único de dados de finanças (instituições, contas,
 transações, categorias, lotes de importação e trilha de auditoria) que todos os conectores

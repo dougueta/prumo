@@ -42,7 +42,7 @@ no client; owner sempre explícito; mesmo comportamento nas duas implementaçõe
 | V. Test-first | Toda task de implementação tem teste vermelho antes (inclusive schema, RLS, auditoria e guardas na Phase 2); bateria de contrato roda nas duas implementações no CI | ✅ |
 | VI. IA assistente | `category_source` + `category_confidence`; travas impedem IA/regra/sync de sobrescrever edição manual; "Sem categoria" como degradação | ✅ |
 | VII. Donos de dados / demo | Todas as tabelas com dona 004 registrada (data-model §1); repositórios Supabase + memória; demo com sessão própria | ✅ |
-| VIII. Revisão independente | PR `autor:claude` → revisão Gemini | ✅ |
+| VIII. Revisão independente | PR `autor:claude` → revisor Claude em contexto limpo (constitution 2.0.0; integrado sem veredito — revisão pós-merge devida) | ✅ |
 | IX. Qualidade dos artefatos | data-model tipado com índices/constraints/RLS; contracts; máquinas de estado; algoritmos; Gherkin abaixo | ✅ |
 | X. Simplicidade | Sem ORM, sem libs novas; sem UI; filtros avançados/dedup cruzado/faturas ficam com 011/013/018 | ✅ |
 | Custo R$ 0 | Só Supabase Free já existente; volume projetado (≪ 500 MB) | ✅ |

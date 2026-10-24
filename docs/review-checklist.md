@@ -2,7 +2,10 @@
 
 Usado pelo revisor independente: um subagente Claude **novo e sem histórico**, em todos os PRs
 (do Claude e do Gemini). O revisor lê **somente**: o diff, `specs/NNN-*/spec.md`,
-`plan.md`, `tasks.md`, `data-model.md`, `contracts/`, a constitution e `docs/adr/`.
+`plan.md`, `tasks.md`, `data-model.md`, `contracts/`, a constitution e `docs/adr/`. PR sem
+`specs/`: diff + constitution + ADRs + este checklist; emenda da constitution é julgada pela
+versão da `main` e pela da branch. Toda execução vai para o PR (prompt literal, resposta sem
+edição, identificador da execução), inclusive as reprovadas.
 Não leia conversas ou justificativas do autor antes de formar seu veredito.
 
 ## Postura
