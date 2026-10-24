@@ -17,6 +17,8 @@
     "test:integration": "vitest run --project integration",
     "test:e2e": "next build && playwright test",
     "synthetic": "tsx scripts/synthetic.ts",
+    "auth:provision": "tsx scripts/auth-provision.ts",
+    "auth:age-session": "tsx scripts/auth-age-session.ts",
     "test:component": "vitest run --project component",
     "test:contract": "vitest run --project contract",
     "test:visual:update": "node scripts/visual-update.mjs"

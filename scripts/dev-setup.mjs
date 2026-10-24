@@ -59,4 +59,8 @@ writeFileSync(
     "",
   ].join("\n"),
 );
-console.log(".env.local escrito. Rode: npm run dev");
+console.log(".env.local escrito.");
+
+// 006: cria no Supabase Auth local o(s) usuário(s) da allowlist (cadastro público é desligado).
+execSync("npm run auth:provision", { stdio: "inherit" });
+console.log("Pronto. Rode: npm run dev");
