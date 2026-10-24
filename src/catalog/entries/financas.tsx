@@ -1,3 +1,4 @@
+import { Children } from "react";
 import { CategoryIcon } from "@/components/finance/category-icon";
 import { CATEGORY_VISUALS, type CategoryVisualKey } from "@/components/finance/category-visuals";
 import { GroupedList } from "@/components/finance/grouped-list";
@@ -32,9 +33,12 @@ function Row({ children }: { children: React.ReactNode }) {
 }
 
 function List({ children }: { children: React.ReactNode }) {
+  const items = Children.toArray(children);
   return (
     <ul className="divide-y divide-border rounded-lg border border-border bg-surface px-2">
-      {children}
+      {items.map((item, i) => (
+        <li key={i}>{item}</li>
+      ))}
     </ul>
   );
 }

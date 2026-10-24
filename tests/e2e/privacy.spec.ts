@@ -25,7 +25,11 @@ test("ocultar valores mascara tudo, com largura igual, inclusive para leitor de 
     }
     // Máscaras do mesmo tamanho de fonte têm a mesma largura (não revelam a grandeza).
     expect(widths.size, path).toBeLessThanOrEqual(4);
-    const tree = await page.locator("main").ariaSnapshot();
+    // Exemplos reais (Variantes e estados); os "errados" são ilustrações estáticas.
+    const examples = page.locator("section", {
+      has: page.getByRole("heading", { level: 2, name: "Variantes e estados" }),
+    });
+    const tree = await examples.ariaSnapshot();
     expect(tree).toContain("valor oculto");
     expect(tree).not.toMatch(/R\$\s?1/);
     await page.getByRole("button", { name: "Mostrar valores" }).first().click();
@@ -55,7 +59,7 @@ test("o switch dos Ajustes controla o mesmo estado do cabeçalho", async ({ page
 test("campo de valor mostra o que é digitado mesmo com valores ocultos", async ({ page }) => {
   await page.goto("/catalogo/money-input");
   await page.getByRole("button", { name: "Ocultar valores" }).first().click();
-  const input = page.getByLabel("Valor").first();
+  const input = page.getByLabel("Valor", { exact: true }).first();
   await input.fill("1234,5");
   await input.blur();
   await expect(input).toHaveValue("R$ 1.234,50");

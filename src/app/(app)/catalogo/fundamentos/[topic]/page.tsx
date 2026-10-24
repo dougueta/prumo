@@ -38,7 +38,12 @@ function Cores() {
         Contraste calculado contra o fundo da página (--background) de cada tema. Texto precisa de
         4,5:1; foco e bordas de controles, 3:1. Cores fora desta lista não passam no lint.
       </p>
-      <div className="overflow-x-auto rounded-lg border border-border">
+      <div
+        role="region"
+        aria-label="Tabela de tokens de cor (rolável)"
+        tabIndex={0}
+        className="overflow-x-auto rounded-lg border border-border"
+      >
         <table className="w-full text-left text-sm">
           <caption className="sr-only">Tokens de cor</caption>
           <thead className="bg-surface-muted">

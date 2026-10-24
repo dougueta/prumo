@@ -9,6 +9,8 @@ export type MoneyProps = {
   currency?: string;
   variant?: MoneyVariant;
   size?: "sm" | "md" | "lg" | "xl";
+  /** "inherit": usa a cor do contexto (ex.: variação do SummaryCard, colorida por good/bad). */
+  tone?: "semantic" | "inherit";
   /** Só layout (margens/alinhamento), nunca cor. */
   className?: string;
 };
@@ -38,6 +40,7 @@ export function Money({
   currency = "BRL",
   variant = "movement",
   size = "md",
+  tone = "semantic",
   className,
 }: MoneyProps) {
   if (cents === null) {
@@ -66,7 +69,7 @@ export function Money({
       className={cn(
         "whitespace-nowrap tabular-nums",
         SIZES[size],
-        colorFor(cents, variant),
+        tone === "semantic" && colorFor(cents, variant),
         className,
       )}
     >

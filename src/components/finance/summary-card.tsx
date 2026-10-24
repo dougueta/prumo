@@ -3,7 +3,6 @@ import Link from "next/link";
 import { EmptyState } from "@/components/states/empty-state";
 import { ErrorState } from "@/components/states/error-state";
 import { LoadingSkeleton } from "@/components/states/loading-skeleton";
-import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { Money } from "./money";
 
@@ -54,7 +53,7 @@ export function SummaryCard({
             className={cn("text-sm tabular-nums", delta.good ? "text-income" : "text-expense")}
           >
             <span aria-hidden="true">{ARROW[delta.trend]}</span>{" "}
-            {formatMoney(delta.cents, { variant: "movement" })} {delta.label}
+            <Money cents={delta.cents} variant="movement" size="sm" tone="inherit" /> {delta.label}
           </p>
         )}
       </div>

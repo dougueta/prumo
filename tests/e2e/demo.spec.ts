@@ -7,7 +7,7 @@ const PAGES = ["/", "/extrato", "/planejamento", "/investimentos", "/mais", "/ca
 for (const path of PAGES) {
   test(`selo de demonstração em ${path} (FR-012)`, async ({ page }) => {
     await page.goto(path);
-    await expect(page.getByText(BADGE)).toBeVisible();
+    await expect(page.getByText(BADGE, { exact: true })).toBeVisible();
     await expect(page.getByText("Local", { exact: true })).toHaveCount(0);
   });
 }
@@ -15,21 +15,28 @@ for (const path of PAGES) {
 test("selo também fora do shell: 404 e página offline (FR-012)", async ({ page }) => {
   await page.goto("/nao-existe");
   await expect(page.getByRole("heading", { name: "Página não encontrada" })).toBeVisible();
-  await expect(page.getByText(BADGE)).toBeVisible();
+  await expect(page.getByText(BADGE, { exact: true })).toBeVisible();
   await page.goto("/~offline");
-  await expect(page.getByText(BADGE)).toBeVisible();
+  await expect(page.getByText(BADGE, { exact: true })).toBeVisible();
 });
 
 test("selo visível e acima do véu com um diálogo aberto (edge case)", async ({ page }) => {
   await page.goto("/catalogo/confirm-dialog");
   await page.getByRole("button", { name: "Excluir transação" }).first().click();
   await expect(page.getByRole("alertdialog")).toBeVisible();
-  const badge = page.getByText(BADGE);
+  const badge = page.getByText(BADGE, { exact: true });
   await expect(badge).toBeVisible();
   const box = await badge.boundingBox();
   if (!box) throw new Error("selo sem caixa");
+  // Com o diálogo aberto, o body fica com pointer-events: none; o selo é reativado só para a
+  // checagem de qual elemento está por cima naquele ponto.
   const topmost = await page.evaluate(
-    ({ x, y }) => document.elementFromPoint(x, y)?.textContent ?? "",
+    ({ x, y }) => {
+      document.querySelectorAll<HTMLElement>('[role="status"]').forEach((el) => {
+        el.style.pointerEvents = "auto";
+      });
+      return document.elementFromPoint(x, y)?.textContent ?? "";
+    },
     { x: box.x + box.width / 2, y: box.y + box.height / 2 },
   );
   expect(topmost).toContain(BADGE);

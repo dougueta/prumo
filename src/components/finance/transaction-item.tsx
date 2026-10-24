@@ -99,7 +99,8 @@ export function TransactionItem({
       </div>
       <span
         data-slot="transaction-amount"
-        className={cn("shrink-0 text-right", data.status === "pending" && "opacity-70")}
+        // Pendente: itálico em vez de opacidade (opacidade derrubaria o contraste AA — FR-019).
+        className={cn("shrink-0 text-right", data.status === "pending" && "italic")}
       >
         <Money cents={data.amountCents} currency={data.currency} size={compact ? "sm" : "md"} />
       </span>

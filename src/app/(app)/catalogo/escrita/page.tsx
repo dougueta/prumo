@@ -59,7 +59,12 @@ export default function WritingGuidePage() {
         </section>
         <section className="flex flex-col gap-2">
           <h2 className="text-xl font-semibold">Termos padronizados</h2>
-          <div className="overflow-x-auto rounded-lg border border-border">
+          <div
+            role="region"
+            aria-label="Tabela de termos (rolável)"
+            tabIndex={0}
+            className="overflow-x-auto rounded-lg border border-border"
+          >
             <table className="w-full text-left text-sm">
               <thead className="bg-surface-muted">
                 <tr>

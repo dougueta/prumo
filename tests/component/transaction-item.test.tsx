@@ -47,13 +47,13 @@ describe("TransactionItem", () => {
     expect(screen.getByText("Sem categoria")).toBeInTheDocument();
   });
 
-  it("pendente: selo de texto e valor esmaecido", () => {
+  it("pendente: selo de texto e valor em itálico (sem perder contraste)", () => {
     const { container } = renderItem(
       <TransactionItem data={data("purchase", { status: "pending" })} />,
     );
     expect(screen.getByText("Pendente")).toBeInTheDocument();
     expect(container.querySelector("[data-slot=transaction-amount]")?.className).toContain(
-      "opacity-70",
+      "italic",
     );
   });
 

@@ -76,10 +76,14 @@ for (const viewport of [
           .filter((el) => (el as HTMLElement).offsetParent !== null)
           .map((el) => {
             const box = el.getBoundingClientRect();
+            // Alvo efetivo inclui a área de toque do ::after posicionado (ex.: Switch).
+            const after = getComputedStyle(el, "::after");
+            const grow = (side: string) =>
+              after.position === "absolute" ? Math.max(0, -parseFloat(side) || 0) : 0;
             return {
               name: el.getAttribute("aria-label") ?? el.textContent,
-              w: box.width,
-              h: box.height,
+              w: box.width + grow(after.left) + grow(after.right),
+              h: box.height + grow(after.top) + grow(after.bottom),
             };
           })
           .filter((b) => b.w < 44 || b.h < 44),

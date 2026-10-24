@@ -21,7 +21,12 @@ describe("SummaryCard", () => {
     );
     expect(screen.getByRole("heading", { name: "Saídas do mês" })).toBeInTheDocument();
     const delta = container.querySelector("[data-slot=summary-delta]");
-    expect(delta?.textContent?.replace(/\s/g, " ")).toBe(`↓ ${MINUS}R$ 120,00 vs. agosto`);
+    const shown = delta?.querySelector("[data-money-value] [aria-hidden=true]")?.textContent;
+    expect(shown?.replace(/\s/g, " ")).toBe(`${MINUS}R$ 120,00`);
+    expect(delta?.textContent).toMatch(/^↓ /);
+    expect(delta?.textContent).toMatch(/vs\. agosto$/);
+    // Respeita o modo privacidade como qualquer valor (FR-031).
+    expect(delta?.querySelector("[data-money-mask]")).not.toBeNull();
     expect(delta?.className).toContain("text-income");
   });
 
