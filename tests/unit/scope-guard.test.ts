@@ -43,11 +43,16 @@ describe("guarda de escopo da 003 (FR-050, FR-051)", () => {
     } catch {
       return; // clone raso sem origin/main: a checagem do diff fica para o CI completo.
     }
-    const changed = execFileSync("git", ["diff", "--name-only", base, "--", "supabase/"], {
-      cwd: ROOT,
-    })
+    // Só os commits da 003 (`tipo(003): …`): features empilhadas depois (006, 007…) mexem em
+    // supabase/ legitimamente e não podem quebrar esta guarda.
+    const changed = execFileSync(
+      "git",
+      ["log", "--format=", "--name-only", "--grep=(003)", "--fixed-strings", `${base}..HEAD`],
+      { cwd: ROOT },
+    )
       .toString()
-      .trim();
-    expect(changed).toBe("");
+      .split(/\r?\n/)
+      .filter((file) => file.startsWith("supabase/"));
+    expect(changed).toEqual([]);
   });
 });
