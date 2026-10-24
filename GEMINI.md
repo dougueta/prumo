@@ -50,6 +50,7 @@ Ao rodar o script de criação de feature, **sempre** passe `--number NNN --shor
 - Implementar feature marcada **Claude**, ou mexer num worktree que não é seu.
 - Alterar schema de tabela de outra feature (Constitution VII).
 - Usar float para dinheiro; criar tabela sem RLS; colocar segredo ou dado real no repo.
+- Emitir veredito de revisão em qualquer PR (Constitution VIII 2.0.0).
 - Fazer merge na `main` (só o Doug faz).
 
 ## 5. Contexto de produto que você precisa saber

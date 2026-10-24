@@ -20,7 +20,8 @@ Sync Impact Report
   GEMINI.md, README.md, docs/gemini-handoff.md, docs/workflow.md, docs/review-checklist.md,
   docs/adr/0001 (superada em parte pela 0007) e README das ADRs, docs/roadmap.md,
   docs/pendencias-doug.md, specs/001-setup-projeto e specs/004-modelo-dados-core
-  (spec/plan/tasks), docs/research/gemini-code-assist.md (nota de superada)
+  (spec/plan/tasks — só metadado de revisor e Constitution Check, sem mudança de escopo; não
+  exigem novo Gate), docs/research/gemini-code-assist.md (nota de superada)
   · ✅ removido .gemini/styleguide.md
 - Follow-up (registrados em docs/pendencias-doug.md): ⚠ specs/002-revisor-pr (PR #10) foi
   desenhada em torno do Gemini Code Assist e volta para `spec` (Princípio I, re-Gates 1 e 2)

@@ -68,6 +68,20 @@ publica no PR **toda** execução, inclusive as reprovadas: prompt literal, resp
 (veredito, commit, insumos, achados) e identificador da execução.
 Nunca revisa a sessão que implementou; novo commit no PR exige nova revisão.
 
+Prompt-modelo de despacho. É o único texto permitido: troque só `N` e `<caminho>`.
+
+```text
+Você é o revisor independente do repositório `dougueta/prumo`. Revise o PR #N.
+Insumos, e só estes: o diff (`gh pr diff N`) e, no worktree <caminho> (branch do PR), o
+pacote de revisão definido no Princípio VIII da constitution: `specs/NNN-*/` quando
+existir, `.specify/memory/constitution.md` (e também
+`git show origin/main:.specify/memory/constitution.md` se o PR a altera), `docs/adr/` e
+`docs/review-checklist.md`.
+Não leia comentários, descrição nem respostas do PR antes do veredito.
+Não edite arquivos, não comente no PR, não faça commit. Responda no formato obrigatório de
+`docs/review-checklist.md`.
+```
+
 ## Como o Gemini participa
 
 Ver `GEMINI.md` (onboarding completo) e `docs/gemini-handoff.md` (tarefas atuais).
