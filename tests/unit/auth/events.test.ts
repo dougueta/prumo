@@ -1,6 +1,7 @@
 import { createHmac } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
-import { recordEvent, type EventInput, type EventSink } from "@/lib/auth/events";
+import { recordEvent, type EventInput } from "@/lib/auth/events";
+import type { EventRow } from "@/lib/auth/store";
 
 /** 006 · T062 (FR-017, FR-018, FR-019) — data-model §4. */
 const SECRET = "s".repeat(40);
@@ -8,14 +9,13 @@ const hmac = (v: string) => createHmac("sha256", SECRET).update(v).digest("hex")
 const IPHONE =
   "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1";
 
-function sink(result: { error: unknown } = { error: null }) {
-  const rows: Record<string, unknown>[] = [];
-  const insert = vi.fn(async (row: Record<string, unknown>) => {
+function sink(result = true) {
+  const rows: EventRow[] = [];
+  const insert = vi.fn(async (row: EventRow) => {
     rows.push(row);
     return result;
   });
-  const client: EventSink = { from: () => ({ insert }) };
-  return { client, rows, insert };
+  return { store: { insertEvent: insert }, rows, insert };
 }
 
 const request = {
@@ -29,7 +29,7 @@ describe("recordEvent", () => {
     const s = sink();
     await recordEvent(
       { type: "otp_requested", email: "  Doug@Example.test ", emailIsOwner: true, request },
-      { client: s.client, hashSecret: SECRET },
+      { store: s.store, hashSecret: SECRET },
     );
     expect(s.rows[0]).toEqual({
       type: "otp_requested",
@@ -50,7 +50,7 @@ describe("recordEvent", () => {
     const s = sink();
     await recordEvent(
       { type: "email_refused", email: "estranho@exemplo.com", emailIsOwner: false, request },
-      { client: s.client, hashSecret: SECRET },
+      { store: s.store, hashSecret: SECRET },
     );
     expect(s.rows[0]).toMatchObject({
       email_masked: "es***@e***.com",
@@ -72,7 +72,7 @@ describe("recordEvent", () => {
         emailIsOwner: true,
         request,
       },
-      { client: s.client, hashSecret: SECRET },
+      { store: s.store, hashSecret: SECRET },
     );
     expect(s.rows[0]).toMatchObject({ owner_id: "u1", session_id: "s1", email_masked: null });
   });
@@ -85,7 +85,7 @@ describe("recordEvent", () => {
         ownerId: "u1",
         request: { userAgent: null, ip: null, headers: new Headers() },
       },
-      { client: s.client, hashSecret: SECRET },
+      { store: s.store, hashSecret: SECRET },
     );
     expect(s.rows[0]).toMatchObject({
       geo: null,
@@ -103,7 +103,7 @@ describe("recordEvent", () => {
   ] as const)("%s sem e-mail é erro de programação (email_hash obrigatório)", async (type) => {
     const s = sink();
     await expect(
-      recordEvent({ type, request }, { client: s.client, hashSecret: SECRET }),
+      recordEvent({ type, request }, { store: s.store, hashSecret: SECRET }),
     ).rejects.toThrow(/email/);
     expect(s.insert).not.toHaveBeenCalled();
   });
@@ -117,16 +117,16 @@ describe("recordEvent", () => {
     const s = sink();
     for (const forbidden of ["code", "token", "password", "otp", "accessToken"]) {
       const input = { type: "logout", request, [forbidden]: "123456" } as unknown as EventInput;
-      await expect(recordEvent(input, { client: s.client, hashSecret: SECRET })).rejects.toThrow();
+      await expect(recordEvent(input, { store: s.store, hashSecret: SECRET })).rejects.toThrow();
     }
     expect(s.insert).not.toHaveBeenCalled();
   });
 
   it("erro do banco não propaga detalhes: devolve false", async () => {
-    const s = sink({ error: { message: "duplicate key value violates … token=abc" } });
+    const s = sink(false);
     const result = await recordEvent(
       { type: "logout", ownerId: "u1", request },
-      { client: s.client, hashSecret: SECRET },
+      { store: s.store, hashSecret: SECRET },
     );
     expect(result).toBe(false);
   });
@@ -134,7 +134,7 @@ describe("recordEvent", () => {
   it("sucesso devolve true", async () => {
     const s = sink();
     expect(
-      await recordEvent({ type: "logout", request }, { client: s.client, hashSecret: SECRET }),
+      await recordEvent({ type: "logout", request }, { store: s.store, hashSecret: SECRET }),
     ).toBe(true);
   });
 });

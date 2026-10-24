@@ -5,6 +5,8 @@
 
 export const LOCK_AFTER_MS = 15 * 60_000;
 export const IDLE_MAX_MS = 30 * 24 * 60 * 60_000;
+/** Validade absoluta, gravada na criação (`absolute_expires_at`) e nunca renovada. */
+export const ABSOLUTE_MAX_MS = 90 * 24 * 60 * 60_000;
 export const TOUCH_THROTTLE_MS = 60_000;
 export const MAX_UNLOCK_FAILURES = 5;
 

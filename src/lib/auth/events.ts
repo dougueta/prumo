@@ -3,6 +3,7 @@ import { z } from "zod";
 import { normalizeEmail } from "./allowlist";
 import { hmacHex, maskEmail } from "./crypto";
 import { describeDevice, geoFromHeaders } from "./device";
+import type { AuthStore, EventRow } from "./store";
 
 /**
  * Eventos de acesso (FR-017–FR-019; data-model §4). Gravação só pelo servidor (cliente de
@@ -57,13 +58,6 @@ const eventInput = z
 
 export type EventInput = z.input<typeof eventInput>;
 
-/** Só o necessário do cliente Supabase (testável sem rede). */
-export type EventSink = {
-  from(table: "access_events"): {
-    insert(row: Record<string, unknown>): PromiseLike<{ error: unknown }>;
-  };
-};
-
 /**
  * Grava o evento. Devolve `false` se o banco recusar — sem repassar a mensagem do banco
  * (FR-019). Entrada inválida (campo proibido, e-mail ausente onde é obrigatório) lança: é erro
@@ -71,14 +65,14 @@ export type EventSink = {
  */
 export async function recordEvent(
   input: EventInput,
-  { client, hashSecret }: { client: EventSink; hashSecret: string },
+  { store, hashSecret }: { store: Pick<AuthStore, "insertEvent">; hashSecret: string },
 ): Promise<boolean> {
   const event = eventInput.parse(input);
   if (EMAIL_REQUIRED.has(event.type) && !event.email) {
     throw new Error(`Evento ${event.type} exige email (email_hash obrigatório)`);
   }
   const email = event.email ? normalizeEmail(event.email) : null;
-  const row = {
+  const row: EventRow = {
     type: event.type,
     reason: event.reason ?? null,
     method: event.method ?? "none",
@@ -90,6 +84,5 @@ export async function recordEvent(
     device_label: describeDevice(event.request.userAgent),
     geo: geoFromHeaders(event.request.headers),
   };
-  const { error } = await client.from("access_events").insert(row);
-  return !error;
+  return store.insertEvent(row);
 }
