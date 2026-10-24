@@ -11,7 +11,7 @@ import { classifyOtpFailure } from "./otp-classify";
 import { evaluateRateLimit } from "./rate-limit";
 import { safeNext } from "./safe-next";
 import type { AuthService, VerifyCodeError } from "./service";
-import { establishSession, NEXT_COOKIE, OTP_EMAIL_COOKIE } from "./sessions";
+import { establishSession, NEXT_COOKIE, OTP_EMAIL_COOKIE, type SessionDeps } from "./sessions";
 import type { AuthStore } from "./store";
 import {
   createAuthClientFor,
@@ -42,7 +42,7 @@ export type ServiceDeps = {
   store: AuthStore;
   jar: CookieJar;
   clock: Clock;
-  bootstrap: () => Promise<void>;
+  bootstrap: SessionDeps["bootstrap"];
 };
 
 /** Provedor fora (rede ou 5xx) ≠ código recusado (4xx). */

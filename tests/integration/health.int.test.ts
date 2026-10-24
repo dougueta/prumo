@@ -3,7 +3,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import addFormats from "ajv-formats";
 import { parse } from "yaml";
 import { describe, expect, it } from "vitest";
-import { createServerClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 import { pingDatabase } from "@/lib/health";
 
 /**
@@ -31,7 +31,7 @@ const validateHealth = ajv.compile(spec.components.schemas.HealthStatus);
 
 describe("health_ping() no Supabase (FR-002, FR-023)", () => {
   it("executa a função do banco e mede latência", async () => {
-    const client = createServerClient();
+    const client = createServiceClient();
     await expect(pingDatabase(client)()).resolves.toBeUndefined();
   });
 });

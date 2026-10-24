@@ -3,6 +3,7 @@ import { createServerClient, type CookieMethodsServer } from "@supabase/ssr";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { NextRequest, NextResponse } from "next/server";
 import { loadEnv, type AppEnv, type Env } from "@/lib/env";
+import { createServiceClient } from "@/lib/supabase/server";
 import type { CookieJar } from "./cookie-jar";
 import { nextCookieJar } from "./cookie-jar";
 import { authCookieOptions } from "./cookie-options";
@@ -61,9 +62,7 @@ export function createStatelessAuthClientFor(env: ServerAuthEnv): SupabaseClient
 
 /** Admin API do Auth (chave secreta): revogar sessões no provedor. Nunca toca cookies. */
 export function createAuthAdminFor(env: ServerAuthEnv) {
-  return createClient(env.SUPABASE_URL, env.SUPABASE_SECRET_KEY, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  }).auth.admin;
+  return createServiceClient(env).auth.admin;
 }
 
 /** Server Actions e Route Handlers (`cookies()` do Next). Em Server Components, gravar é no-op. */

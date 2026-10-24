@@ -23,8 +23,8 @@ export type SessionDeps = {
   store: AuthStore;
   jar: CookieJar;
   now: () => Date;
-  /** `(await getCoreStore()).bootstrap()` da 004 — idempotente. */
-  bootstrap: () => Promise<void>;
+  /** Bootstrap da 004 (idempotente) para o dono recém-autenticado, com o cliente da sessão. */
+  bootstrap: (owner: { ownerId: string; client: SupabaseClient }) => Promise<void>;
 };
 
 export type Claims = { sub: string; email: string; sessionId: string };
@@ -104,7 +104,7 @@ export async function establishSession(
     request,
   });
   try {
-    await deps.bootstrap();
+    await deps.bootstrap({ ownerId: claims.sub, client: auth });
   } catch {
     // A 004 também faz bootstrap preguiçoso: não impede a entrada (contracts/dal.md).
   }

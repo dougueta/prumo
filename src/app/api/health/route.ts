@@ -1,6 +1,6 @@
 import { appVersion, loadEnv } from "@/lib/env";
 import { checkHealth, pingDatabase } from "@/lib/health";
-import { createServerClient } from "@/lib/supabase/server";
+import { createServiceClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +9,7 @@ export async function GET() {
   const { httpStatus, body } = await checkHealth({
     appEnv: APP_ENV,
     version: appVersion(),
-    ping: APP_ENV === "preview" ? async () => {} : pingDatabase(createServerClient()),
+    ping: APP_ENV === "preview" ? async () => {} : pingDatabase(createServiceClient()),
   });
   return Response.json(body, { status: httpStatus, headers: { "Cache-Control": "no-store" } });
 }
