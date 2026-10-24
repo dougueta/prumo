@@ -12,11 +12,13 @@ rastreabilidade total, sem código criado fora de especificação.
 - Integrações Spec Kit instaladas para Claude Code e Gemini CLI.
 - **Revisão cruzada**: PR do Claude revisado pelo Gemini (Code Assist); PR do Gemini revisado
   por Claude em contexto limpo. Merge só com CI verde + APROVADO + Doug.
+  _Substituído pela ADR 0007: todo PR é revisado por subagente Claude em contexto limpo._
 - Paralelismo por ondas de dependência em git worktrees, WIP ≤ 3.
 
 ## Alternativas rejeitadas
 - Processo próprio de specs em Markdown: menos padronizado, sem tooling para os dois agentes.
 - Revisor do mesmo modelo/contexto do autor: compartilha pontos cegos.
+  _Revista na ADR 0007: mesmo modelo, contexto limpo._
 - Fila única sequencial: lenta; paralelismo controlado é viável com contratos core.
 
 ## Consequências

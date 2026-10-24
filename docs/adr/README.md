@@ -10,4 +10,5 @@
 | [0006](0006-ambientes-gratuitos-preview-demo.md) | Ambientes gratuitos e preview em modo demonstração | Aceita |
 | [0007](0007-revisao-independente-por-contexto-limpo.md) | Revisão independente por subagente Claude em contexto limpo | Aceita |
 
-Nova ADR: copie o formato, próximo número, PR dedicado, aprovação do Doug.
+Nova ADR: copie o formato, próximo número, PR dedicado (ou junto da emenda da constitution que
+ela fundamenta), aprovação do Doug.

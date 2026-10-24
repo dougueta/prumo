@@ -61,6 +61,9 @@ como se fosse defeito. Se não há problemas, diga APROVADO sem enrolação.
 ```
 ## Veredito: APROVADO | MUDANÇAS NECESSÁRIAS
 
+Commit revisado: <sha>
+Insumos recebidos: <diff, artefatos da spec, constitution, ADRs, checklist — listar>
+
 ### Achados
 | # | Severidade | Arquivo:linha | Princípio | Problema | Sugestão |
 |---|---|---|---|---|---|

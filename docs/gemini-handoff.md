@@ -60,4 +60,5 @@ Não inclua nenhum dado pessoal ou financeiro real do Doug.
 
 ## Revisões pendentes
 
-Nenhuma ainda. A partir da feature 001, todo PR `autor:claude` aguarda sua revisão.
+Nenhuma: você não revisa PRs. Desde a constitution 2.0.0 (ADR 0007), todo PR — inclusive os
+seus — é revisado por um subagente Claude em contexto limpo.

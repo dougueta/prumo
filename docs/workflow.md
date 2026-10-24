@@ -62,8 +62,10 @@ Regras:
 Claude pode despachar subagentes, um por worktree/feature, cada um recebendo apenas:
 spec/plan/tasks da feature + constitution + AGENTS.md. Revisões de PR (do Gemini e
 do próprio Claude) são feitas por um subagente **novo e sem histórico** (contexto limpo), que
-recebe só o pacote de revisão e aplica `docs/review-checklist.md`. O veredito vai para o PR
-como comentário, identificando o commit revisado. Nunca revisa a sessão que implementou.
+recebe só o pacote de revisão e aplica `docs/review-checklist.md`. O prompt de despacho leva só
+o número do PR e o local dos artefatos, sem afirmações do autor. A sessão que despachou
+publica o veredito no PR, transcrito sem edição, com o commit revisado e os insumos recebidos.
+Nunca revisa a sessão que implementou; novo commit no PR exige nova revisão.
 
 ## Como o Gemini participa
 

@@ -38,7 +38,7 @@ zod 4.6; service worker próprio (sem Serwist — ver research R-08)
 | V. Test-first | Tasks ordenadas teste → implementação; CI bloqueante | ✅ |
 | VI. IA assistente | N/A — sem IA nesta feature | ✅ |
 | VII. Donos de dados / demo | Única migração: função `health_ping` (dona 001); modo demonstração implementado na base | ✅ |
-| VIII. Revisão independente | PR `autor:claude` → revisão Gemini (exceção de bootstrap até a 002) | ✅ |
+| VIII. Revisão independente | PR `autor:claude` → revisor Claude em contexto limpo (constitution 2.0.0) | ✅ |
 | IX. Qualidade dos artefatos | data-model tipado, contracts OpenAPI, Gherkin abaixo, estrutura e libs definidas | ✅ |
 | X. Simplicidade | Projeto único; sem monorepo; sem libs de env/estado extras | ✅ |
 | Custo R$ 0 | Vercel Hobby, Supabase Free, GitHub Actions (repo privado: 2.000 min/mês grátis — estimativa ~400 min/mês) | ✅ |
