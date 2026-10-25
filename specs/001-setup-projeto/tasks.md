@@ -145,7 +145,7 @@
 1. MVP: Phases 1–2 + US1 + US2 → base local testável com CI.
 2. US4 em paralelo (desbloqueia testes das features 004+).
 3. US3 (publicação) após confirmação das ações externas.
-4. US5 e Polish; PR para revisão (Gemini) + Gate 3.
+4. US5 e Polish; PR para revisão (subagente Claude limpo) + Gate 3.
 
 ## Rastreabilidade FR → Tasks
 

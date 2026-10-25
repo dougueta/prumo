@@ -10,7 +10,7 @@
 
 - **Status**: `backlog` → `spec` (specify/clarify) → `spec-ok` (Doug aprovou spec) → `plan`
   → `plan-ok` (Doug aprovou plan+tasks) → `impl` → `review` → `done`
-- **Agente**: quem implementa. O revisor é sempre o outro (Constitution VIII).
+- **Agente**: quem implementa. O revisor é sempre um subagente Claude em contexto limpo (Constitution VIII).
 - **MVP**: ✅ = faz parte do primeiro release utilizável.
 
 ## Contas do usuário (contexto de produto)
@@ -28,9 +28,9 @@
 | # | Slug | Iniciativa | Feature | Depende de | Onda | Agente | MVP | Status |
 |---|---|---|---|---|---|---|---|---|
 | 001 | `setup-projeto` | 0 · Plataforma | Setup: Next.js, Supabase, Vercel, CI (lint/type/test/E2E), PWA base, gerador de dados sintéticos | — | 0 | Claude | ✅ | impl |
-| 002 | `revisor-pr` | 0 · Plataforma | Revisor de PR independente (Gemini Code Assist + revisor Claude limpo + branch protection + template de PR) | 001 | 1 | Claude | ✅ | plan-ok |
+| 002 | `revisor-pr` | 0 · Plataforma | Revisor de PR independente (revisor Claude limpo + branch protection + template de PR; replanejar após a constitution 2.0.0) | 001 | 1 | Claude | ✅ | spec |
 | 003 | `design-system` | 0 · Plataforma | Design system e shell do app (navegação, layout mobile-first, componentes base, tema claro/escuro) | 001 | 1 | Claude | ✅ | plan-ok |
-| 004 | `modelo-dados-core` | 0 · Plataforma | Modelo de dados core: contas, transações, categorias, origens, lotes de importação, RLS | 001 | 1 | Claude | ✅ | review |
+| 004 | `modelo-dados-core` | 0 · Plataforma | Modelo de dados core: contas, transações, categorias, origens, lotes de importação, RLS (integrada no PR #9 sem veredito; revisão pós-merge devida até 2026-10-31) | 001 | 1 | Claude | ✅ | review |
 | 005 | `export-backup` | 0 · Plataforma | Exportar todos os dados (CSV/JSON) e rotina de backup | 004 | 6 | Gemini | | backlog |
 | 006 | `login` | 1 · Autenticação | Login single-user com allowlist, sessão segura, logout | 001 | 1 | Claude | ✅ | plan-ok |
 | 007 | `conexao-open-finance` | 2 · Contas e conexões | Conectar instituições via Pluggy (widget, contas/cartões, status, reconexão) | 004, 006 | 2 | Claude | ✅ | backlog |

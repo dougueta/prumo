@@ -40,7 +40,7 @@ Não inclua nenhum dado pessoal ou financeiro real do Doug.
 - [x] **R4 · Google Sheets API** → `docs/research/google-sheets.md` (026)
   - Leitura via conta de serviço com acesso somente leitura a uma planilha específica;
     cotas; melhor forma de agendar (Supabase Cron/Edge Function) e detectar mudanças.
-- [x] **R5 · Gemini Code Assist no GitHub** → `docs/research/gemini-code-assist.md` (substituída e detalhada em `specs/002-revisor-pr/research.md`)
+- [x] **R5 · Gemini Code Assist no GitHub** → `docs/research/gemini-code-assist.md` (substituída e detalhada em `specs/002-revisor-pr/research.md`) — _superada: app consumer encerrado; revisor agora é subagente Claude limpo (ADR 0007)_
   - Instalação em repositório privado, `.gemini/config.yaml` e `.gemini/styleguide.md`,
     o que ele consegue (resumo, comentários, severidade), se pode **aprovar/reprovar**
     formalmente ou só comentar, e como transformar o veredito em check obrigatório.
@@ -60,4 +60,5 @@ Não inclua nenhum dado pessoal ou financeiro real do Doug.
 
 ## Revisões pendentes
 
-Nenhuma ainda. A partir da feature 001, todo PR `autor:claude` aguarda sua revisão.
+Nenhuma: você não revisa PRs. Desde a constitution 2.0.0 (ADR 0007), todo PR — inclusive os
+seus — é revisado por um subagente Claude em contexto limpo.

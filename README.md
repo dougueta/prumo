@@ -5,7 +5,7 @@ categorização com IA, dashboard, orçamento, análise de comportamento, alerta
 investimentos e planejamento.
 
 **Construído 100% por Spec-Driven Development (GitHub Spec Kit)** por dois agentes — Claude e
-Gemini — em revisão cruzada, com o Doug como product owner.
+Gemini — com revisão independente em contexto limpo e o Doug como product owner.
 
 | Documento | Para quê |
 |---|---|

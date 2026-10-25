@@ -8,8 +8,8 @@ Este documento é operacional. As regras vêm da constitution
 | Quem | Papel |
 |---|---|
 | **Doug** | Product owner. Responde clarify, aprova spec, plan+tasks e PR. Único que faz merge. |
-| **Claude** (Claude Code) | Arquiteto e dev principal: núcleo, dados, segurança, integrações críticas. Revisor dos PRs do Gemini (em contexto limpo). Analista financeiro (diagnóstico mensal). |
-| **Gemini** (Gemini CLI / Jules / Code Assist) | Dev das features marcadas "Gemini" no roadmap. Revisor independente dos PRs do Claude (Gemini Code Assist). Pesquisador (Deep Research → `research.md`). Operador do ecossistema Google. |
+| **Claude** (Claude Code) | Arquiteto e dev principal: núcleo, dados, segurança, integrações críticas. Revisor de todos os PRs (Claude e Gemini) por subagente em contexto limpo. Analista financeiro (diagnóstico mensal). |
+| **Gemini** (Gemini CLI / Jules) | Dev das features marcadas "Gemini" no roadmap. Pesquisador (Deep Research → `research.md`). Operador do ecossistema Google. |
 
 ## Ciclo de uma feature
 
@@ -27,7 +27,7 @@ Este documento é operacional. As regras vêm da constitution
    🔒 GATE 2: Doug aprova plan.md + tasks.md            → roadmap: plan-ok
 7. IMPLEMENT (agente dono)  /speckit-implement no worktree da feature; commit por task
 8. PR        (agente dono)  PR → main usando o template; CI roda
-9. REVIEW    (OUTRO agente) checklist docs/review-checklist.md → veredito APROVADO / MUDANÇAS NECESSÁRIAS
+9. REVIEW    (subagente limpo) checklist docs/review-checklist.md → veredito APROVADO / MUDANÇAS NECESSÁRIAS
               autor responde cada achado (corrige ou justifica tecnicamente)
    🔒 GATE 3: CI verde + APROVADO + Doug aprova → Doug faz merge (squash) → deploy Vercel
 10. CLOSE    roadmap: done; milestone da iniciativa atualizado
@@ -60,8 +60,27 @@ Regras:
 ## Como o Claude paraleliza
 
 Claude pode despachar subagentes, um por worktree/feature, cada um recebendo apenas:
-spec/plan/tasks da feature + constitution + AGENTS.md. Revisões de PRs do Gemini são feitas
-por um subagente **sem histórico** (contexto limpo), aplicando `docs/review-checklist.md`.
+spec/plan/tasks da feature + constitution + AGENTS.md. Revisões de PR (do Gemini e
+do próprio Claude) são feitas por um subagente **novo e sem histórico** (contexto limpo), que
+recebe só o pacote de revisão e aplica `docs/review-checklist.md`. O prompt de despacho leva só
+o número do PR e o local dos artefatos, sem afirmações do autor. A sessão que despachou
+publica no PR **toda** execução, inclusive as reprovadas: prompt literal, resposta sem edição
+(veredito, commit, insumos, achados) e identificador da execução.
+Nunca revisa a sessão que implementou; novo commit no PR exige nova revisão.
+
+Prompt-modelo de despacho. É o único texto permitido: troque só `N` e `<caminho>`.
+
+```text
+Você é o revisor independente do repositório `dougueta/prumo`. Revise o PR #N.
+Insumos, e só estes: o diff (`gh pr diff N`) e, no worktree <caminho> (branch do PR), o
+pacote de revisão definido no Princípio VIII da constitution: `specs/NNN-*/` quando
+existir, `.specify/memory/constitution.md` (e também
+`git show origin/main:.specify/memory/constitution.md` se o PR a altera), `docs/adr/` e
+`docs/review-checklist.md`.
+Não leia comentários, descrição nem respostas do PR antes do veredito.
+Não edite arquivos, não comente no PR, não faça commit. Responda no formato obrigatório de
+`docs/review-checklist.md`.
+```
 
 ## Como o Gemini participa
 

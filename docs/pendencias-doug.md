@@ -4,7 +4,7 @@
 > Os agentes atualizam esta lista; o Doug marca `[x]` ao concluir. **Nunca** registrar aqui
 > valores de segredos — o repositório é público.
 
-Última atualização: 2026-10-05
+Última atualização: 2026-10-24
 
 ## Credenciais e configuração externa
 
@@ -14,8 +14,9 @@
 - [ ] **Secret `SUPABASE_DB_PASSWORD`** no GitHub — senha do banco do projeto Supabase `prumo`.
   Cadastrar pela interface ou no seu terminal com `gh secret set SUPABASE_DB_PASSWORD`
   (pede o valor; não colar em conversa com agentes).
-- [ ] **Instalar o Gemini Code Assist** (app do GitHub, gratuito) no repositório `dougueta/prumo` —
-  hoje nenhum PR recebe revisão automática do Gemini. Previsto na feature 002.
+- [ ] **Desinstalar o app Gemini Code Assist** do GitHub (Settings → Applications → Installed
+  GitHub Apps). A versão gratuita foi encerrada pelo Google e o revisor agora é um subagente
+  Claude em contexto limpo (constitution 2.0.0, ADR 0007).
 
 ## Verificações manuais
 
@@ -33,6 +34,18 @@
 - [ ] **PR #2** — 001 · Setup do projeto: aprovar e integrar quando sair de rascunho (após T049).
 - [ ] **PR #6** — pesquisas R1–R5 do Gemini: revisão do Claude = MUDANÇAS NECESSÁRIAS; aguardar
   as correções do Gemini e o novo veredito antes de integrar.
+- [ ] **PR #12** — constitution 2.0.0 (revisor em contexto limpo): aprovar e integrar após o
+  veredito APROVADO. Destrava a #11 (003) e os PRs seguintes.
+
+## Revisões e replanejamentos devidos (dono: Claude)
+
+- [ ] **PR #9 (004)** — integrado sem veredito e sem rótulo `emergencia` (violação do VIII 1.2.0).
+  Revisão pós-merge por subagente limpo **até 2026-10-31**; CRÍTICO/ALTO viram correção
+  imediata. Depende do merge do #12.
+- [ ] **002 · revisor-pr (PR #10)** — desenhada em torno do Gemini Code Assist; volta para `spec`
+  e precisa de novo Gate 1 e Gate 2 do Doug antes de seguir.
+- [ ] **Sinalização de emergências** com revisão pós-merge pendente (VIII) — não existe; até a
+  002 entregar, esta lista é o registro visível.
 
 ## Decisões de produto pendentes (para as próximas specs)
 

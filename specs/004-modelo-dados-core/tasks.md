@@ -217,7 +217,7 @@ nas duas.
 1. **MVP**: Phases 1–2 + US1 + US2 + US3 — contrato seguro e idempotente; desbloqueia 007/009/012.
 2. US4 + US5 (CRUD manual e auditoria completa) — desbloqueia 011/012/014/016.
 3. US6 (demo) — obrigatório antes do PR (Constitution VII).
-4. US7 + Polish; PR para revisão Gemini + Gate 3.
+4. US7 + Polish; PR para revisão (subagente Claude limpo) + Gate 3.
 
 ## Rastreabilidade FR → Tasks → Testes
 

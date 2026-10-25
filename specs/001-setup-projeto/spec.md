@@ -5,7 +5,7 @@
 **Status**: Draft
 **Iniciativa**: 0 · Plataforma
 **Onda**: 0
-**Agente**: Claude (revisor: Gemini)
+**Agente**: Claude (revisor: subagente Claude em contexto limpo)
 **Dependências**: nenhuma
 **Input**: "Setup do projeto: base do app, ambientes local/preview/produção, verificações
 automáticas de qualidade, PWA base e gerador de dados sintéticos — fundação sobre a qual
